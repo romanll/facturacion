@@ -1,0 +1,11 @@
+Cliente Usuario (Facturador)
+-tiene clientes -> Clientes
+-tiene productos -> Articulos
+-tiene datos de cuenta -> Usuario
+-tiene datos fiscales -> Datos
+
+Los clientes
+-tienen datos fiscales
+
+Los Articulos
+-Datos del articulo

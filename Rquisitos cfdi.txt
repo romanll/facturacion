@@ -1,0 +1,83 @@
+Rquisitos cfdi
+
+-Serie/Folio. Permiten indicar un número de Serie y Folio fiscal que se usará como identificación interna de la factura concatenando la Serie y el Folio como un único Identificador.
+
+-Fecha. Permite indicar la fecha de emisión de la factura. Este dato es obligatorio.
+
+-Tipo. Permite seleccionar “Ingreso” cuando se trate de una factura, “Egreso” para notas de crédito, o "Traslado" cuando se trate de un traslado. Este dato es Obligatorio.
+
+-Forma de pago. Permite indicar de manera literal la forma de pago de la factura (“Pago en una sola exhibición” o “Pago en x parcialidades”, etc.). Este dato es obligatorio.
+
+_________________________________
+EMISOR:
+-Campo Nombre. Permite indicar tanto el Nombre como el RFC del emisor. Este dato es Obligatorio.
+
+-Campo Expedido en (Emisor). Permite indicar tanto el Nombre como el RFC del lugar de expedición. Únicamente es necesario si la factura se expide en otra dirección fiscal. Si no es así se debe omitir.
+
+-Pestaña Domicilio Fiscal (Emisor). Permite indicar todos los datos del emisor. 
+
+-Pestaña  Expedido en (Emisor). Permite indicar todos los datos del emisor del lugar donde se emitió el comprobante. 
+
+-Pestaña Régimen fiscal. Permite indicar el Régimen fiscal bajo el cual tributa el usuario.  Este campo es Obligatorio
+
+-Pestaña Lugar de expedición. Permite indicar el Lugar de expedición del comprobante. Este campo es Obligatorio.
+
+_________________________________
+RECEPTOR
+-Nombre. Permite indicar tanto el Nombre como el RFC del Receptor.  Este dato es Obligatorio.
+
+-Datos de contacto del Receptor. Permite indicar los datos de contacto del Receptor. Únicamente el País es del receptor es obligatorio (además de su RFC).
+
+_________________________________
+DETALLE
+Añadir lineas
+
+-Nº Identificación. Permite indicar el código EAN del artículo.
+-Descripción. Permite indicar la descripción del artículo. Este dato es Obligatorio.
+-Cantidad. Permite indicar la cantidad facturada. Este dato es Obligatorio.
+-Unidad. Permite indicar la unidad de medida del artículo. Este dato es Obligatorio.
+-Valor unitario. Permite indicar precio neto unitario. Este dato es Obligatorio.
+-Importe. Permite indicar el importe de la línea. Resultado de multiplicar la Cantidad por el Valor unitario. Este dato es Obligatorio.
+-Núm. Cuenta Predial. Permite indicar el número de cuenta Predial.
+
+_________________________________
+IMPUESTOS
+
+-Traslados. Se pueden indicar hasta cuatro traslados.
+-Tipo Impuesto. Permite seleccionar de la lista la palabra "IVA" o "IEPS" o incluir los dos según sea el caso.
+-Importe. Permite indicar el importe del impuesto correspondiente al total del "IVA" o "IEPS" del documento.
+-Tasa. Permite indicar el porcentaje del impuesto aplicado.
+-Retenciones. Se pueden indicar hasta dos retenciones.
+-Tipo Impuesto. Permite seleccionar de la lista la palabra IVA o ISR o incluir los dos según sea el caso.
+-Importe. Permite indicar el importe del impuesto correspondiente al total del IVA o ISR del documento.
+
+Totales.
+-Total Impuestos Retenidos. Permite indicar la suma de los importes de los impuestos Retenidos; en caso de que no existan impuestos retenidos poner un cero.
+-Total Impuestos Trasladados. Permite indicar la suma de los importes de los impuestos Trasladados; en caso de que no existan impuestos trasladados poner un cero.
+
+_________________________________
+FORMA DE PAGO.
+
+-Condiciones de pago. Permite indicar las condiciones de pago, ejemplo “8 días fecha factura” o “20 días fecha entrega factura” , etc.
+-Método de pago. Permite indicar el método de pago (Cheque, Transferencia, Depósito, etc.). Este campo es Obligatorio.
+-Nº Cuenta de pago. Permite indicar al menos los cuatro últimos dígitos del número de cuenta con la que se realizó el pago del comprobante.
+Importante.
+Aunque la release 3.2 no lo marca como obligatorio la ley indica que es obligatorio que aparezca en la representación impresa de un CFDI. Por tanto en caso de no contar con este dato, se debe indicar obligatoriamente la leyenda "NO APLICA"
+
+-Descuento. Permite indicar el importe total de los descuentos globales del documento en caso de no haber descuento dejar en blanco.
+-Motivo del Descuento. Permite indicar el motivo por el cual se generó un descuento.
+-Moneda. Permite indicar la divisa del comprobante.
+-Tipo de cambio. Permite indicar la tasa de cambio cuando el comprobante no está en Peso Mexicano.
+-Subtotal. Permite indicar el importe bruto. Suma de los importes de los conceptos antes de descuentos e impuestos. Este dato es Obligatorio.
+-Total. Permite indicar el importe total del documento. Este dato es Obligatorio.
+
+
+_________________________________
+SECCIÓN PAGO EN PARCIALIDADES
+
+Cuando la forma de pago es "pago en x parcialidades". Todos los campos de esta sección aplican y son Obligatorios.
+
+-Folio fiscal original. Permite indicar el folio del comprobante original, del cual el comprobante actual es una parcialidad. Este campo es Obligatorio si forma de pago es "Pago en parcialidades"
+-Fecha del folio fiscal original. Permite indicar la fecha del comprobante original, del cual el comprobante actual es una parcialidad.  Este campo es Obligatorio si forma de pago es "Pago en parcialidades"
+-Serie del folio fiscal original. Permite indicar la serie del comprobante original, del cual el comprobante actual es una parcialidad.  Este campo es Obligatorio si forma de pago es "Pago en parcialidades"
+-Total del comprobante original.  Permite indicar el total del comprobante original, del cual el comprobante actual es una parcialidad.  Este campo es Obligatorio si forma de pago es "Pago en parcialidades"
