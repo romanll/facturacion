@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<div id="container" class="uk-container uk-container-center">
-			<form class="uk-form" method="post" action='<?php echo base_url("usuarios"); ?>'>
+			<form class="uk-form" method="post" action='<?php echo base_url("usuarios/registro"); ?>'>
 				<fieldset>
 					<legend>Registro de Usuario</legend>
 					<!-- correo -->
