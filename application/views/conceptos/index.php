@@ -3,7 +3,7 @@
 	<head>
 			<meta charset="utf-8">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
-			<title>Registro de conceptos</title>
+			<title>Conceptos</title>
 			<!-- Css -->
 			<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</head>
@@ -47,14 +47,26 @@
 				</fieldset>
 			</form>
 
+
 			<!-- Lista de Conceptos -->
 			<h3 class="uk-h3">Lista de Conceptos</h3>
 			<div id="conceptos"></div>
+
+			<!-- modal para editar/mostrar mensaje error-confirmacion -->
+			<div id="modal" class="uk-modal">
+				<div class="uk-modal-dialog uk-modal-dialog-slide">
+        			<a href="" class="uk-modal-close uk-close"></a>
+        			<div class="modal_content">
+        				Editra datos del concepto
+        			</div>
+    			</div>
+			</div>
 		</div>
 
 	</body>
 	<!-- Scripts -->
 	<?php $this->load->view('template/jquery'); ?>
+	<?php $this->load->view('template/alertify'); ?>
 	<script src='<?php echo base_url("libs/jquery_validation/jquery.validate.min.js"); ?>'></script>
 	<script src='<?php echo base_url("libs/jquery_validation/localization/messages_es.js"); ?>'></script>
 	<script src='<?php echo base_url("scripts/concepto.js"); ?>'></script>

@@ -3,7 +3,7 @@
 	<head>
 			<meta charset="utf-8">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
-			<title>Registro de clientes</title>
+			<title>Clientes</title>
 			<!-- Css -->
 			<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</head>
@@ -12,6 +12,8 @@
 			<form class="uk-form" method="post" action='<?php echo base_url("clientes/registro"); ?>'>
 				<fieldset>
 					<legend>Registro de Clientes</legend>
+					<!-- validacion -->
+					<?php echo validation_errors(); ?>
 					<!-- Nombre o Razon Social -->
 					<div class="uk-grid">
 						<div class="uk-width-1-6"><label for="nombre" class="uk-form-label">Nombre o Raz&oacute;n Social</label></div>
@@ -40,7 +42,7 @@
 						<div class="uk-width-1-6"><label class="uk-form-label" for="municipio">Municipio o Delegaci&oacute;n</label></div>
 						<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="municipio" name="municipio" placeholder="Municipio o delegaci&oacute;n (en el caso del DF)"></div>
 						<div class="uk-width-1-6"><label class="uk-form-label" for="cp">Codigo Postal</label></div>
-						<div class="uk-width-1-6"><input class="uk-width-1-1" type="text" id="cp" name="cp"></div>
+						<div class="uk-width-1-6"><input class="uk-width-1-1" type="text" id="cp" name="cp" maxlength="5"></div>
 					</div>
 					<!-- Colonia -->
 					<div class="uk-grid">
@@ -84,6 +86,10 @@
 	</body>
 	<!-- Scripts -->
 	<?php $this->load->view('template/jquery'); ?>
+	<?php $this->load->view('template/alertify'); ?>
+	<script src='<?php echo base_url("libs/jquery_validation/jquery.validate.min.js"); ?>'></script>
+	<script src='<?php echo base_url("libs/jquery_validation/localization/messages_es.js"); ?>'></script>
+	<script src='<?php echo base_url("scripts/clientes.js"); ?>'></script>
 	<!-- Uilit -->
 	<?php $this->load->view('template/uikit'); ?>
 </html>

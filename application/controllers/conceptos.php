@@ -17,7 +17,7 @@ class Conceptos extends CI_Controller {
     /* Por defecto mostrar registro de connceptos */
     function index() {
     	$this->load->library('form_validation');
-        $this->load->view('conceptos/registro');
+        $this->load->view('conceptos/index');
     }
 
     /* Hacer registro de concepto */
@@ -31,13 +31,15 @@ class Conceptos extends CI_Controller {
     	$this->form_validation->set_rules('observaciones', 'Obseravciones', 'trim|xss_clean');
     	//validar los datos de entrada
     	if($this->form_validation->run() == FALSE){
-    		$this->load->view('conceptos/registro');
+    		$this->load->view('conceptos/index');
     	}
     	else{
     		//Paso validacion, guardar datos del $_POST
     		$datos=$this->input->post();
             //Revisar que el numero de identificacion no exista
-            $numitems=$this->items->exist($datos['noidentificacion'],1);
+            //emisor es el dueño del item y el noIdentificacion es el recibido en $_POST
+            $where=array('emisor'=>1,'noidentificacion'=>$datos['noidentificacion']);
+            $numitems=$this->items->exist($where);
             if($numitems>0){
                 //mensaje : noIdentificacion ya existe
                 $response['error']="No Identificación ya existe";
@@ -69,6 +71,36 @@ class Conceptos extends CI_Controller {
             $data['error']="No existen registros";
         }
         $this->load->view('conceptos/tabla', $data, FALSE);
+    }
+
+    /* Eliminar registro */
+    function eliminar(){
+        $item=$this->uri->segment(3);
+        //echo $item;
+        if($item){
+            //obtener info del item
+            $where=array('idconcepto'=>$item);
+            $query=$this->items->read();
+            if($query->num_rows()>0){
+                $row=$query->row();
+                $propietario=$row->emisor;
+            }
+            //soy el propietario del item?: comparar con 'session'
+            if($propietario==1){    //si:eliminar
+                $eliminar=$this->items->delete($item);
+                //comprobar que no exista
+                $numitems=$this->items->exist($where);
+                if($numitems>0){$result['error']="Error: No se pudo eliminar item, intenta mas tarde.";}
+                else{$result['success']="Item eliminado correctamente.";}
+            }
+            else{                   //no:error de privilegios
+                $result['error']="Error: item no existe.";
+            }
+        }
+        else{
+            $result['error']="Error: no se especifico item.";
+        }
+        echo json_encode($result);
     }
 
 }

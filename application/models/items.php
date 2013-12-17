@@ -30,12 +30,18 @@ class Items extends CI_Model {
         return $this->db->get($this->tabla);
     }
 
-    /* Ver si registro existe $noitem=noIdentificacion cuando contribuyente es el dueño del item */
-    function exist($noitem,$emisor){
-    	$this->db->where('emisor',$emisor);
-    	$this->db->where('noidentificacion',$noitem);
+    /* Ver si registro existe */
+    function exist($condicion){
+        $this->db->where($condicion);
     	$this->db->from($this->tabla);
     	return $this->db->count_all_results();
+    }
+
+    /* eliminar item, recibe como parametro el idconcepto */
+    function delete($id){
+        $this->db->where('idconcepto',$id);
+        $this->db->delete($this->tabla);
+        return;
     }
 
 }

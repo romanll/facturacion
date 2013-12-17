@@ -15,3 +15,38 @@ label.error{
 	color: #EC0000;
 	font-size: 13px;
 }
+
+/* sobreescibiri alertify confirm */
+.alertify{
+	border-radius: 0 !important;
+	font-family: inherit !important;
+}
+.alertify-buttons{
+	background: #FFF !important;
+	border-top: none !important;
+}
+.alertify-button{
+	border-radius: 0 !important;
+}
+
+.alertify-log-success {
+	background-color: #8cc14c !important;
+  	color: #ffffff !important;
+	border: none !important;
+}
+.alertify-log-error {
+	background-color: #da314b !important;
+  	color: #ffffff !important;
+  	border: none !important;
+}
+
+.alertify-log{
+	border-radius: 0 !important;
+	text-shadow:none !important;
+}
+
+
+/* Propios */
+.modal_content{
+	overflow: hidden;
+}
