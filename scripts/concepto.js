@@ -3,6 +3,9 @@ concepto.js => Nuevo concepto, insertar via AJAX cuando sea posible
 16-12-2013
 */
 
+var base="http://localhost:81/facturacion/";
+listar();
+
 /* Validar form */
 $("#nuevo_concepto").validate({
 	rules:{
@@ -27,42 +30,30 @@ function enviar(formulario){
         processData: false, //necesario para enviar FormData()
         contentType: false,
         data: datos,
-        dataType:'html'//o json
+        dataType:'json'//o html
     });
     request.done(function(result){
         console.log(result);
+        if(result.success){
+            listar();
+            $(formulario)[0].reset();
+        }
+        else{alert(result.error)}
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
     });
 }
 
-/*
-var datos=new FormData(formulario);
-    //console.log(formulario.attr('action'));
-    
-    //llenar los datos de impresion
-    
-    var request=new XMLHttpRequest();
-    request.open("POST",$(formulario).attr("action"));
-    request.onload=function (event) {
-        if (request.status==200) {
-            console.log(request.responseText);
-        }
-        else{
-            console.log('error');
-        }
-    }
-    request.send(datos);
-    
-    
-    var request = $.ajax({
-        type: "POST",
-        url: $(formulario).attr("action"),
-        processData: false, //necesario para enviar FormData()
-        contentType: false,
-        data: datos,
-        dataType:'json'
-    });
+/* Mostrar tabla de conceptos */
+function listar(){
+    $("#conceptos").load(base+'conceptos/listar');
+}
 
-    */
+/* editar */
+$(document).on(
+    'click','a.editar',function(event){
+        event.preventDefault();
+        console.log('editar '+$(this).attr('href'));
+    }
+)

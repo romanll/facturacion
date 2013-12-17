@@ -11,6 +11,7 @@ class Conceptos extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->load->model('items');
     }
 
     /* Por defecto mostrar registro de connceptos */
@@ -33,10 +34,41 @@ class Conceptos extends CI_Controller {
     		$this->load->view('conceptos/registro');
     	}
     	else{
-    		//paso validacion, ahora revisar que el numero de identificacion no exista
+    		//Paso validacion, guardar datos del $_POST
     		$datos=$this->input->post();
-    		print_r($datos);
+            //Revisar que el numero de identificacion no exista
+            $numitems=$this->items->exist($datos['noidentificacion'],1);
+            if($numitems>0){
+                //mensaje : noIdentificacion ya existe
+                $response['error']="No Identificación ya existe";
+            }
+            else{
+                //insertar datos
+                $datos['emisor']=1;     //Se agregara con session
+                $insertar=$this->items->create($datos);     //insertar en DB
+                if($insertar){
+                    $response['success']="Item insertado correctamente : $insertar";
+                }
+                else{
+                    $response['error']="No se inserto :(";
+                }
+            }
+            echo json_encode($response);
     	}
+    }
+
+
+    /* Listar conceptos de usuario */
+    function listar(){
+        $where=array('emisor'=>1);      //emisor se obtienen de session
+        $query=$this->items->read($where);
+        if($query->num_rows()>0){
+            $data['items']=$query->result();
+        }
+        else{
+            $data['error']="No existen registros";
+        }
+        $this->load->view('conceptos/tabla', $data, FALSE);
     }
 
 }

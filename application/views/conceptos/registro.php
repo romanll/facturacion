@@ -49,50 +49,7 @@
 
 			<!-- Lista de Conceptos -->
 			<h3 class="uk-h3">Lista de Conceptos</h3>
-			<table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-				<caption>Productos/Servicios en lista</caption>
-				<thead>
-					<tr>
-						<th class="uk-text-center">NoIdentificaci&oacute;n</th>
-						<th>Descripci&oacute;n</th>
-						<th class="uk-text-center">Precio Unitario</th>
-						<th class="uk-text-center">Unidad</th>
-						<th class="uk-text-center">Opciones</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="uk-text-center uk-width-2-10">AAA0000111</td>
-						<td class="uk-width-5-10">Producto de prueba</td>
-						<td class="uk-text-center uk-width-1-10">50.00</td>
-						<td class="uk-text-center uk-width-1-10">Pieza</td>
-						<td class="uk-text-center uk-width-1-10">
-							<a href="#AAA0000111"><i class="uk-icon-edit"></i></a>
-							<a href="#AAA0000111"><i class="uk-icon-trash"></i></a>
-						</td>
-					</tr>
-					<tr>
-						<td class="uk-text-center uk-width-2-10">2537</td>
-						<td class="uk-width-5-10">Producto de prueba con una descripci&oacute;n demasiado extensa y sin sentido</td>
-						<td class="uk-text-center uk-width-1-10">1.00</td>
-						<td class="uk-text-center uk-width-1-10">Pieza</td>
-						<td class="uk-text-center uk-width-1-10">
-							<a href="#2537"><i class="uk-icon-edit"></i></a>
-							<a href="#2537"><i class="uk-icon-trash"></i></a>
-						</td>
-					</tr>
-					<tr>
-						<td class="uk-text-center uk-width-2-10">QW22773SR1</td>
-						<td class="uk-width-5-10">Descipción breve</td>
-						<td class="uk-text-center uk-width-1-10">1000.00</td>
-						<td class="uk-text-center uk-width-1-10">Litro</td>
-						<td class="uk-text-center uk-width-1-10">
-							<a href="#QW22773SR1"><i class="uk-icon-edit"></i></a>
-							<a href="#QW22773SR1"><i class="uk-icon-trash"></i></a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<div id="conceptos"></div>
 		</div>
 
 	</body>
