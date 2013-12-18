@@ -36,18 +36,17 @@ class Conceptos extends CI_Controller {
     	else{
     		//Paso validacion, guardar datos del $_POST
     		$datos=$this->input->post();
+             $datos['emisor']=1;                                                //Se agregara con session
             //Revisar que el numero de identificacion no exista
             //emisor es el dueño del item y el noIdentificacion es el recibido en $_POST
             $where=array('emisor'=>1,'noidentificacion'=>$datos['noidentificacion']);
             $numitems=$this->items->exist($where);
             if($numitems>0){
-                //mensaje : noIdentificacion ya existe
-                $response['error']="No Identificación ya existe";
+                $response['error']="No Identificación ya existe";               //mensaje error : noIdentificacion ya existe
             }
+            //insertar datos   
             else{
-                //insertar datos
-                $datos['emisor']=1;     //Se agregara con session
-                $insertar=$this->items->create($datos);     //insertar en DB
+                $insertar=$this->items->create($datos);                         //insertar en DB
                 if($insertar){
                     $response['success']="Item insertado correctamente : $insertar";
                 }
@@ -62,7 +61,7 @@ class Conceptos extends CI_Controller {
 
     /* Listar conceptos de usuario */
     function listar(){
-        $where=array('emisor'=>1);      //emisor se obtienen de session
+        $where=array('emisor'=>1);                                              //emisor se obtienen de session
         $query=$this->items->read($where);
         if($query->num_rows()>0){
             $data['items']=$query->result();
@@ -76,10 +75,8 @@ class Conceptos extends CI_Controller {
     /* Eliminar registro */
     function eliminar(){
         $item=$this->uri->segment(3);
-        //echo $item;
         if($item){
-            //obtener info del item
-            $where=array('idconcepto'=>$item);
+            $where=array('idconcepto'=>$item);                                  //obtener info del item
             $query=$this->items->read();
             if($query->num_rows()>0){
                 $row=$query->row();
@@ -93,8 +90,8 @@ class Conceptos extends CI_Controller {
                 if($numitems>0){$result['error']="Error: No se pudo eliminar item, intenta mas tarde.";}
                 else{$result['success']="Item eliminado correctamente.";}
             }
-            else{                   //no:error de privilegios
-                $result['error']="Error: item no existe.";
+            else{
+                $result['error']="Error: item no existe.";                      //no:error de privilegios
             }
         }
         else{

@@ -36,7 +36,7 @@ function enviar(formulario){
         console.log(result);
         alertify.set({ delay: 15000 });
         if(result.success){
-            alertify.success(result.success);   //mosatra mensaje exito
+            alertify.success(result.success);   //mostrar mensaje exito
             listar();                           //listar conceptos
             $(formulario)[0].reset();
         }
