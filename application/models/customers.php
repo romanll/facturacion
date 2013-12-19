@@ -35,6 +35,14 @@ class Customers extends CI_Model {
         return $this->db->get($this->tabla);
     }
 
+
+    /* Eliminar registro */
+    function delete($id){
+        $this->db->where('idcliente',$id);
+        $this->db->delete($this->tabla);
+        return;
+    }
+
 }
 
 ?>

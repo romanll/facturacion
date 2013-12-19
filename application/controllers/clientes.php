@@ -78,6 +78,34 @@ class Clientes extends CI_Controller {
     }
 
 
+    /* Eliminar */
+    function eliminar(){
+        $cliente=$this->uri->segment(3);
+        if($cliente){
+            $where=array('idcliente'=>$cliente);                                //obtener info del cliente
+            $query=$this->customers->read();
+            if($query->num_rows()>0){
+                $row=$query->row();
+                $proveedor=$row->emisor;
+            }
+            //soy el proveedor del cliente?: comparar con 'session'
+            if($proveedor==1){                                                  //si:eliminar
+                $eliminar=$this->customers->delete($cliente);
+                //comprobar que no exista
+                $num_clientes=$this->customers->exist($where);
+                if($num_clientes>0){$result['error']="Error: No se pudo eliminar cliente, intenta mas tarde.";}
+                else{$result['success']="El cliente ha sido eliminado correctamente.";}
+            }
+            else{
+                $result['error']="Error: Cliente no existe.";                   //no:error de privilegios
+            }
+        }
+        else{
+            $result['error']="Error: no se especifico identificador de cliente.";
+        }
+        echo json_encode($result);
+    }
+
 
 
 }

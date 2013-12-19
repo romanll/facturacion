@@ -37,7 +37,7 @@ class Items extends CI_Model {
     	return $this->db->count_all_results();
     }
 
-    /* Ver si cliente existe: retorna valor numerico */
+    /* Eliminar registro */
     function delete($id){
         $this->db->where('idconcepto',$id);
         $this->db->delete($this->tabla);

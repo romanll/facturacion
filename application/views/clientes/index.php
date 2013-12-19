@@ -72,7 +72,7 @@
 					<!-- Identificador de cliente -->
 					<div class="uk-grid">
 						<div class="uk-width-1-6"><label for="identificador" class="uk-form-label">Identificador</label></div>
-						<div class="uk-width-2-6"><input type="text" class="uk-width-1-1" name="identificador" id="identificador" value="<?php echo set_value('identificador'); ?>" required placeholder="Identificador de cliente, ej:A123456789, CLINTE1234" maxlength="10"></div>
+						<div class="uk-width-2-6"><input type="text" class="uk-width-1-1" name="identificador" id="identificador" value="<?php echo set_value('identificador'); ?>" required placeholder="Identificador de cliente, ej:A123456789, CLIENTE123" maxlength="10"></div>
 					</div>
 					<!-- Boton Guardar -->
 					<div class="uk-grid">
@@ -99,6 +99,6 @@
 	<script src='<?php echo base_url("libs/jquery_validation/additional-methods.min.js"); ?>'></script>
 	<script src='<?php echo base_url("libs/jquery_validation/localization/messages_es.js"); ?>'></script>
 	<script src='<?php echo base_url("scripts/clientes.js"); ?>'></script>
-	<!-- Uilit -->
+	<!-- Uikit -->
 	<?php $this->load->view('template/uikit'); ?>
 </html>

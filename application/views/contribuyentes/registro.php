@@ -115,6 +115,12 @@
 	</body>
 	<!-- Scripts -->
 	<?php $this->load->view('template/jquery'); ?>
+	<?php $this->load->view('template/alertify'); ?>
+	<?php $this->load->view('template/jqueryui'); ?>
+	<script src='<?php echo base_url("libs/jquery_validation/jquery.validate.min.js"); ?>'></script>
+	<script src='<?php echo base_url("libs/jquery_validation/additional-methods.min.js"); ?>'></script>
+	<script src='<?php echo base_url("libs/jquery_validation/localization/messages_es.js"); ?>'></script>
+	<script src='<?php echo base_url("scripts/clientes.js"); ?>'></script>
 	<!-- Uikit -->
 	<?php $this->load->view('template/uikit'); ?>
 </html>

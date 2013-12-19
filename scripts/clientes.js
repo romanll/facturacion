@@ -6,6 +6,7 @@ clientes.js => Registrar clientes, administrarlos, etc...
 
 var base="http://localhost:81/facturacion/";
 listar();										//listar clientes
+$("#pais").val('México');						//al inicio asignar valor de "México"
 
 /* Validar form */
 $("#nuevo_cliente").validate({
@@ -84,6 +85,7 @@ function listar(){
 	        	$("#estado_label").append("<option value="+val.idestado+">"+val.estado+"</option>");
 	        });
 	        $("#estado").val($("#estado_label option:selected").text());		//por defecto tendra el valor del estado en select
+	        municipios(1);														//llenar los municipios del primer estado (x defecto)
     	}
     	else{
     		console.log(result.error);
@@ -99,6 +101,8 @@ $("#estado_label").change(function(event){
 	//console.log(estado);
 	$("#estado").val(estado);
 	municipios($(this).val());
+	//limpiar input y darle foco
+	$("#municipio").val('').focus();
 })
 
 /* municipios: llenar input en base al estado seleccionado en <select> */
@@ -109,20 +113,58 @@ function municipios(estado){
 		dataType: 'json'
 	})
 	.done(function(data) {
-		console.log(data);
+		//console.log(data);
 		var lista=data;
 		if(!lista.error){
 		    $("#municipio").autocomplete({
-			source:lista
+				source:lista
 		    })
+		}
+		else{
+			console.log(lista.error);
 		}
 	})
 	.fail(function() {
 		console.log("error");
-	})
-	.always(function() {
-		console.log("complete");
 	});
 }
+
+/* Al eliminar cliente */
+$(document).on('click','a.eliminar',function(event){
+    event.preventDefault();
+    var href=$(this).attr('href');
+    alertify.set({ labels: {
+        ok     : "Aceptar",
+        cancel : "Cancelar"
+    } });
+    alertify.confirm("&iquest;Eliminar cliente de la lista?", function (e) {
+        if (e) {
+            // user clicked "ok"
+            console.log('ok');
+            var request=$.ajax({
+                type:"POST",
+                url:href,
+                dataType:'json'
+            });
+            request.done(function(result){
+                console.log(result);
+                alertify.set({ delay: 15000 });             //tiempo antes de esconder notificacion
+                if(result.success){
+                    listar();                               //recargar lista de clientes
+                    alertify.success(result.success);       //mostrar mensaje
+                }
+                else{
+                    alertify.error(result.error);           //mostrar error
+                }
+            });
+            request.fail(function(jqXHR,textStatus){
+                console.log(textStatus);
+            })
+        } else {
+            // user clicked "cancel"
+            console.log('cancel');
+        }
+    });
+})
 
 //rastreo estafeta: 3527383905
