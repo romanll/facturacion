@@ -12,7 +12,7 @@ class Usuarios extends CI_Controller {
     }
 
     function index() {
-    	$this->load->view('usuarios/registro');
+    	$this->load->view('usuarios/index');
     }
 
     /* registro: insertar datos de usuario en DB */

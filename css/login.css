@@ -31,15 +31,22 @@ body{
 }
 #box div span{
 	position: absolute;
-	top: 10;
-	left: 45;
+	top: 10px;
+	left: 45px;
 	color:#ccc;
 }
+@media (max-width: 1221px){
+	#box div span{
+		left: 20px;
+	}
+}
+
 #box .uk-grid .uk-width-1-1{position: relative;}
 #box input:focus + span{
 	color:#99baca;
 }
 #box label{color: #444;}
+#box label.error{color: #EC0000;}
 
 /* validacion php */
 #box .uk-alert-danger{font-size: 13px !important;}
