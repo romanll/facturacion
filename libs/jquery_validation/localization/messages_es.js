@@ -6,7 +6,7 @@
 	$.extend($.validator.messages, {
 		required: "Este campo es obligatorio.",
 		remote: "Por favor, rellena este campo.",
-		email: "Escribe una dirección de correo válida",
+		email: "Escribe una dirección de correo válida.",
 		url: "Por favor, escribe una URL válida.",
 		date: "Por favor, escribe una fecha válida.",
 		dateISO: "Por favor, escribe una fecha (ISO) válida.",
@@ -14,7 +14,7 @@
 		digits: "Por favor, escribe sólo dígitos.",
 		creditcard: "Por favor, escribe un número de tarjeta válido.",
 		equalTo: "Por favor, escribe el mismo valor de nuevo.",
-		accept: "Por favor, escribe un valor con una extensión aceptada.",
+		accept: "Por favor, selecciona archivo con una extensión aceptada.",
 		maxlength: $.validator.format("Por favor, no escribas más de {0} caracteres."),
 		minlength: $.validator.format("Por favor, no escribas menos de {0} caracteres."),
 		rangelength: $.validator.format("Por favor, escribe un valor entre {0} y {1} caracteres."),

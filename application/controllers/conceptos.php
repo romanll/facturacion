@@ -1,9 +1,7 @@
 <?php 
-
 /*
 conceptos => Manejo y validacion de datos para concepto o productos del cliente
 */
-
 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
@@ -69,8 +67,15 @@ class Conceptos extends CI_Controller {
         else{
             $data['error']="No existen registros";
         }
-        $this->load->view('conceptos/tabla', $data, FALSE);
+        if($this->input->is_ajax_request()){
+            $this->load->view('conceptos/tabla', $data, FALSE);
+        }
+        else{
+            $this->load->view('conceptos/lista', $data, FALSE);
+        }
     }
+
+
 
     /* Eliminar registro */
     function eliminar(){

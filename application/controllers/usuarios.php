@@ -9,17 +9,53 @@ class Usuarios extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->load->model('users');
     }
 
     function index() {
+        $this->load->library('form_validation');
     	$this->load->view('usuarios/index');
     }
 
     /* registro: insertar datos de usuario en DB */
     function registro(){
-    	//datos por $_POST
-    	$datos=$this->input->post();
-    	print_r($datos);
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
+        $this->form_validation->set_rules('correo', 'Correo', 'trim|required|valid_email|xss_clean');
+        $this->form_validation->set_rules('contrasena', 'Contrase&ntilde;a', 'trim|required|xss_clean');
+        //validar los datos de entrada
+        if($this->form_validation->run() == FALSE){
+            $this->load->view('usuarios/index');
+        }
+        else{
+            //Paso validacion, guardar datos del $_POST
+            $datos=$this->input->post();
+            //cambiar indices para agregar a DB
+            $datos['email']=$datos['correo'];
+            $datos['password']=md5($datos['contrasena']);           //md5 al passsword
+            $datos['type']=$datos['tipo'];
+            if(isset($datos['telefono'])){                          //Recibi telefono?
+                $datos['phone']=$datos['telefono'];                 //cambiar su indice
+                unset($datos['telefono']);                          //y borrarlo despues 
+            }
+            if($datos['type']==1){$redireccionar=FALSE;}            //si tipo es '1', NO redireccionar
+            //si es '2' es contribuyente, redireccionar a registrar los datos fiscales de este
+            else{$redireccionar=TRUE;}
+            //borrar indices innecesarios
+            unset($datos['correo'],$datos['contrasena'],$datos['tipo']);
+            $insertar=$this->users->create($datos);                 //Insertar en DB
+            if($insertar){                                          //si se inserto, mostrar mensaje OK
+                $response['success']="Usuario creado correctamente.";
+                if($redireccionar){                                 //si es contribuyente, completar datos fiscales
+                    $response['success'].="<br>Redireccionando...";
+                    $response['url']=base_url("contribuyentes/registro/$insertar");
+                }
+            }
+            else{                                                   //si NO, mostrar error
+                $response['error']="Error al crear usuario, intente mas tarde.";                
+            }
+            echo json_encode($response);
+        }
     }
 
 

@@ -14,6 +14,7 @@ class Login extends CI_Controller {
         $this->load->model('users');
         $this->load->model('contributors');
         $this->load->helper('url');
+        $this->logeado();
     }
 
     function index() {
@@ -36,6 +37,7 @@ class Login extends CI_Controller {
             $query=$this->users->read($datos);                      //Comprobar que exista en DB
             if($query->num_rows()>0){
                 $session_data=array();                              //existe, crear SESSION
+                $session_data['logged_in']=TRUE;                    //logeado
                 foreach ($query->result() as $row) {
                     $session_data['correo']=$row->email;
                     $session_data['iduser']=$row->idusuario;
@@ -65,8 +67,21 @@ class Login extends CI_Controller {
             }
     	}
     }
+
+    /* Estoy logeado? */
+    function logeado(){
+        $logeado=$this->session->userdata('logged_in');
+        if($logeado){
+            $tipo=$this->session->userdata('tipo');             //tipo de usuario
+            if($tipo==1){
+                redirect('usuarios');                           //admin:redireccionar a usuarios
+            }
+            else{
+                redirect('contribuyentes');                     //emisor: redireccionar a sus datos
+            }
+        }
+    }
+
+
 }
-        
-
-
 ?>

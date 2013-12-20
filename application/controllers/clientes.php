@@ -8,10 +8,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Clientes extends CI_Controller {
 
+    private $usertype='emisor';
+
     function __construct() {
         parent::__construct();
         $this->load->model('customers');
         date_default_timezone_set('America/Tijuana');
+        $this->usertype=$this->whoami();
     }
 
     /* por defecto mostrar registrar cliente */
@@ -27,7 +30,7 @@ class Clientes extends CI_Controller {
     	$this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
         $this->form_validation->set_rules('identificador', 'Identificador de cliente', 'trim|required|alpha_numeric|xss_clean');
     	$this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
-    	$this->form_validation->set_rules('rfc', 'RFC', 'trim|required|xss_clean');
+    	$this->form_validation->set_rules('rfc', 'RFC', 'trim|required|alpha_numeric|xss_clean');
     	$this->form_validation->set_rules('pais', 'Pa&iacute;s', 'trim|required|xss_clean');
     	$this->form_validation->set_rules('cp', 'Codigo Postal', 'trim|required|integer|xss_clean');
     	//validar los datos de entrada
@@ -40,8 +43,6 @@ class Clientes extends CI_Controller {
             $datos['emisor']=1;                                         //Se agregara con session
             $datos['fecha']=date("Y-m-d H:i:s");                        //fecha de registro
             unset($datos['estado_label']);                              //eliminar ya que no nos interesa guardarlo en DB
-            print_r($datos);
-            die();
             //Revisar que el identificador no exista
             //emisor es el proveedor del cliente y el 'identificador' es el recibido en $_POST
             $where=array('emisor'=>$datos['emisor'],'identificador'=>$datos['identificador']);
@@ -74,7 +75,12 @@ class Clientes extends CI_Controller {
         else{
             $data['error']="No existen registros";
         }
-        $this->load->view('clientes/tabla', $data, FALSE);
+        if($this->input->is_ajax_request()){
+            $this->load->view('clientes/tabla', $data, FALSE);
+        }
+        else{
+            $this->load->view('clientes/lista', $data, FALSE);
+        }
     }
 
 
@@ -104,6 +110,26 @@ class Clientes extends CI_Controller {
             $result['error']="Error: no se especifico identificador de cliente.";
         }
         echo json_encode($result);
+    }
+
+    /* checar usuario: logeado?: si->saber tipo : no->redirigir a login */
+    function whoami(){
+        $logeado=$this->session->userdata('logged_in');
+        if($logeado){
+            //saber tipo
+            $tipo=$this->session->userdata('tipo');
+            if($tipo==1){
+                //es admin
+                return 'admin';
+            }
+            else{
+                //es usuario
+                return 'emisor';
+            }
+        }
+        else{
+            redirect('login');
+        }
     }
 
 

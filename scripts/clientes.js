@@ -33,7 +33,7 @@ $("#nuevo_cliente").validate({
 	submitHandler: function(form) {
 	    //console.log('ok, enviar form');
 	    enviar(form);
-	 }
+	}
 });
 
 /* enviar(formulario) */
@@ -54,7 +54,8 @@ function enviar(formulario){
         if(result.success){
             alertify.success(result.success);   //mostrar mensaje exito
             listar();                           //listar conceptos
-            $(formulario)[0].reset();
+            $(formulario)[0].reset();           //Resetear form
+            municipios(1);                      //reiniciar valores en municipio
         }
         else{
             alertify.error(result.error);       //mostrar error
