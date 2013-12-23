@@ -9,12 +9,14 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Clientes extends CI_Controller {
 
     private $usertype='emisor';
+    private $emisor=FALSE;              //almacenar datos de emisor (obtener de SESSION)
 
     function __construct() {
         parent::__construct();
         $this->load->model('customers');
         date_default_timezone_set('America/Tijuana');
         $this->usertype=$this->whoami();
+        $this->emisor=$this->getEmisor();
     }
 
     /* por defecto mostrar registrar cliente */
@@ -40,7 +42,7 @@ class Clientes extends CI_Controller {
     	else{
             //Paso validacion, guardar datos del $_POST
             $datos=$this->input->post();
-            $datos['emisor']=1;                                         //Se agregara con session
+            $datos['emisor']=$this->emisor['idemisor'];                 //Se agregara con SESSION
             $datos['fecha']=date("Y-m-d H:i:s");                        //fecha de registro
             unset($datos['estado_label']);                              //eliminar ya que no nos interesa guardarlo en DB
             //Revisar que el identificador no exista
@@ -67,13 +69,13 @@ class Clientes extends CI_Controller {
 
     /* Listar clientes del contribuyente */
     function listar(){
-        $where=array('emisor'=>1);                                      //emisor se obtienen de session
+        $where=array('emisor'=>$this->emisor['idemisor']);              //emisor se obtienen de session
         $query=$this->customers->read($where);
         if($query->num_rows()>0){
             $data['customers']=$query->result();
         }
         else{
-            $data['error']="No existen registros";
+            $data['error']="No existen registros.";
         }
         if($this->input->is_ajax_request()){
             $this->load->view('clientes/tabla', $data, FALSE);
@@ -95,7 +97,7 @@ class Clientes extends CI_Controller {
                 $proveedor=$row->emisor;
             }
             //soy el proveedor del cliente?: comparar con 'session'
-            if($proveedor==1){                                                  //si:eliminar
+            if($proveedor==$this->emisor['idemisor']){                          //si:eliminar
                 $eliminar=$this->customers->delete($cliente);
                 //comprobar que no exista
                 $num_clientes=$this->customers->exist($where);
@@ -129,6 +131,18 @@ class Clientes extends CI_Controller {
         }
         else{
             redirect('login');
+        }
+    }
+
+
+    /* get Emisor : obtener el identificador de emisor de SESSION */
+    function getEmisor(){
+        $emisor_data=$this->session->all_userdata();
+        if(array_key_exists('idemisor', $emisor_data)){
+            return $emisor_data;
+        }
+        else{
+            redirect('contribuyente/datos');            //si no existe 'idemisor', debe registrar sus datos de contribuyente
         }
     }
 

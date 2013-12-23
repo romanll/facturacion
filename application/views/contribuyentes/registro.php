@@ -19,7 +19,7 @@
 				</div>
 				<!-- right -->
 				<div id="right" class="uk-width-medium-5-6">
-					<form class="uk-form" method="post" action='<?php echo base_url("contribuyentes/registrar"); ?>' id="regemisor">
+					<form class="uk-form" method="post" enctype="multipart/form-data" action='<?php echo base_url("contribuyentes/registrar"); ?>' id="regemisor">
 						<fieldset>
 							<legend>Registro de datos de Contribuyente</legend>
 							<!-- validacion -->

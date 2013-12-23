@@ -21,17 +21,29 @@ class Contributors extends CI_Model {
     }
 
     /* Ver si emisor existe: retorna valor numerico */
-    /*function exist($condicion){
+    function exist($condicion){
         $this->db->where($condicion);
     	$this->db->from($this->tabla);
     	return $this->db->count_all_results();
-    }*/
+    }
 
     /* Obtener los datos de emisor, $condicion es array(); */
     function read($condicion=FALSE){
         if($condicion){$this->db->where($condicion);}
         $this->db->order_by('idemisor','DESC');
         return $this->db->get($this->tabla);
+    }
+
+    /* Actualizar Registro */
+    function update($data,$where){
+        $this->db->where($where);
+        $this->db->update($this->tabla,$data);
+        if($this->db->affected_rows()==1){
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
     }
 
 

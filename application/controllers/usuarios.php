@@ -50,11 +50,30 @@ class Usuarios extends CI_Controller {
                     $response['success'].="<br>Redireccionando...";
                     $response['url']=base_url("contribuyentes/registro/$insertar");
                 }
+                // ToDo: MANDAR CORREO DE CONFIRMACION CON SUS DATOS DE ACCESO ************************
             }
             else{                                                   //si NO, mostrar error
                 $response['error']="Error al crear usuario, intente mas tarde.";                
             }
             echo json_encode($response);
+        }
+    }
+
+
+    /* Listar usuarios */
+    function listar(){
+        $query=$this->users->read();
+        if($query->num_rows()>0){
+            $data['users']=$query->result();
+        }
+        else{
+            $data['error']="No existen usuarios registrados.";
+        }
+        if($this->input->is_ajax_request()){
+            $this->load->view('usuarios/tabla', $data, FALSE);
+        }
+        else{
+            $this->load->view('usuarios/lista', $data, FALSE);
         }
     }
 

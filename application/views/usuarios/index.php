@@ -62,57 +62,10 @@
 							</div>
 						</fieldset>
 					</form>		<!-- end Form -->
-
 					<!-- Lista de Usuarios -->
-			
-			<h3 class="uk-h3">Lista de Usuarios</h3>
-			
-			<div id="Usuarios">
-<table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-	<caption>Lista de usuarios</caption>
-	<thead>
-		<tr>
-			<th>Usuario</th>
-			<th class="uk-text-center">Tel&eacute;fono</th>
-			<th class="uk-text-center">Tipo</th>
-			<th class="uk-text-center">Opciones</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td class="uk-width-3-6 ">correo@dominio.com</td>
-			<td class="uk-width-1-6 uk-text-center">61611654321</td>
-			<td class="uk-width-1-6 uk-text-center">Contribuyente</td>
-			<td class="uk-width-1-6 uk-text-center">
-				<a href="#" class="editar"><i class="uk-icon-edit"></i></a>
-				<a href="#" class="eliminar"><i class="uk-icon-trash"></i></a>
-			</td>
-		</tr>
-		<tr>
-			<td class="uk-width-3-6">correo@dominio.com</td>
-			<td class="uk-width-1-6 uk-text-center">61611654321</td>
-			<td class="uk-width-1-6 uk-text-center">Contribuyente</td>
-			<td class="uk-width-1-6 uk-text-center">
-				<a href="#" class="editar"><i class="uk-icon-edit"></i></a>
-				<a href="#" class="eliminar"><i class="uk-icon-trash"></i></a>
-			</td>
-		</tr>
-		<tr>
-			<td class="uk-width-3-6">yo@dominio.com</td>
-			<td class="uk-width-1-6 uk-text-center">0446161623456</td>
-			<td class="uk-width-1-6 uk-text-center">Administrador</td>
-			<td class="uk-width-1-6 uk-text-center">
-				<a href="#" class="editar"><i class="uk-icon-edit"></i></a>
-				<a href="#" class="eliminar"><i class="uk-icon-trash"></i></a>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-			</div>
-
-
-
+					<h3 class="uk-h3">Lista de Usuarios</h3>
+					<div id="usuarios"></div>
+					
 				</div>		<!-- end Right -->
 			</div>		<!-- end uk-grid -->
 		</div>		<!-- end container -->

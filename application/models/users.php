@@ -21,11 +21,11 @@ class Users extends CI_Model {
     }
 
     /* Ver si usuario existe: retorna valor numerico */
-    /*function exist($condicion){
+    function exist($condicion){
         $this->db->where($condicion);
     	$this->db->from($this->tabla);
     	return $this->db->count_all_results();
-    }*/
+    }
 
     /* Obtener los datos de usuario, $condicion es array(); */
     function read($condicion=FALSE){

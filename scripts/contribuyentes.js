@@ -40,10 +40,40 @@ $("#regemisor").validate({
 	},
 	submitHandler: function(form) {
 	    //console.log('ok, enviar form');
-	    //enviar(form);
-	    form.submit();
+	    enviar(form);
+	    //form.submit();
 	}
 });
+
+
+/* enviar(formulario) */
+function enviar(formulario){
+	var datos=new FormData(formulario);
+	//console.log(formulario);
+	var request = $.ajax({
+        type: "POST",
+        url: $(formulario).attr("action"),
+        processData: false,                     //necesario para enviar FormData()
+        contentType: false,
+        data: datos,
+        dataType:'json'                         //o html
+    });
+    request.done(function(result){
+        console.log(result);
+        alertify.set({ delay: 10000 });
+        if(result.success){
+            alertify.success(result.success);   //mostrar mensaje exito
+            $(formulario)[0].reset();           //Resetear form
+            municipios(1);                      //reiniciar valores en municipio
+        }
+        if(result.error){						//puede haber mensaje de exito y error
+        	alertify.error(result.error);       //mostrar error
+        }
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+}
 
 
 /* Mostrar lista de estados: autoejecutable ya uque solo se requerira al mostrar la vista */
