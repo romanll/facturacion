@@ -9,7 +9,7 @@ if(isset($items)):
 	<caption>Productos/Servicios en lista</caption>
 	<thead>
 		<tr>
-			<th class="uk-text-center">NoIdentificaci&oacute;n</th>
+			<th class="uk-text-center">No Identificaci&oacute;n</th>
 			<th>Descripci&oacute;n</th>
 			<th class="uk-text-center">Precio Unitario</th>
 			<th class="uk-text-center">Unidad</th>

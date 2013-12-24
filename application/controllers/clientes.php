@@ -85,6 +85,17 @@ class Clientes extends CI_Controller {
         }
     }
 
+    /* buscar clientes */
+    function buscar(){
+        $keyword=$this->input->get('term');
+        //echo $keyword;
+        $where=array('emisor'=>$this->emisor['idemisor'],'like'=>$keyword);
+        $query=$this->customers->like($where);
+        if($query->num_rows()>0){
+            echo json_encode($query->result());
+        }
+    }
+
 
     /* Eliminar */
     function eliminar(){

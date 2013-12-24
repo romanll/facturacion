@@ -9,6 +9,7 @@ base.css => Estilos base para proyecto
 /* Redefinir algunos estilos */
 .uk-form .uk-grid,.mg7 {margin-top: 7px !important;}
 table th{font-family: 'Lato';}
+.uk-table td{vertical-align: middle;}
 .uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
 /* label generado por jquery.validate */
 label.error{
@@ -56,6 +57,16 @@ label.error{
 /* Propios */
 .modal_content{
 	overflow: hidden;
+	max-height: 500px;
+}
+.modal_content form table{
+	overflow-y: auto;
+}
+.modal form table{height: 345px;display: block}
+.modal .uk-grid .uk-button-danger{margin-left: 5px;}
+
+form input[type="checkbox"]{
+	margin-top: 4px;
 }
 
 /* De layout */
