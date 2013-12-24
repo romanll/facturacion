@@ -7,9 +7,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Usuarios extends CI_Controller {
 
+    //private $usertype='emisor';
+
     function __construct() {
         parent::__construct();
         $this->load->model('users');
+        $this->whoami();
     }
 
     function index() {
@@ -77,6 +80,27 @@ class Usuarios extends CI_Controller {
         }
     }
 
+
+    /* checar usuario: logeado?: si->saber tipo : no->redirigir a login */
+    function whoami(){
+        $logeado=$this->session->userdata('logged_in');
+        if($logeado){
+            //saber tipo
+            $tipo=$this->session->userdata('tipo');
+            if($tipo==1){
+                //es admin
+                return 'admin';
+            }
+            else{
+                //es usuario, o puede estar aqui
+                //return 'emisor';
+                redirect("contribuyentes/perfil");
+            }
+        }
+        else{
+            redirect('login');
+        }
+    }
 
 }
         

@@ -7,7 +7,7 @@ base.css => Estilos base para proyecto
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700);
 
 /* Redefinir algunos estilos */
-.uk-form .uk-grid {margin-top: 7px !important;}
+.uk-form .uk-grid,.mg7 {margin-top: 7px !important;}
 table th{font-family: 'Lato';}
 .uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
 /* label generado por jquery.validate */

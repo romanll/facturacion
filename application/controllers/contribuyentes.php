@@ -37,6 +37,7 @@ class Contribuyentes extends CI_Controller {
         }  	
     }
 
+    /* Procesar peticion de registro */
     function registrar(){
     	$this->load->library('form_validation');
     	$this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
@@ -142,6 +143,27 @@ class Contribuyentes extends CI_Controller {
             }
         }
         echo json_encode($response);
+    }
+
+    /* Mostrar perfil del usuario : datos de usuario y de contribuyente, lo puede ver el usuario emisor */
+    function perfil(){
+        $session=$this->session->all_userdata();
+        //obtener sus datos de usuario
+        $qu=$this->users->read(array('idusuario'=>$session['iduser']));
+        if($qu->num_rows()>0){
+            $data['usuario']=$qu->result();
+            //datos de contribuyente
+            if(isset($session['idemisor'])){
+                //obtener estos datos
+                $qe=$this->contributors->read(array('idemisor'=>$session['idemisor']));
+                if($qe->num_rows()>0){
+                    $data['emisor']=$qe->result();
+                }
+            }
+        }else{
+            $data['error']="Error:No se encontor usuario.";
+        }
+        $this->load->view('contribuyentes/perfil', $data, FALSE);
     }
 
 

@@ -7,9 +7,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Conceptos extends CI_Controller {
 
+    private $emisor=FALSE;              //almacenar datos de emisor (obtener de SESSION)
+
     function __construct() {
         parent::__construct();
         $this->load->model('items');
+        $this->emisor=$this->getEmisor();
     }
 
     /* Por defecto mostrar registro de connceptos */
@@ -34,10 +37,10 @@ class Conceptos extends CI_Controller {
     	else{
     		//Paso validacion, guardar datos del $_POST
     		$datos=$this->input->post();
-             $datos['emisor']=1;                                                //Se agregara con session
+            $datos['emisor']=$this->emisor['idemisor'];                         //Se agregara con session
             //Revisar que el numero de identificacion no exista
             //emisor es el dueño del item y el noIdentificacion es el recibido en $_POST
-            $where=array('emisor'=>1,'noidentificacion'=>$datos['noidentificacion']);
+            $where=array('emisor'=>$this->emisor['idemisor'],'noidentificacion'=>$datos['noidentificacion']);
             $numitems=$this->items->exist($where);
             if($numitems>0){
                 $response['error']="No Identificación ya existe";               //mensaje error : noIdentificacion ya existe
@@ -59,7 +62,7 @@ class Conceptos extends CI_Controller {
 
     /* Listar conceptos de usuario */
     function listar(){
-        $where=array('emisor'=>1);                                              //emisor se obtienen de session
+        $where=array('emisor'=>$this->emisor['idemisor']);                      //emisor se obtienen de session
         $query=$this->items->read($where);
         if($query->num_rows()>0){
             $data['items']=$query->result();
@@ -88,7 +91,7 @@ class Conceptos extends CI_Controller {
                 $propietario=$row->emisor;
             }
             //soy el propietario del item?: comparar con 'session'
-            if($propietario==1){    //si:eliminar
+            if($propietario==$this->emisor['idemisor']){                       //si:eliminar
                 $eliminar=$this->items->delete($item);
                 //comprobar que no exista
                 $numitems=$this->items->exist($where);
@@ -103,6 +106,18 @@ class Conceptos extends CI_Controller {
             $result['error']="Error: no se especifico item.";
         }
         echo json_encode($result);
+    }
+
+
+    /* get Emisor : obtener el identificador de emisor de SESSION */
+    function getEmisor(){
+        $emisor_data=$this->session->all_userdata();
+        if(array_key_exists('idemisor', $emisor_data)){
+            return $emisor_data;
+        }
+        else{
+            redirect('contribuyente/datos');            //si no existe 'idemisor', debe registrar sus datos de contribuyente
+        }
     }
 
 }
