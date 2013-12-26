@@ -16,7 +16,7 @@ $("#nuevo_concepto").validate({
 	submitHandler: function(form) {
 	    //console.log('ok, enviar form');
 	    enviar(form);
-	 }
+	}
 });
 
 

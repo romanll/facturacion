@@ -19,9 +19,10 @@
 				</div>
 				<!-- right -->
 				<div id="right" class="uk-width-medium-5-6">
+					<!-- AGREGAR RECEPTOR: Cliente -->
 					<form action="#" class="uk-form" method="post" id="crear_factura">
 						<fieldset>
-							<legend>Crear Factura</legend>
+							<legend>Datos del cliente</legend>
 							<div class="uk-grid">
 								<div class="uk-width-2-10"><label for="receptor" class="uk-form-label">Receptor</label></div>
 								<div class="uk-width-3-10">
@@ -52,53 +53,146 @@
 									<input type="text" class="uk-width-1-1" id="direccion" name="direccion" readonly>
 								</div>
 							</div>
-							<hr>
-							<!-- Conceptos -->
-							<div class="uk-grid">
-						        <div class="uk-width-2-10"><label for="concepto" class="uk-form-label">Concepto</label></div>
-						   		<div class="uk-width-3-10">
-						        	<input type="text" class="uk-width-1-1" id="concepto" name="concepto" placeholder="Identificador del bien o servicio">
-						        </div>
-						        <div class="uk-width-1-10">
-						        	<button class="uk-button uk-button-success uk-width-1-1" type="button" data-uk-modal="{target:'#modal',bgclose:false}"><i class="uk-icon-search"></i></button>
-						        </div>
-						   	</div>
-						    <!-- descripcion -->
-						   	<div class="uk-grid">
-						       	<div class="uk-width-2-10"><label for="descripcion" class="uk-form-label">Descripci&oacute;n</label></div>
-						       	<div class="uk-width-8-10">
-						       		<input type="text" class="uk-width-1-1" id="descripcion" name="descripcion" readonly>
-						       	</div>
-					        </div>
-						   	<!-- valor & unidad -->
-						    <div class="uk-grid">
-						        <div class="uk-width-2-10"><label for="precio" class="uk-form-label">Precio</label></div>
-						       	<div class="uk-width-3-10">
-						        	<input type="text" class="uk-width-1-1" id="precio" name="precio" readonly>
-						        </div>
-						       	<div class="uk-width-2-10"><label for="unidad" class="uk-form-label">Unidad</label></div>
-						     	<div class="uk-width-3-10">
-						        	<input type="text" class="uk-width-1-1" id="unidad" name="unidad" readonly>
-						        </div>
-						    </div>
-						    <!-- cantidad & descuento-->
-						    <div class="uk-grid">
-						       	<div class="uk-width-2-10"><label for="cantidad" class="uk-form-label">Cantidad</label></div>
-						        <div class="uk-width-3-10">
-						   			<input type="text" class="uk-width-1-1" id="cantidad" name="cantidad">
-						        </div>
-						        <div class="uk-width-2-10"><label for="descuento" class="uk-form-label">Descuento</label></div>
-						        <div class="uk-width-3-10">
-						      		<input type="text" class="uk-width-1-1" id="descuento" name="descuento">
-						        </div>
-						    </div>
-							<!--  -->
-							<div class="uk-grid">
-								<div class="uk-width-2-10"><label for="" class="uk-form-label"></label></div>
-								<div class="uk-width-5-10"></div>
-							</div>
 						</fieldset>
 					</form>
+					<!-- COMPLEMENTOS: IVA, FORMA DE PAGO -->
+					<h3 class="uk-h3">Datos del comprobante</h3>
+					<form action="#" class="uk-form">
+						<!-- IVA -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="iva" class="uk-form-label">IVA</label></div>
+							<div class="uk-width-2-10">
+								<select name="iva" id="iva" class="uk-width-1-1">
+									<option value="0">0%</option>
+									<!--<option value="11">11%</option>-->
+									<option value="16" selected>16%</option>
+								</select>	
+							</div>
+						</div>
+						<!-- forma de pago -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="formapago" class="uk-form-label">Forma de Pago</label></div>
+							<div class="uk-width-4-10">
+								<select name="formapago" id="formapago" class="uk-width-1-1">
+									<option value="Pago en una sola exhibición">Pago en una sola exhibición</option>
+									<option value="Pago en parcialidades">Pago en parcialidades</option>
+								</select>
+							</div>
+						</div>
+						<!-- condiciones pago -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="condiciones" class="uk-form-label">Condiciones de pago</label></div>
+							<div class="uk-width-4-10">
+								<input type="text" class="uk-width-1-1" name="condiciones" id="condiciones" placeholder="Contado">
+							</div>
+						</div>
+						<!-- Metodo de pago y Num Cta-->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="metodopago" class="uk-form-label">Metodo de pago</label></div>
+							<div class="uk-width-4-10">
+								<input type="text" class="uk-width-1-1" id="metodopago" name="metodopago" placeholder="Efectivo, Cheque, Transferencia, Depósito, etc.">
+							</div>
+							<div class="uk-width-2-10"><label for="numcuenta" class="uk-form-label">No Cuenta</label></div>
+							<div class="uk-width-2-10">
+								<input type="text" class="uk-width-1-1" id="numcuenta" name="numcuenta" placeholder="No de cuenta del pago">
+							</div>
+						</div>
+						<!-- Descuento y motivo de descuento -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="descuento" class="uk-form-label">Descuento</label></div>
+							<div class="uk-width-2-10">
+								<input type="text" class="uk-width-1-1" id="descuento" name="descuento">
+							</div>
+							<div class="uk-width-6-10">
+								<input type="text" class="uk-width-1-1" id="motivodesc" name="motivodesc" placeholder="Motivo de descuento aplicable.">
+							</div>
+						</div>
+						<!-- Moneda y tipo de cambio -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="moneda" class="uk-form-label">Moneda</label></div>
+							<div class="uk-width-2-10">
+								<select name="moneda" id="moneda" class="uk-width-1-1">
+									<option value="MXN">MXN</option>
+									<option value="USD">USD</option>
+									<option value="EUR">EUR</option>
+								</select>
+							</div>
+							<div class="uk-width-2-10"><label for="tipocambio" class="uk-form-label">Tipo de cambio</label></div>
+							<div class="uk-width-2-10">
+								<input type="text" class="uk-width-1-1" id="tipocambio" name="tipocambio" value="1.00">
+							</div>
+						</div>
+						<!-- tipo de comprobante -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="tipocomp" class="uk-form-label">Tipo de comprobante</label></div>
+							<div class="uk-width-4-10">
+								<select name="tipocomp" id="tipocomp" class="uk-width-1-1">
+									<option value="Ingreso">Ingreso</option>
+									<option value="Egreso">Egreso</option>
+									<option value="Traslado">Traslado</option>
+								</select>
+							</div>
+						</div>
+						*Aplicar Serie y Folio, ref anexo 20 pag 60
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="" class="uk-form-label"></label></div>
+							<div class="uk-width-2-10"></div>
+						</div>
+					</form>
+					<!-- AGREGAR CONCEPTOS -->
+					<h3 class="uk-h3">Concepto(s)</h3>
+					<form action="<?php echo base_url('facturas/agregaritem'); ?>" class="uk-form" id="additem" method="post">
+						<div class="uk-grid">
+						    <div class="uk-width-2-10"><label for="concepto" class="uk-form-label">Concepto</label></div>
+						   	<div class="uk-width-3-10">
+						        <input type="text" class="uk-width-1-1" id="concepto" name="concepto" placeholder="Identificador del bien o servicio" required>
+						    </div>
+						    <div class="uk-width-1-10">
+					        	<button class="uk-button uk-button-success uk-width-1-1" type="button" data-uk-modal="{target:'#modal',bgclose:false}"><i class="uk-icon-search"></i></button>
+					        </div>
+					   	</div>
+					    <!-- descripcion -->
+					   	<div class="uk-grid">
+					       	<div class="uk-width-2-10"><label for="descripcion" class="uk-form-label">Descripci&oacute;n</label></div>
+						    <div class="uk-width-8-10">
+						   		<input type="text" class="uk-width-1-1" id="descripcion" name="descripcion" readonly>
+					       	</div>
+				        </div>
+					   	<!-- valor & unidad -->
+					    <div class="uk-grid">
+					        <div class="uk-width-2-10"><label for="precio" class="uk-form-label">Precio</label></div>
+					       	<div class="uk-width-3-10">
+						        <input type="text" class="uk-width-1-1" id="precio" name="precio" readonly>
+						    </div>
+						   	<div class="uk-width-2-10"><label for="unidad" class="uk-form-label">Unidad</label></div>
+					     	<div class="uk-width-3-10">
+					        	<input type="text" class="uk-width-1-1" id="unidad" name="unidad" readonly>
+					        </div>
+					    </div>
+					    <!-- cantidad & descuento-->
+					    <div class="uk-grid">
+						    <div class="uk-width-2-10"><label for="cantidad" class="uk-form-label">Cantidad</label></div>
+						    <div class="uk-width-3-10">
+					   			<input type="text" class="uk-width-1-1" id="cantidad" name="cantidad" placeholder="1" required>
+					        </div>
+					        <div class="uk-width-2-10"><label for="descuento" class="uk-form-label">Descuento</label></div>
+					        <div class="uk-width-3-10">
+					      		<input type="text" class="uk-width-1-1" id="descuento" name="descuento" placeholder="0">
+					        </div>
+						</div>
+						<!-- boton agregar concepto -->
+						<div class="uk-grid">
+							<div class="uk-width-1-1">
+								<button class="uk-button uk-button-success uk-float-right" type="submit">
+									<i class="uk-icon-plus-sign"></i> Agregar concepto
+								</button>
+							</div>
+						</div>
+					</form>
+					<!-- lista de conceptos -->
+					<div id="agregados"></div>
+
+
 					<!-- Lista de Facturas -->
 					<!-- <h3 class="uk-h3">Ultimas facturas</h3>
 					<div id="facturas"></div> -->

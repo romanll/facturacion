@@ -79,6 +79,18 @@ class Conceptos extends CI_Controller {
     }
 
 
+    /* buscar conceptos, llenar 'autocomplete' de jqueryui */
+    function buscar(){
+        $keyword=$this->input->get('term');
+        $where=array('emisor'=>$this->emisor['idemisor'],'like'=>$keyword);
+        $query=$this->items->like($where);
+        if($query->num_rows()>0){
+            $data['result']=$query->result_array();
+        }
+        else{$data['error']='No data';}
+        $this->load->view('conceptos/likejson', $data, FALSE);
+    }
+
 
     /* Eliminar registro */
     function eliminar(){

@@ -35,10 +35,10 @@ class Customers extends CI_Model {
         return $this->db->get($this->tabla);
     }
 
-    /* like : $where recibe emisor y terminoa buscar */
+    /* like : $where recibe emisor y termino a buscar */
     function like($condicion){
         //retornar id, label y value para autocompletado, y los demas campos tambien
-        $this->db->select("identificador as label, identificador as value, rfc as id");
+        //$this->db->select("identificador as label, identificador as value, rfc as id");
         $this->db->like('identificador',$condicion['like']);
         $this->db->where('emisor',$condicion['emisor']);
         return $this->db->get($this->tabla);

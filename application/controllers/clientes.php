@@ -85,15 +85,18 @@ class Clientes extends CI_Controller {
         }
     }
 
-    /* buscar clientes */
+    /* buscar clientes, llenar autocomplete de jqueryui */
     function buscar(){
         $keyword=$this->input->get('term');
         //echo $keyword;
         $where=array('emisor'=>$this->emisor['idemisor'],'like'=>$keyword);
         $query=$this->customers->like($where);
         if($query->num_rows()>0){
-            echo json_encode($query->result());
+            //echo json_encode($query->result());
+            $data['result']=$query->result_array();
         }
+        else{$data['error']='No data';}
+        $this->load->view('clientes/likejson', $data, FALSE);
     }
 
 

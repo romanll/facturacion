@@ -30,6 +30,13 @@ class Items extends CI_Model {
         return $this->db->get($this->tabla);
     }
 
+    /* like : $where recibe emisor y termino a buscar */
+    function like($condicion){
+        $this->db->like('noidentificacion',$condicion['like']);
+        $this->db->where('emisor',$condicion['emisor']);
+        return $this->db->get($this->tabla);
+    }
+
     /* Ver si registro existe */
     function exist($condicion){
         $this->db->where($condicion);
