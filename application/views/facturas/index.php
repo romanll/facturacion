@@ -23,6 +23,7 @@
 					<form action="#" class="uk-form" method="post" id="crear_factura">
 						<fieldset>
 							<legend>Datos del cliente</legend>
+							<!-- Autocompletado cliente -->
 							<div class="uk-grid">
 								<div class="uk-width-2-10"><label for="receptor" class="uk-form-label">Receptor</label></div>
 								<div class="uk-width-3-10">
@@ -63,9 +64,26 @@
 							<div class="uk-width-2-10"><label for="iva" class="uk-form-label">IVA</label></div>
 							<div class="uk-width-2-10">
 								<select name="iva" id="iva" class="uk-width-1-1">
-									<option value="0">0%</option>
+									<option value="0">No aplicar</option>
 									<!--<option value="11">11%</option>-->
 									<option value="16" selected>16%</option>
+								</select>	
+							</div>
+						</div>
+						<!-- Retencion IVA e ISR -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="ivaretencion" class="uk-form-label">Retenci&oacute;n IVA</label></div>
+							<div class="uk-width-2-10">
+								<select name="ivaretencion" id="ivaretencion" class="uk-width-1-1">
+									<option value="0">No aplicar</option>
+									<option value="2/3">2/3</option>
+								</select>	
+							</div>
+							<div class="uk-width-2-10"><label for="isr" class="uk-form-label">Retenci&oacute;n ISR</label></div>
+							<div class="uk-width-2-10">
+								<select name="isr" id="isr" class="uk-width-1-1">
+									<option value="0">No aplicar</option>
+									<option value="10">10%</option>
 								</select>	
 							</div>
 						</div>
@@ -101,7 +119,7 @@
 						<div class="uk-grid">
 							<div class="uk-width-2-10"><label for="descuento" class="uk-form-label">Descuento</label></div>
 							<div class="uk-width-2-10">
-								<input type="text" class="uk-width-1-1" id="descuento" name="descuento">
+								<input type="text" class="uk-width-1-1" id="descuento" name="descuento" value="0">
 							</div>
 							<div class="uk-width-6-10">
 								<input type="text" class="uk-width-1-1" id="motivodesc" name="motivodesc" placeholder="Motivo de descuento aplicable.">
@@ -142,6 +160,7 @@
 					<!-- AGREGAR CONCEPTOS -->
 					<h3 class="uk-h3">Concepto(s)</h3>
 					<form action="<?php echo base_url('facturas/agregaritem'); ?>" class="uk-form" id="additem" method="post">
+						<!-- Autocompletado Item -->
 						<div class="uk-grid">
 						    <div class="uk-width-2-10"><label for="concepto" class="uk-form-label">Concepto</label></div>
 						   	<div class="uk-width-3-10">
@@ -174,10 +193,6 @@
 						    <div class="uk-width-2-10"><label for="cantidad" class="uk-form-label">Cantidad</label></div>
 						    <div class="uk-width-3-10">
 					   			<input type="text" class="uk-width-1-1" id="cantidad" name="cantidad" placeholder="1" required>
-					        </div>
-					        <div class="uk-width-2-10"><label for="descuento" class="uk-form-label">Descuento</label></div>
-					        <div class="uk-width-3-10">
-					      		<input type="text" class="uk-width-1-1" id="descuento" name="descuento" placeholder="0">
 					        </div>
 						</div>
 						<!-- boton agregar concepto -->
