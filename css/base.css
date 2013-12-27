@@ -8,7 +8,7 @@ base.css => Estilos base para proyecto
 
 /* Redefinir algunos estilos */
 .uk-form .uk-grid,.mg7 {margin-top: 7px !important;}
-table th{font-family: 'Lato';}
+table th,table td.uk-text-bold{font-family: 'Lato';}
 .uk-table td{vertical-align: middle;}
 .uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
 /* label generado por jquery.validate */

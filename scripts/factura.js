@@ -28,6 +28,36 @@ $("#additem").validate({
 
 /* ========== EVENTOS ========== */
 
+/* Al dar click en 'generar factura' */
+$("#generar").click(function(event){
+    event.preventDefault();
+    //datos de cliente
+    var cliente={
+        id:$("#receptor").val(),
+        rfc:$("#rfc").val()
+    }
+    var comprobante=new FormData(document.getElementById('comprobanteform'));
+    comprobante.append('cliente',JSON.stringify(cliente));
+    comprobante.append('conceptos',JSON.stringify(items));
+    //console.log(items);
+    var request = $.ajax({
+        type: "POST",
+        url: base+"facturas/crear",
+        data:comprobante,
+        processData: false,  // tell jQuery not to process the data
+        contentType: false  // tell jQuery not to set contentType
+    });
+    request.done(function(result){
+        console.log(result);
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+
+    //datos de factura
+    //datos de conceptos
+})
+
 /* Al remover concepto */
 $(document).on('click','a.remove',function(event){
     event.preventDefault();
@@ -57,7 +87,8 @@ $("#descuento").keyup(function(event){
     relistar();
 })
 
-/* Autocompletado receptos aka clientes */
+/* Autocompletado receptor aka clientes */
+/*
 $("#receptor").autocomplete({
     source: base+"clientes/buscar",
     minLength:2,
@@ -70,23 +101,132 @@ $("#receptor").autocomplete({
         $("#rfc").val(d.rfc);
         $("#direccion").val(direccion);
     }
-})
-
+});
+*/
 /* Autocompletado conceptos aka productos o servicios */
+/*
 $("#concepto").autocomplete({
     source:base+"conceptos/buscar",
     minLength:2,
     select:function(event,ui){
         item=ui.item;
         var c=ui.item;
-        //console.log(c);
         $("#descripcion").val(c.descripcion);
         $("#precio").val(c.valor);
         $("#unidad").val(c.unidad);
     }
 })
+*/
+
+/* Al cambiar el valor del select concepto */
+$("#concepto").change(function(event){
+    var valor=$(this).val();
+    if(!isNaN(valor)){getItem(valor);}
+    else{
+        //dejar en blanco los campos
+        $("#precio").val("");
+        $("#unidad").val("");
+    }
+});
+
+/* Al cambiar el valor de select receptor */
+$("#receptor").change(function(event){
+    var valor=$(this).val();
+    if(!isNaN(valor)){getCustomer(valor)}
+    else{
+        $("#nombre").val("");
+        $("#rfc").val("");
+        $("#direccion").val("");
+    }
+});
 
 /*  ========== FUNCIONES ========== */
+
+/* llenar <select> de clientes */
+(function(){
+    var request = $.ajax({
+        type: "POST",
+        url: base+"clientes/listar/json",
+        dataType:'json'
+    });
+    request.done(function(result){
+        //console.log(result);
+        $.each(result, function(index, cliente) {
+            //console.log(cliente);
+            var option=document.createElement('option');
+            option.text=cliente.nombre;
+            option.value=cliente.idcliente;
+            $("#receptor").append(option);
+        });
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+})();
+
+/* leer item */
+function getItem(iditem){
+    var request = $.ajax({
+        type: "POST",
+        data:{item:iditem},
+        url: base+"conceptos/ver",
+        dataType:'json'
+    });
+    request.done(function(result){
+        item=result;
+        //console.log(result);
+        //$("#descripcion").val(result.descripcion);
+        $("#precio").val(result.valor);
+        $("#unidad").val(result.unidad);
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+}
+
+/* leer datos del cliente */
+function getCustomer(idcustomer){
+    var request = $.ajax({
+        type: "POST",
+        data:{cliente:idcustomer},
+        url: base+"clientes/ver",
+        dataType:'json'
+    });
+    request.done(function(result){
+        //console.log(result);
+        var d=result;
+        var direccion=d.calle+' '+d.nexterior+', Colonia '+d.colonia+', '+d.localidad+', '+d.estado+', '+d.pais+' C.P. '+d.cp;
+        $("#nombre").val(d.nombre);           //asignar valores a inputs de lectura
+        $("#rfc").val(d.rfc);
+        $("#direccion").val(direccion);
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+}
+
+/* Llenar conceptos del emisor */
+(function(){
+    //console.log('obtener conceptos y mostrar select');
+    var request = $.ajax({
+        type: "POST",
+        url: base+"conceptos/listar/json",
+        dataType:'json'
+    });
+    request.done(function(result){
+        //console.log(result);
+        $.each(result, function(index, item) {
+            //console.log(item);
+            var option=document.createElement('option');
+            option.text=item.descripcion;
+            option.value=item.idc;
+            $("#concepto").append(option);
+        });
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+})()
 
 /* Al agregar concepto */
 function agregar(){
@@ -127,6 +267,13 @@ function relistar(){
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
     });
+    //ver si item esta vacio, si no, habilitar boton 'generar factura'
+    if(!$.isEmptyObject(items)){
+        $("#generar").attr('disabled',false)
+    }
+    else{
+        $("#generar").attr('disabled',true);
+    }
 }
 
 /* Remover de lista de items */

@@ -20,18 +20,25 @@
 				<!-- right -->
 				<div id="right" class="uk-width-medium-5-6">
 					<!-- AGREGAR RECEPTOR: Cliente -->
-					<form action="#" class="uk-form" method="post" id="crear_factura">
+					<form action="#" class="uk-form" method="post" id="clienteform">
 						<fieldset>
 							<legend>Datos del cliente</legend>
 							<!-- Autocompletado cliente -->
 							<div class="uk-grid">
 								<div class="uk-width-2-10"><label for="receptor" class="uk-form-label">Receptor</label></div>
+								<div class="uk-width-6-10">
+									<select name="receptor" id="receptor" class="uk-width-1-1">
+										<option value="NA">Seleccionar</option>
+									</select>
+								</div>
+								<!--
 								<div class="uk-width-3-10">
 									<input type="text" class="uk-width-1-1" id="receptor" name="receptor" placeholder="Identificador de cliente">
 								</div>
 								<div class="uk-width-1-10">
 									<button class="uk-button uk-button-success uk-width-1-1" type="button"><i class="uk-icon-search"></i></button>
 								</div>
+								-->
 							</div>
 							<!-- Nombre | Razon Social -->
 							<div class="uk-grid">
@@ -58,7 +65,7 @@
 					</form>
 					<!-- COMPLEMENTOS: IVA, FORMA DE PAGO -->
 					<h3 class="uk-h3">Datos del comprobante</h3>
-					<form action="#" class="uk-form">
+					<form action="#" class="uk-form" id="comprobanteform">
 						<!-- IVA -->
 						<div class="uk-grid">
 							<div class="uk-width-2-10"><label for="iva" class="uk-form-label">IVA</label></div>
@@ -108,7 +115,16 @@
 						<div class="uk-grid">
 							<div class="uk-width-2-10"><label for="metodopago" class="uk-form-label">Metodo de pago</label></div>
 							<div class="uk-width-4-10">
-								<input type="text" class="uk-width-1-1" id="metodopago" name="metodopago" placeholder="Efectivo, Cheque, Transferencia, Depósito, etc.">
+								<select name="metodopago" id="metodopago" class="uk-width-1-1">
+									<option value="Efectivo">Efectivo</option>
+									<option value="Cheque">Cheque</option>
+									<option value="Tarjeta de debito">Tarjeta de debito</option>
+									<option value="Tarjeta de credito">Tarjeta de credito</option>
+									<option value="Transferencia bancaria">Transferencia bancaria</option>
+									<option value="No identificado">No identificado</option>
+									<option value="N/A">N/A</option>
+								</select>
+								<!--<input type="text" class="uk-width-1-1" id="metodopago" name="metodopago" placeholder="Efectivo, Cheque, Transferencia, Depósito, etc.">-->
 							</div>
 							<div class="uk-width-2-10"><label for="numcuenta" class="uk-form-label">No Cuenta</label></div>
 							<div class="uk-width-2-10">
@@ -163,20 +179,27 @@
 						<!-- Autocompletado Item -->
 						<div class="uk-grid">
 						    <div class="uk-width-2-10"><label for="concepto" class="uk-form-label">Concepto</label></div>
-						   	<div class="uk-width-3-10">
-						        <input type="text" class="uk-width-1-1" id="concepto" name="concepto" placeholder="Identificador del bien o servicio" required>
+						   	<div class="uk-width-6-10">
+						        <!--<input type="text" class="uk-width-1-1" id="concepto" name="concepto" placeholder="Identificador del bien o servicio" required>-->
+						        <select name="concepto" id="concepto" class="uk-width-1-1">
+						        	<option value="NA">Seleccionar producto/servicio</option>
+						        </select>
 						    </div>
+						    <!--
 						    <div class="uk-width-1-10">
 					        	<button class="uk-button uk-button-success uk-width-1-1" type="button" data-uk-modal="{target:'#modal',bgclose:false}"><i class="uk-icon-search"></i></button>
 					        </div>
+					    	-->
 					   	</div>
 					    <!-- descripcion -->
+					   	<!--
 					   	<div class="uk-grid">
 					       	<div class="uk-width-2-10"><label for="descripcion" class="uk-form-label">Descripci&oacute;n</label></div>
 						    <div class="uk-width-8-10">
 						   		<input type="text" class="uk-width-1-1" id="descripcion" name="descripcion" readonly>
 					       	</div>
 				        </div>
+				    	-->
 					   	<!-- valor & unidad -->
 					    <div class="uk-grid">
 					        <div class="uk-width-2-10"><label for="precio" class="uk-form-label">Precio</label></div>
@@ -206,6 +229,14 @@
 					</form>
 					<!-- lista de conceptos -->
 					<div id="agregados"></div>
+					<hr>
+					<div class="uk-grid">
+						<div class="uk-width-1-1">
+							<button class="uk-button uk-button-primary uk-float-right" type="button" id="generar" disabled>
+								<i class="uk-icon-file"></i> Generar factura
+							</button>
+						</div>
+					</div>
 
 
 					<!-- Lista de Facturas -->

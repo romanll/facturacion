@@ -59,22 +59,43 @@ class Conceptos extends CI_Controller {
     	}
     }
 
+    /* Mostrar datos del concepto */                // <= comprobar que yo sea propietario
+    function ver(){
+        $iditem=$this->input->post('item');
+        if($iditem){
+            $q=$this->items->read(array('idconcepto'=>$iditem));
+            if($q->num_rows()>0){
+                $data['item']=$q->result();
+            }
+            else{
+                $data['error']="No existe item";
+            }
+            $this->load->view('conceptos/item_json', $data, FALSE);
+        }
+        else{
+            echo 'Debe especificar item';
+        }
+    }
+
 
     /* Listar conceptos de usuario */
     function listar(){
+        $format=$this->uri->segment(3);
         $where=array('emisor'=>$this->emisor['idemisor']);                      //emisor se obtienen de session
-        $query=$this->items->read($where);
-        if($query->num_rows()>0){
-            $data['items']=$query->result();
+        $query=$this->items->read($where,array('by'=>'descripcion','direction'=>'ASC'));
+        if($query->num_rows()>0){$data['items']=$query->result();}
+        else{$data['error']="No existen registros";}
+        //si $format =='json', retornar items en ese formato
+        if($format && $format=='json'){
+            $this->load->view('conceptos/items_json', $data, FALSE);
         }
         else{
-            $data['error']="No existen registros";
-        }
-        if($this->input->is_ajax_request()){
-            $this->load->view('conceptos/tabla', $data, FALSE);
-        }
-        else{
-            $this->load->view('conceptos/lista', $data, FALSE);
+            if($this->input->is_ajax_request()){
+                $this->load->view('conceptos/tabla', $data, FALSE);
+            }
+            else{
+                $this->load->view('conceptos/lista', $data, FALSE);
+            }
         }
     }
 

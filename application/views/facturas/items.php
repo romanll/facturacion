@@ -66,29 +66,29 @@ if(isset($items)):
 	<div class="uk-width-1-3 uk-push-2-3">
 		<table class="uk-table uk-table-condensed uk-float-right">
 			<tr>
-				<th>Subtotal</th>
+				<td class="uk-text-bold">Subtotal</td>
 				<td class="uk-text-right uk-text-success"><?php echo number_format($subtotal,2); ?></td>
 				<!-- suma de los importes antes de descuentos e impuestos -->
 			</tr>
 			<tr>
-				<th>Descuento</th>
+				<td class="uk-text-bold">Descuento</td>
 				<td class="uk-text-right uk-text-danger"><?php echo number_format($descuento,2); ?></td>
 			</tr>
 			<tr>
-				<th>Retencion ISR</th>
+				<td class="uk-text-bold">Retencion ISR</td>
 				<td class="uk-text-right uk-text-info"><?php echo number_format($isrret,2); ?></td>
 			</tr>
 			<tr>
-				<th>Retencion IVA</th>
+				<td class="uk-text-bold">Retencion IVA</td>
 				<td class="uk-text-right uk-text-info"><?php echo number_format($ivaret,2); ?></td>
 			</tr>
 			<tr>
-				<th>IVA <?php echo "($iva %)"; ?></th>
+				<td class="uk-text-bold">IVA <?php echo "($iva %)"; ?></td>
 				<td class="uk-text-right uk-text-success"><?php echo number_format($ivatotal,2); ?></td>
 			</tr>
 			<tr>
-				<th>Total</th>
-				<td class="uk-text-right uk-text-success"><?php echo number_format($subtotal-$descuento+$ivatotal-$ivaret-$isrret,2); ?></td>
+				<td class="uk-text-bold">Total</td>
+				<td class="uk-text-right uk-text-bold"><?php echo number_format($subtotal-$descuento+$ivatotal-$ivaret-$isrret,2); ?></td>
 				<!-- subtotal - descuentos + impuestos trasladados - impuestos retenidos -->
 			</tr>
 		</table>

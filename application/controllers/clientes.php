@@ -26,7 +26,7 @@ class Clientes extends CI_Controller {
     }
 
 
-    /* Registrra cliente */
+    /* Registrar cliente */
     function registro(){
     	$this->load->library('form_validation');
     	$this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
@@ -66,22 +66,45 @@ class Clientes extends CI_Controller {
     	}
     }
 
+    /* Ver datos del cliente */
+    function ver(){
+        $cliente=$this->input->post('cliente');
+        if($cliente){
+            $q=$this->customers->read(array('idcliente'=>$cliente));
+            if($q->num_rows()>0){
+                $data['cliente']=$q->result();
+            }
+            else{
+                $data['error']="No existe cliente";
+            }
+            $this->load->view('clientes/cliente_json', $data, FALSE);
+        }
+        else{
+            echo 'Debe especificar cliente';
+        }
+    }
 
     /* Listar clientes del contribuyente */
     function listar(){
+        $format=$this->uri->segment(3);
         $where=array('emisor'=>$this->emisor['idemisor']);              //emisor se obtienen de session
-        $query=$this->customers->read($where);
+        $query=$this->customers->read($where,array('by'=>'nombre','direction'=>'ASC'));
         if($query->num_rows()>0){
             $data['customers']=$query->result();
         }
         else{
             $data['error']="No existen registros.";
         }
-        if($this->input->is_ajax_request()){
-            $this->load->view('clientes/tabla', $data, FALSE);
+        if($format && $format=='json'){
+            $this->load->view('clientes/clientes_json', $data, FALSE);
         }
         else{
-            $this->load->view('clientes/lista', $data, FALSE);
+            if($this->input->is_ajax_request()){
+                $this->load->view('clientes/tabla', $data, FALSE);
+            }
+            else{
+                $this->load->view('clientes/lista', $data, FALSE);
+            }
         }
     }
 

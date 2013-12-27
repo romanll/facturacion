@@ -29,9 +29,14 @@ class Customers extends CI_Model {
     }
 
     /* Obtener los datos de cliente, $condicion es array(); */
-    function read($condicion=FALSE){
+    function read($condicion=FALSE,$orden=FALSE){
         if($condicion){$this->db->where($condicion);}
-        $this->db->order_by('idcliente','DESC');
+        if($orden){
+            $this->db->order_by($orden['by'],$orden['direction']);
+        }
+        else{
+            $this->db->order_by('idcliente','DESC');
+        }
         return $this->db->get($this->tabla);
     }
 
