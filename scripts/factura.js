@@ -30,22 +30,32 @@ $("#additem").validate({
 
 /* Al dar click en 'generar factura' */
 $("#generar").click(function(event){
-    event.preventDefault();
-    //datos de cliente
-    var cliente={
+    event.preventDefault(); 
+    var cliente={                                       //datos de cliente
         id:$("#receptor").val(),
         rfc:$("#rfc").val()
     }
-    var comprobante=new FormData(document.getElementById('comprobanteform'));
-    comprobante.append('cliente',JSON.stringify(cliente));
-    comprobante.append('conceptos',JSON.stringify(items));
-    //console.log(items);
+    var comprobante={                                   //datos de comprobante: iva, descuento
+        iva:$("#iva").val(),
+        ivaretencion:$("#ivaretencion").val(),
+        isr:$("#isr").val(),
+        formapago:$("#formapago").val(),
+        condiciones:$("#condiciones").val(),
+        metodopago:$("#metodopago").val(),
+        numcuenta:$("#numcuenta").val(),
+        descuento:$("#descuento").val(),
+        motivodesc:$("#motivodesc").val(),
+        moneda:$("#moneda").val(),
+        tipocambio:$("#tipocambio").val(),
+        tipocomp:$("#tipocomp").val(),
+        serie:$("#serie").val(),
+        serietxt:$("#serie :selected").text(),
+        folio:$("#folio").val()
+    }
     var request = $.ajax({
         type: "POST",
         url: base+"facturas/crear",
-        data:comprobante,
-        processData: false,  // tell jQuery not to process the data
-        contentType: false  // tell jQuery not to set contentType
+        data:{cliente:cliente,conceptos:items,comprobante:comprobante},
     });
     request.done(function(result){
         console.log(result);
@@ -53,9 +63,6 @@ $("#generar").click(function(event){
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
     });
-
-    //datos de factura
-    //datos de conceptos
 })
 
 /* Al remover concepto */
@@ -140,7 +147,40 @@ $("#receptor").change(function(event){
     }
 });
 
+/* Al cambiar el valor de select 'serie' */
+$("#serie").change(function(event){
+    var valor=$(this).val();
+    if(!isNaN(valor)){
+        getSerie(valor);
+    }
+    else{
+        $("#folio").val("");
+    }
+});
+
 /*  ========== FUNCIONES ========== */
+
+/* Llenar <select> series */
+(function(){
+    var request = $.ajax({
+        type: "POST",
+        url: base+"configuracion/listarseries/json",
+        dataType:'json'
+    });
+    request.done(function(result){
+        //console.log(result);
+        $.each(result, function(index, series) {
+            //console.log(series);
+            var option=document.createElement('option');
+            option.text=series.nombre;
+            option.value=series.idserie;
+            $("#serie").append(option);
+        });
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+})();
 
 /* llenar <select> de clientes */
 (function(){
@@ -163,6 +203,23 @@ $("#receptor").change(function(event){
         console.log(textStatus);
     });
 })();
+
+/* leer datos de serie */
+function getSerie(serie){
+    var request = $.ajax({
+        type: "POST",
+        url: base+"configuracion/verserie/"+serie,
+        dataType:'json'
+    });
+    request.done(function(result){
+        var serie=result[0];
+        //llenar el campo folio con el folio actual
+        $("#folio").val(serie.folio_actual);
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+}
 
 /* leer item */
 function getItem(iditem){

@@ -6,6 +6,15 @@
 								<?php $user=explode("@", $this->session->userdata('correo')); echo $user[0]; ?>
 							</a>
 						</li>
+						<li class="uk-parent <?php if($active=='configuracion'){echo 'uk-active';} ?>">
+							<a href="#">
+								<i class="uk-icon-cog"></i> Configuración
+							</a>
+							<ul class="uk-nav-sub">
+								<li><a href="<?php echo base_url('configuracion'); ?>">Datos fiscales</a></li>
+								<li><a href="<?php echo base_url('configuracion/series'); ?>">Series</a></li>
+							</ul>
+						</li>
 						<li class="uk-nav-divider"></li>
 						<?php if($this->session->userdata('tipo')==1): ?>
 						<li class="uk-parent <?php if($active=='usuarios'){echo 'uk-active';} ?>">

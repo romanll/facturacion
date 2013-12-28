@@ -16,8 +16,8 @@ class Facturas extends CI_Controller {
     }
 
     function crear(){
-        //$datos=$this->input->post();
-        echo "<pre>";print_r($_POST);echo "</pre>";
+        $datos=$this->input->post();
+        echo "<pre>";print_r($datos);echo "</pre>";
     }
 
     /* Agregar a factura : agregar item a lista de items en factura */

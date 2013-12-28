@@ -66,6 +66,19 @@
 					<!-- COMPLEMENTOS: IVA, FORMA DE PAGO -->
 					<h3 class="uk-h3">Datos del comprobante</h3>
 					<form action="#" class="uk-form" id="comprobanteform">
+						<!-- Serie y Folio -->
+						<div class="uk-grid">
+							<div class="uk-width-2-10"><label for="serie" class="uk-form-label">Serie</label></div>
+							<div class="uk-width-3-10">
+								<select name="serie" id="serie" class="uk-width-1-1">
+									<option value="NA">Seleccionar serie (Opcional)</option>
+								</select>
+							</div>
+							<div class="uk-width-2-10"><label for="folio" class="uk-form-label">Folio</label></div>
+							<div class="uk-width-3-10">
+								<input type="text" class="uk-width-1-1" name="folio" id="folio" readonly>
+							</div>
+						</div>
 						<!-- IVA -->
 						<div class="uk-grid">
 							<div class="uk-width-2-10"><label for="iva" class="uk-form-label">IVA</label></div>

@@ -12,6 +12,7 @@ class Contribuyentes extends CI_Controller {
         parent::__construct();
         $this->load->model('contributors');
         $this->load->model('users');
+        $this->load->model('series');
     }
 
     function index() {
