@@ -20,13 +20,6 @@ class crearXML{
 		foreach ($datos as $key => $value) {
 			$this->agregarAtributo($key,$value,$this->root);
 		}
-		//o hacerlo individualmente
-		/*if(array_key_exists('version', $datos)){
-			$this->agregarAtributo('version',$datos['version']);
-		}
-		if(array_key_exists('fecha', $datos)){
-			$this->agregarAtributo('fecha',$datos['fecha']);
-		}*/
 	}
 
 	/* Agregar Emisor array(rfc,nombre,domicilio fiscal,calle...)*/

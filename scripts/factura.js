@@ -289,7 +289,7 @@ function getCustomer(idcustomer){
 function agregar(){
     //agregar a item la cantidad y descuento
     item.cantidad=$("#cantidad").val();                 // campo cantidad agregar a item
-    item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s)
+    item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s) (valor*cantidad)
     items[item.noidentificacion]=item;                  //agregar el item a la lista de items
     relistar();                                         //recrear tabla items
     $("#additem")[0].reset();                           //vaciar form de item

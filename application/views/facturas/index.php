@@ -180,7 +180,6 @@
 								</select>
 							</div>
 						</div>
-						*Aplicar Serie y Folio, ref anexo 20 pag 60
 						<div class="uk-grid">
 							<div class="uk-width-2-10"><label for="" class="uk-form-label"></label></div>
 							<div class="uk-width-2-10"></div>
