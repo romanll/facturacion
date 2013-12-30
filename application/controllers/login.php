@@ -44,7 +44,7 @@ class Login extends CI_Controller {
                     $session_data['tipo']=$row->type;
                 }
                 $where=array('usuario'=>$session_data['iduser']);
-                $q2=$this->contributors->read();                    //leer los datos fiscales del usuario
+                $q2=$this->contributors->read($where);                    //leer los datos fiscales del usuario
                 if($q2->num_rows()>0){
                     foreach ($q2->result() as $row) {
                         $session_data['nombre']=$row->razonsocial;

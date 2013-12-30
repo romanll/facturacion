@@ -40,6 +40,7 @@ class Contribuyentes extends CI_Controller {
 
     /* Procesar peticion de registro */
     function registrar(){
+        $this->load->library('sslex');
     	$this->load->library('form_validation');
     	$this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
     	$this->form_validation->set_rules('razonsoc', 'Raz&oacute;n Social', 'trim|required|xss_clean');
@@ -78,7 +79,8 @@ class Contribuyentes extends CI_Controller {
         		'cp'=>$datos['cp'],
         		'usuario'=>$datos['ue'],
         		'tipo'=>$datos['tipo'],
-        		'keypwd'=>$datos['llave_password']
+        		'keypwd'=>$datos['llave_password'],
+                'nocertificado'=>$datos['nocertificado']
         	);
         	$insertar=$this->contributors->create($new_emisor);		//insertar en DB, retorna id de registro
         	if($insertar){                                          //se inserto, manipular sus arhivos
@@ -109,6 +111,10 @@ class Contribuyentes extends CI_Controller {
                                 }
                                 else if($data['file_ext']==".key"){ //llave
                                     $update_data['key']=$data['file_name'];
+                                    //generar llave .pem
+                                    $pathkey=$path."/".$data['file_name'];          //ruta archivo .key
+                                    $pathpem=$path.$datos['rfc'].".pem.txt"         //ruta del archivo a generar XXX.pem.txt
+                                    $this->sslex->genkey($pathkey,$datos['llave_password'],$pathpem);
                                 }
                                 else{                               //error:borrar archivo no permitido
                                     unlink($data['full_path']);
@@ -116,6 +122,7 @@ class Contribuyentes extends CI_Controller {
                             }
                         }
                     }
+
                     //ahora con el 'id' de registro, actualizar datos, si es que existen
                     if(isset($update_data) && count($update_data)>0){                      //si el arreglo contiene datos por actualizar
                         $actualizar=$this->contributors->update($update_data,array('idemisor'=>$insertar));

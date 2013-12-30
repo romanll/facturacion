@@ -128,10 +128,13 @@ $("#concepto").autocomplete({
 /* Al cambiar el valor del select concepto */
 $("#concepto").change(function(event){
     var valor=$(this).val();
-    if(!isNaN(valor)){getItem(valor);}
+    if(!isNaN(valor)){
+        $("#additem button").attr('disabled',false);                //habilitar boton "agregar concepto"
+        getItem(valor);                                             //obtener valorer de item
+    }
     else{
-        //dejar en blanco los campos
-        $("#precio").val("");
+        $("#additem button").attr('disabled',true);                 //deshabilitar boton
+        $("#precio").val("");                                       //dejar en blanco los campos
         $("#unidad").val("");
     }
 });
@@ -288,11 +291,12 @@ function getCustomer(idcustomer){
 /* Al agregar concepto */
 function agregar(){
     //agregar a item la cantidad y descuento
-    item.cantidad=$("#cantidad").val();                 // campo cantidad agregar a item
+    item.cantidad=$("#cantidad").val();                             // campo cantidad agregar a item
     item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s) (valor*cantidad)
-    items[item.noidentificacion]=item;                  //agregar el item a la lista de items
-    relistar();                                         //recrear tabla items
-    $("#additem")[0].reset();                           //vaciar form de item
+    items[item.noidentificacion]=item;                              //agregar el item a la lista de items
+    relistar();                                                     //recrear tabla items
+    $("#additem")[0].reset();                                       //vaciar form de item
+    $("#additem button").attr('disabled',true);                     //y deshabilitar boton de nuevo
 }
 
 /* Actualizar tabla de items */

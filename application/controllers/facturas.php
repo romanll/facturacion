@@ -32,13 +32,13 @@ class Facturas extends CI_Controller {
         $query=$this->contributors->read($where);
         if($query->num_rows()>0){$emisor=$query->result();$emisor=$emisor[0];}
         else{$emisor=false;}
+        /* NUMERO DE CERTIFICADO <=== OBTENER DESDE DB, SE DEBE OBTENER A PARTIR DE ARCHIVO O EL USUARIO DEBE INGRESARLO */
 
         //obtener datos del cliente
         $where=array('idcliente'=>$cliente['id'],'rfc'=>$cliente['rfc'],'emisor'=>$this->emisor);
         $query=$this->customers->read($where);
         if($query->num_rows()>0){$receptor=$query->result();}
         else{$receptor=false;}
-        /* NUMERO DE CERTIFICADO <=== OBTENER DESDE DB, SE DEBE OBTENER A PARTIR DE ARCHIVO O EL USUARIO DEBE INGRESARLO */
         
         //obtener datos de comprobante
         $iva=$comprobante['iva'];                                                   //IVA
@@ -70,36 +70,49 @@ class Facturas extends CI_Controller {
             'version'=>'3.2',
             'fecha'=>date("Y-m-d\TH:i:s"),
             'formaDePago'=>$comprobante['formapago'],
-            'subTotal'=>$subtotal,
+            'subTotal'=>number_format($subtotal,2,'.',''),
             'Moneda'=>$comprobante['moneda'],
-            'total'=>$total,
+            'total'=>number_format($total,2,'.',''),
             'metodoDePago'=>$comprobante['metodopago'],
             'tipoDeComprobante'=>$comprobante['tipocomp'],
-            'LugarExpedicion'=>"$emisor->localidad, $emisor->estado"
+            'LugarExpedicion'=>"$emisor->localidad, $emisor->estado",
+            'noCertificado'=>$emisor->nocertificado
         );
         if($comprobante['serie']!="NA"){
             $datoscomp['serie']=$comprobante['serietxt'];
             $datoscomp['folio']=$comprobante['folio'];
         }
-        //if(!empty($comprobante['folio'])){$datoscomp['folio']=$comprobante['folio'];}
-        print_r($datoscomp);
-        die();
 
-        $datoscomp=array(
-            'version'=>'3.2','fecha'=>date("Y-m-d\TH:i:s"),
-            'folio'=>$comprobante['folio'],'formaDePago'=>$comprobante['formapago'],
-            'noCertificado'=>'20001000000200001428',
-            'subTotal'=>'50','Moneda'=>'MXN','total'=>'58',
-            'metodoDePago'=>'Efectivo','tipoDeComprobante'=>'ingreso',
-            'LugarExpedicion'=>'MEXICO'
-            );
+        /* Datos REQUERIDOS del emisor de cfdi "$emisor" es un objeto */
+        $datosemisor=array(
+            'rfc'=>$emisor->rfc,
+            'nombre'=>$emisor->razonsocial,
+            'calle'=>$emisor->calle,
+            'municipio'=>$emisor->municipio,
+            'estado'=>$emisor->estado,
+            'pais'=>$emisor->pais,
+            'codigoPostal'=>$emisor->cp,
+            'Regimen'=>$emisor->regimen
+        );
+        /* Datos OPCIONALES del emisor de cfdi */
+        if(!empty($emisor->colonia)){$datoscomp['colonia']=$emisor->colonia;}
+        if(!empty($emisor->localidad)){$datoscomp['localidad']=$emisor->localidad;}
+        //noExterior, interior & referencia, al ser opcionales pueden ser vacios
+        if(!empty($emisor->nexterior)){$datosemisor['noExterior']=$emisor->nexterior;}
+        if(!empty($emisor->ninterior)){$datosemisor['noInterior']=$emisor->ninterior;}
+        if(!empty($emisor->referencia)){$datosemisor['referencia']=$emisor->referencia;}
+
+
         $this->crearxml->comprobante($datoscomp);
+        $this->crearxml->emisor($datosemisor);
         $test=$this->crearxml->getxml();
+        $guardar=$this->crearxml->saveXML("./ufiles/$emisor->rfc/test.xml");
+        var_dump($guardar);
         echo $test;
     }
 
     /* Agregar a factura : agregar item a lista de items en factura */
-    /* *** CAMBIAR A SESSION **** SOLO POR SI ACASO, PERO MAS ADELANTE, SOLO ES COMPRAR TIEMPO */
+    /* *** CAMBIAR A SESSION **** SOLO POR SI ACASO, PERO MAS ADELANTE, SOLO ES P/COMPRAR TIEMPO */
     function agregaritem(){
     	$items=$this->input->post('items');
         $comprobante=$this->input->post('datosf');
@@ -110,6 +123,11 @@ class Facturas extends CI_Controller {
         else{$data['error']="Aun no hay elementos en lista.";}
     	$this->load->view('facturas/items', $data, FALSE);
     }
+
+    /*function testssl(){
+        $this->load->library('sslex');
+        $this->sslex->test();
+    }*/
 }
         
 

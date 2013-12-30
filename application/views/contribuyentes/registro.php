@@ -53,7 +53,7 @@
 							<!-- Pais & Estado-->
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="pais">Pa&iacute;s</label></div>
-								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="pais" name="pais" value="<?php echo set_value('pais','Mexico'); ?>"></div>
+								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="pais" name="pais" value="<?php echo set_value('pais','México'); ?>"></div>
 								<div class="uk-width-1-6"><label class="uk-form-label" for="estado_label">Estado</label></div>
 								<div class="uk-width-2-6">
 									<select name="estado_label" id="estado_label" class="uk-width-1-1"></select>
@@ -112,6 +112,12 @@
 								<div class="uk-width-1-6"><label class="uk-form-label" for="llave_password">Contrase&ntilde;a de llave</label></div>
 								<div class="uk-width-2-6">
 									<input type="text" class="uk-width-1-1" name="llave_password" id="llave_password" value="<?php echo set_value('llave_password'); ?>">
+								</div>
+							</div>
+							<div class="uk-grid">
+								<div class="uk-width-1-6"><label for="nocertificado" class="uk-form-label">No Certificado</label></div>
+								<div class="uk-width-2-6">
+									<input type="text" class="uk-width-1-1" name="nocertificado" id="nocertificado" required>
 								</div>
 							</div>
 							<!-- boton -->

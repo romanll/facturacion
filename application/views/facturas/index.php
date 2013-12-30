@@ -121,7 +121,7 @@
 						<div class="uk-grid">
 							<div class="uk-width-2-10"><label for="condiciones" class="uk-form-label">Condiciones de pago</label></div>
 							<div class="uk-width-4-10">
-								<input type="text" class="uk-width-1-1" name="condiciones" id="condiciones" placeholder="Contado">
+								<input type="text" class="uk-width-1-1" name="condiciones" id="condiciones" placeholder="Contado" required>
 							</div>
 						</div>
 						<!-- Metodo de pago y Num Cta-->
@@ -233,7 +233,7 @@
 						<!-- boton agregar concepto -->
 						<div class="uk-grid">
 							<div class="uk-width-1-1">
-								<button class="uk-button uk-button-success uk-float-right" type="submit">
+								<button class="uk-button uk-button-success uk-float-right" type="submit" disabled="true">
 									<i class="uk-icon-plus-sign"></i> Agregar concepto
 								</button>
 							</div>

@@ -177,6 +177,7 @@ class Clientes extends CI_Controller {
         $emisor_data=$this->session->all_userdata();
         if(array_key_exists('idemisor', $emisor_data)){
             return $emisor_data;
+            //print_r($emisor_data);
         }
         else{
             redirect('contribuyente/datos');            //si no existe 'idemisor', debe registrar sus datos de contribuyente
