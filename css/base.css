@@ -55,6 +55,37 @@ label.error{
 
 
 /* Propios */
+/*header*/
+header{
+	background-color: #000;
+	color: #FFF;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 1em;
+	font-family: 'Lato';
+}
+
+/* sobreescribir para menu */
+.uk-navbar-brand,.uk-navbar-brand:hover{color: #FFF;}
+.uk-navbar-nav > li > a {color:#DDD;cursor: pointer !important;}
+.uk-dropdown-navbar{
+	-moz-box-shadow: 0 0 5px #444;
+	-webkit-box-shadow: 0 0 5px#444;
+	box-shadow: 0 0 5px #444;
+	border:none;
+}
+.uk-navbar-flip{
+	margin-top: 10px;
+}
+.uk-navbar-flip a{
+	color: #FFF;
+	text-decoration: none;
+}
+.uk-navbar-flip a:hover{
+	color: #00a8e6;
+}
+/* /sobreescribir para menu */
+
 .modal_content{
 	overflow: hidden;
 	max-height: 500px;

@@ -4,9 +4,19 @@ factura.js : creacion de factura, validacion de campos
 */
 
 var base="http://localhost:81/facturacion/";
+base="http://bitwebdev.com/facturacion/";
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
 
+NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 300 })
+
+$(document).ready(function () {
+    $(document).ajaxStart(function () {
+        NProgress.start();
+    }).ajaxStop(function () {
+        NProgress.done();
+    });
+});
 
 /* Validar form 'additem' */
 $("#additem").validate({
@@ -30,6 +40,8 @@ $("#additem").validate({
 
 /* Al dar click en 'generar factura' */
 $("#generar").click(function(event){
+    //deshabilitar boton
+    $(this).attr('disabled',true);
     event.preventDefault(); 
     var cliente={                                       //datos de cliente
         id:$("#receptor").val(),
@@ -56,9 +68,23 @@ $("#generar").click(function(event){
         type: "POST",
         url: base+"facturas/crear",
         data:{cliente:cliente,conceptos:items,comprobante:comprobante},
+        dataType:'json'
     });
     request.done(function(result){
         console.log(result);
+        //habiliatr boton
+        $("#generar").attr('disabled',false);
+        //mostra resultado
+        if(result.mensaje){
+            var msj='<div class="uk-alert uk-alert-success">'+result.mensaje+'</div>';
+            msj+="<a href='"+result.xml+"'><i class='uk-icon-cloud-download'></i> Descargar xml timbrado</a>";
+            $(".modal_content").html(msj);
+        }
+        else{
+            var msj='<div class="uk-alert uk-alert-danger">'+result.error+'</div>';
+            $(".modal_content").html(msj);
+        }
+        shmodal();
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
@@ -341,4 +367,14 @@ function relistar(){
 function remover(item){
     delete items[item];
     relistar();
+}
+
+/* Mostra/Esconder modal */
+function shmodal(){
+    var modal = new $.UIkit.modal.Modal("#modal");
+    if ( modal.isActive() ) {
+        modal.hide();
+    } else {
+        modal.show();
+    }
 }

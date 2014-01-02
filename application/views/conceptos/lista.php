@@ -4,18 +4,17 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title>Conceptos</title>
-		<!-- Css -->
-		<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</head>
 	<body>
+		<?php $this->load->view('template/menu_top'); ?>
 		<div id="container" class="uk-container uk-container-center">
 			<div class="uk-grid data-uk-grid-margin">
 				<!-- left -->
-				<div id="left" class="uk-width-medium-1-6">
+				<div id="left" class="uk-width-medium-1-6 uk-hidden-large">
 					<?php $this->load->view('template/menu_left'); ?>
 				</div>
 				<!-- right -->
-				<div id="right" class="uk-width-medium-5-6">
+				<div id="right" class="uk-width-medium-5-6 uk-width-large-1-1">
 					<!-- Lista de Conceptos -->
 					<h3 class="uk-h3">Lista de Conceptos</h3>
 					<div id="conceptos">
@@ -44,7 +43,7 @@
 									<td class="uk-text-center uk-width-1-10"><?php echo $item->unidad; ?></td>
 									<td class="uk-text-center uk-width-1-10">
 										<a href='<?php echo base_url("conceptos/editar/$item->idconcepto"); ?>' class="editar"><i class="uk-icon-edit"></i></a>
-										<a href='<?php echo base_url("conceptos/eliminar/$item->idconcepto"); ?>' class="eliminar"><i class="uk-icon-trash"></i></a>
+										<a href='<?php echo base_url("conceptos/eliminar/$item->idconcepto"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
 									</td>
 								</tr>
 						<?php
@@ -69,5 +68,7 @@
 		<script src='<?php echo base_url("scripts/concepto_lista.js"); ?>'></script>
 		<!-- Uikit -->
 		<?php $this->load->view('template/uikit'); ?>
+		<!-- Css -->
+		<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</body>
 </html>

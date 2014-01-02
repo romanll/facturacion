@@ -113,8 +113,9 @@ class Contribuyentes extends CI_Controller {
                                     $update_data['key']=$data['file_name'];
                                     //generar llave .pem
                                     $pathkey=$path."/".$data['file_name'];          //ruta archivo .key
-                                    $pathpem=$path.$datos['rfc'].".pem.txt"         //ruta del archivo a generar XXX.pem.txt
+                                    $pathpem=$path."/".$datos['rfc'].".pem.txt";        //ruta del archivo a generar XXX.pem.txt
                                     $this->sslex->genkey($pathkey,$datos['llave_password'],$pathpem);
+                                    $update_data['pem']=$datos['rfc'].".pem.txt";
                                 }
                                 else{                               //error:borrar archivo no permitido
                                     unlink($data['full_path']);

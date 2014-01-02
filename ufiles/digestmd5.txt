@@ -1,0 +1,1 @@
+MD5(./ufiles/AAA010101AAA/cadena.txt)= a80e0f4f9b9a932753ff40a1bdf40c3e

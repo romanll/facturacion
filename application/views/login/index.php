@@ -11,6 +11,9 @@
 	<?php $this->load->view('template/uikit'); ?>
 	<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	<link rel="stylesheet" href='<?php echo base_url("css/login.css"); ?>'>
+    <!-- Uikit Addon -->
+    <link rel="stylesheet" href='<?php echo base_url("libs/uikit/addons/css/form-password.css"); ?>'>
+    <script src='<?php echo base_url("libs/uikit/addons/js/form-password.js"); ?>'></script>
 </head>
 <body class="uk-height-1-1">
     <div class="uk-vertical-align uk-text-center">
@@ -34,17 +37,19 @@
         			<div class="uk-grid">
         				<div class="uk-width-1-1">
             				<input type="email" id="correo" name="correo" class="uk-width-1-1" value="<?php echo set_value('correo'); ?>" required>
-            				<span><i class="uk-icon-envelope-alt"></i></span>
+            				<span><i class="uk-icon-envelope-o"></i></span>
             			</div>
             		</div>
             		<div class="uk-grid">
         				<div class="uk-width-1-1 uk-text-left"><label for="contrasena" class="uk-form-label">Contrase&ntilde;a</label></div>
         			</div>
             		<div class="uk-grid">
-            			<div class="uk-width-1-1">
+            			<div class="uk-width-1-1 uk-form-password">
             				<input type="password" id="contrasena" name="contrasena" class="uk-width-1-1" value="<?php echo set_value('contrasena'); ?>" required>
+                            <a href="" class="uk-form-password-toggle" data-uk-form-password>Mostrar</a>
         					<span><i class="uk-icon-magic"></i></span>
         				</div>
+
         			</div>
             		<div class="uk-grid">
             			<div class="uk-width-1-1">

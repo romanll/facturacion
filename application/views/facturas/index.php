@@ -11,14 +11,15 @@
 		<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</head>
 	<body>
+		<?php $this->load->view('template/menu_top'); ?>
 		<div id="container" class="uk-container uk-container-center">
 			<div class="uk-grid data-uk-grid-margin">
 				<!-- left -->
-				<div id="left" class="uk-width-medium-1-6">
+				<div id="left" class="uk-width-medium-1-6 uk-hidden-large">
 					<?php $this->load->view('template/menu_left'); ?>
 				</div>
 				<!-- right -->
-				<div id="right" class="uk-width-medium-5-6">
+				<div id="right" class="uk-width-medium-5-6 uk-width-large-1-1">
 					<!-- AGREGAR RECEPTOR: Cliente -->
 					<form action="#" class="uk-form" method="post" id="clienteform">
 						<fieldset>
@@ -174,9 +175,9 @@
 							<div class="uk-width-2-10"><label for="tipocomp" class="uk-form-label">Tipo de comprobante</label></div>
 							<div class="uk-width-4-10">
 								<select name="tipocomp" id="tipocomp" class="uk-width-1-1">
-									<option value="Ingreso">Ingreso</option>
-									<option value="Egreso">Egreso</option>
-									<option value="Traslado">Traslado</option>
+									<option value="ingreso">Ingreso</option>
+									<option value="egreso">Egreso</option>
+									<option value="traslado">Traslado</option>
 								</select>
 							</div>
 						</div>
@@ -203,15 +204,6 @@
 					        </div>
 					    	-->
 					   	</div>
-					    <!-- descripcion -->
-					   	<!--
-					   	<div class="uk-grid">
-					       	<div class="uk-width-2-10"><label for="descripcion" class="uk-form-label">Descripci&oacute;n</label></div>
-						    <div class="uk-width-8-10">
-						   		<input type="text" class="uk-width-1-1" id="descripcion" name="descripcion" readonly>
-					       	</div>
-				        </div>
-				    	-->
 					   	<!-- valor & unidad -->
 					    <div class="uk-grid">
 					        <div class="uk-width-2-10"><label for="precio" class="uk-form-label">Precio</label></div>
@@ -234,7 +226,7 @@
 						<div class="uk-grid">
 							<div class="uk-width-1-1">
 								<button class="uk-button uk-button-success uk-float-right" type="submit" disabled="true">
-									<i class="uk-icon-plus-sign"></i> Agregar concepto
+									<i class="uk-icon-plus-circle"></i> Agregar concepto
 								</button>
 							</div>
 						</div>
@@ -250,7 +242,6 @@
 						</div>
 					</div>
 
-
 					<!-- Lista de Facturas -->
 					<!-- <h3 class="uk-h3">Ultimas facturas</h3>
 					<div id="facturas"></div> -->
@@ -259,7 +250,7 @@
 					    <div class="uk-modal-dialog uk-modal-dialog-slide">
 					        <a href="#" class="uk-modal-close uk-close"></a>
 					        <div class="modal_content">
-					        	Listar conceptos para que usuario eliga
+					        	Mostrar resultado de generar factura
 					        </div>
 					    </div>
 					</div>
@@ -272,6 +263,8 @@
 		<script src='<?php echo base_url("libs/jquery_validation/jquery.validate.min.js"); ?>'></script>
 		<script src='<?php echo base_url("libs/jquery_validation/additional-methods.min.js"); ?>'></script>
 		<script src='<?php echo base_url("libs/jquery_validation/localization/messages_es.js"); ?>'></script>
+		<link rel="stylesheet" href='<?php echo base_url("libs/nprogress/nprogress.css"); ?>'></link>
+		<script src='<?php echo base_url("libs/nprogress/nprogress.js"); ?>'></script>
 		<script src='<?php echo base_url("scripts/factura.js"); ?>'></script>
 	</body>
 </html>

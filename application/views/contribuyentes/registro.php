@@ -11,14 +11,15 @@
 		<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</head>
 	<body>
+		<?php $this->load->view('template/menu_top'); ?>
 		<div id="container" class="uk-container uk-container-center">
 			<div class="uk-grid data-uk-grid-margin">
 				<!-- left -->
-				<div id="left" class="uk-width-medium-1-6">
+				<div id="left" class="uk-width-medium-1-6 uk-hidden-large">
 					<?php $this->load->view('template/menu_left'); ?>
 				</div>
 				<!-- right -->
-				<div id="right" class="uk-width-medium-5-6">
+				<div id="right" class="uk-width-medium-5-6 uk-width-large-1-1">
 					<form class="uk-form" method="post" enctype="multipart/form-data" action='<?php echo base_url("contribuyentes/registrar"); ?>' id="regemisor">
 						<fieldset>
 							<legend>Registro de datos de Contribuyente</legend>
@@ -46,7 +47,7 @@
 									</select>
 								</div>
 								<div class="uk-width-1-6"><label class="uk-form-label" for="regimen">R&eacute;gimen Fiscal</label></div>
-								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="regimen" name="regimen" value="<?php echo set_value('regimen'); ?>" placeholder="R&eacute;gimen Fiscal">
+								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="regimen" name="regimen" value="<?php echo set_value('regimen'); ?>" placeholder="R&eacute;gimen Fiscal" required>
 								</div>
 							</div>
 							<!-- domicilio fiscal -->

@@ -4,6 +4,7 @@ concepto.js => Nuevo concepto, insertar via AJAX cuando sea posible
 */
 
 var base="http://localhost:81/facturacion/";
+base="http://bitwebdev.com/facturacion/";
 listar();
 
 /* Validar form */

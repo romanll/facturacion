@@ -44,7 +44,7 @@ if(isset($items)):
 				</a>
 				-->
 				<a href="<?php echo "#".$item['noidentificacion']; ?>" class="remove">
-					<icon class="uk-icon-remove"></icon>
+					<icon class="uk-icon-times"></icon>
 				</a>
 			</td>
 		</tr>

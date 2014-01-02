@@ -49,6 +49,7 @@ class Login extends CI_Controller {
                     foreach ($q2->result() as $row) {
                         $session_data['nombre']=$row->razonsocial;
                         $session_data['idemisor']=$row->idemisor;
+                        $session_data['rfc']=$row->rfc;
                     }
                 }
                 $this->session->set_userdata($session_data);        //crear la session

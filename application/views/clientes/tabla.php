@@ -21,7 +21,7 @@ if(isset($customers)):
 			<td class="uk-text-center uk-width-1-10"><?php echo $c->rfc; ?></td>
 			<td class="uk-text-center uk-width-1-10">
 				<a href='<?php echo base_url("clientes/editar/$c->idcliente"); ?>' class="editar"><i class="uk-icon-edit"></i></a>
-				<a href='<?php echo base_url("clientes/eliminar/$c->idcliente"); ?>' class="eliminar"><i class="uk-icon-trash"></i></a>
+				<a href='<?php echo base_url("clientes/eliminar/$c->idcliente"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
 			</td>
 		</tr>
 <?php

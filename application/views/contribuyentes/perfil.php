@@ -11,14 +11,15 @@
 		<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</head>
 	<body>
+		<?php $this->load->view('template/menu_top'); ?>
 		<div id="container" class="uk-container uk-container-center">
 			<div class="uk-grid data-uk-grid-margin">
 				<!-- left -->
-				<div id="left" class="uk-width-medium-1-6">
+				<div id="left" class="uk-width-medium-1-6 uk-hidden-large">
 					<?php $this->load->view('template/menu_left'); ?>
 				</div>
 				<!-- right -->
-				<div id="right" class="uk-width-medium-5-6">
+				<div id="right" class="uk-width-medium-5-6 uk-width-large-1-1">
 				<?php if(isset($usuario)): foreach($usuario as $u): ?>
 					<h3 class="uk-h3">Datos de usuario</h3>
 					<div class="uk-grid mg7">

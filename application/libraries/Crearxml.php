@@ -100,18 +100,40 @@ class Crearxml
 	function impuestos($datos){
 		//agregar nodo 'Impuestos'
 		$impuestos=$this->root->appendChild($this->xmlfile->createElement('cfdi:Impuestos'));
-		//agregar atributo 'totalImpuestosTrasladados'
-		$this->agregarAtributo('totalImpuestosTrasladados',$datos['totalImpuestosTrasladados'],$impuestos);
-		unset($datos['totalImpuestosTrasladados']);
 
-		//agregar subnodos 'Traslados'
-		$traslados=$impuestos->appendChild($this->xmlfile->createElement('cfdi:Traslados'));
-		
-		//y a este insertar 'Traslado'
-		$traslado=$traslados->appendChild($this->xmlfile->createElement('cfdi:Traslado'));
-		//y sus respectivos atributos
-		foreach($datos as $key=>$value){
-			$this->agregarAtributo($key,$value,$traslado);
+		//tipos de impuestos
+		if(isset($datos['retenciones'])){
+			//agregar atributo 'totalImpuestosRetenidos'
+			$retenidos=$datos['retenciones']['totalImpuestosRetenidos'];
+			$this->agregarAtributo('totalImpuestosRetenidos',$retenidos,$impuestos);
+			unset($datos['retenciones']['totalImpuestosRetenidos']);
+
+			//agregar subnodo 'Retenciones'
+			$retenciones=$impuestos->appendChild($this->xmlfile->createElement('cfdi:Retenciones'));
+			//y a este insertarle cada retencion
+			foreach ($datos['retenciones'] as $r) {
+				$retencion=$retenciones->appendChild($this->xmlfile->createElement('cfdi:Retencion'));
+				//y sus atributos a cada retencion
+				foreach ($r as $key => $value) {
+					$this->agregarAtributo($key,$value,$retencion);
+				}
+			}
+		}
+
+		if(isset($datos['traslados'])){
+			//agregar atributo 'totalImpuestosTrasladados'
+			$this->agregarAtributo('totalImpuestosTrasladados',$datos['traslados']['totalImpuestosTrasladados'],$impuestos);
+			unset($datos['traslados']['totalImpuestosTrasladados']);
+
+			//agregar subnodo 'Traslados'
+			$traslados=$impuestos->appendChild($this->xmlfile->createElement('cfdi:Traslados'));
+			//y cada traslado
+			foreach ($datos['traslados'] as $t) {
+				$traslado=$traslados->appendChild($this->xmlfile->createElement('cfdi:Traslado'));
+				foreach($t as $key=>$value){
+					$this->agregarAtributo($key,$value,$traslado);
+				}
+			}
 		}
 	}
 
@@ -131,6 +153,11 @@ class Crearxml
 	function saveXML($full_path){
 		$this->xmlfile->formatOutput=true;
 		return $this->xmlfile->save($full_path);
+	}
+
+	/* Agregar sello */
+	function agregarsello($sello){
+		$this->agregarAtributo("sello",$sello,$this->root);
 	}
 
 

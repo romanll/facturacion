@@ -27,7 +27,7 @@
 						</li>
 						<?php else: ?>
 						<li class="uk-parent <?php if($active=='facturas'){echo 'uk-active';} ?>">
-							<a href="#"><i class="uk-icon-file-text-alt"></i> Facturas</a>
+							<a href="#"><i class="uk-icon-file-text-o"></i> Facturas</a>
 							<ul class="uk-nav-sub">
 								<li><a href="<?php echo base_url('facturas') ?>">Nueva</a></li>
 								<li><a href="<?php echo base_url('facturas/listar') ?>">Emitidas</a></li>

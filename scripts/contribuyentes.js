@@ -5,6 +5,7 @@ contribuyentes.js => validacion de form
 
 
 var base="http://localhost:81/facturacion/";
+base="http://bitwebdev.com/facturacion/";
 
 /* Validar form */
 $("#regemisor").validate({

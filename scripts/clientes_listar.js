@@ -5,6 +5,7 @@ COPY & PASTE de clientes.js
 */
 
 var base="http://localhost:81/facturacion/";
+base="http://bitwebdev.com/facturacion/";
 listar();										//listar clientes
 
 /* Mostrar tabla de clientes */

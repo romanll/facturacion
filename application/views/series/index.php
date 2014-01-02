@@ -18,14 +18,15 @@ series => vista para creacion de series
 		<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>
 	</head>
 	<body>
+		<?php $this->load->view('template/menu_top'); ?>
 		<div id="container" class="uk-container uk-container-center">
 			<div class="uk-grid data-uk-grid-margin">
 				<!-- left -->
-				<div id="left" class="uk-width-medium-1-6">
+				<div id="left" class="uk-width-medium-1-6 uk-hidden-large">
 					<?php $this->load->view('template/menu_left'); ?>
 				</div>
 				<!-- right -->
-				<div id="right" class="uk-width-medium-5-6">
+				<div id="right" class="uk-width-medium-5-6 uk-width-large-1-1">
 					<form action="<?php echo base_url('configuracion/crearserie'); ?>" class="uk-form" method="post" id="crearserie">
 						<fieldset>
 							<legend>Crear Serie</legend>
@@ -39,7 +40,7 @@ series => vista para creacion de series
 									<input type="text" class="uk-width-1-1" name="folio_inicial" id="folio_inicial" placeholder="Folio inicial">
 								</div>
 								<div class="uk-width-2-10">
-									<button class="uk-button uk-button-primary"><i class="uk-icon-ok"></i> Crear</button>
+									<button class="uk-button uk-button-primary"><i class="uk-icon-check"></i> Crear</button>
 								</div>
 							</div>
 
