@@ -106,7 +106,10 @@ class St
 		$xmlresult=$response->stampResult->xml;
 		if(!empty($xmlresult)){
 			file_put_contents($pathxmlt, $xmlresult);
-			return $response->stampResult->CodEstatus;
+			//borrar campos que no me interesan para respuesta
+			unset($response->stampResult->xml,$response->stampResult->Incidencias);
+			return $response->stampResult;
+
 		}
 		else{
 			return $response->stampResult->Incidencias;

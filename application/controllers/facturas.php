@@ -12,6 +12,7 @@ class Facturas extends CI_Controller {
         parent::__construct();
         $this->load->model('contributors');
         $this->load->model('customers');
+        $this->load->model('invoice');
         $this->load->library('crearxml');
         date_default_timezone_set('America/Tijuana');
         $this->emisor=$this->session->userdata('idemisor');
@@ -153,8 +154,8 @@ class Facturas extends CI_Controller {
 
     /* ==== CONFUGURACIONES ==== */
         $pathcertificado="./ufiles/".$emisor->rfc."/".$emisor->cer;         //Ruta del certificado del emisor
-        $filename=$emisor->rfc.date("YmdHis").".xml";                       //Nombre archivo generado
-        $xmlfile="./ufiles/$emisor->rfc/$filename";                         //Ruta archivo a generar
+        $filename=$emisor->rfc.date("YmdHis");                       //Nombre archivo generado
+        $xmlfile="./ufiles/$emisor->rfc/$filename.xml";                         //Ruta archivo a generar
         $cadenafile="./ufiles/$emisor->rfc/cadena.txt";                     //Ruta archivo cadena a generar
         $pem="./ufiles/$emisor->rfc/$emisor->pem";                          //Ruta de archivo pem de emisor
     /* ==== CONFUGURACIONES:END ==== */
@@ -199,9 +200,9 @@ class Facturas extends CI_Controller {
         if($cadena){
             //sellar
             $sello=$this->st->sello($pem,$cadena);
-            //$sello=$this->st->sellar("./ufiles/$emisor->rfc/$emisor->rfc.pem.txt",$cadena);
-            //Agregar atributo sello a xml
+            //Agregar atributo sello a xml y a datos del comprobante
             $this->crearxml->agregarsello($sello);
+            $datoscomp['sello']=$sello;
             //Volver a generar xml
             $this->crearxml->saveXML($xmlfile);
         }
@@ -217,27 +218,39 @@ class Facturas extends CI_Controller {
         //Una vez sellado, hacer el timbrado del archivo
         $xmltfile=$xmlfile;                                         //Archivo XML timbrado
         $timbrar=$this->st->timbrar($xmlfile,$xmltfile);
+    /* ==== TIMBRAR:END ==== */
 
         //respuesta
         $pathxml=pathinfo($xmltfile);
-        if(is_string($timbrar)){
-            $response['mensaje']=$timbrar;
+        if(isset($timbrar->CodEstatus)){
+            $response['mensaje']=$timbrar->CodEstatus;
             $response['xml']=base_url("facturas/descargarxml/{$pathxml['basename']}");
-            /* Respuestas cuando es satisfactorio
-            <s1:Fecha>2013-05-26T16:07:41.3448595</s1:Fecha>
-            <s1:NoCertificadoSAT>12345678901234567890</s1:NoCertificadoSAT>
-            <s1:UUID>B88C86A7-33F7-4D5A-B928-75D7C6CFCA86</s1:UUID>
-            <s1:SatSeal>
-            */
-
             //Ahora guardar en DB
+            $factura=array(
+                "receptor"=>$datoscliente['rfc'],
+                "fecha"=>date("Y-m-d H:i:s"),
+                "emisor"=>$this->emisor,
+                "nodo_comprobante"=>json_encode($datoscomp),
+                "nodo_emisor"=>json_encode($datosemisor),
+                "nodo_receptor"=>json_encode($datoscliente),
+                "nodo_conceptos"=>json_encode($items),
+                "nodo_impuestos"=>json_encode($impuestos),
+                "nodo_timbre"=>json_encode($timbrar),
+                "estado"=>"timbrado",
+                "filename"=>$filename
+            );
+            $insertar=$this->invoice->create($factura);
+            if($insertar){
+                $response['success']="Factura creada";
+            }
+            else{
+                $response['error']="Error al guardar factura en DB";
+            }
         }
         else{
             $response['error']="Error al timbrar";
         }
-        echo json_encode($response);
-    /* ==== TIMBRAR:END ==== */
-        
+        echo json_encode($factura);
 
     }
 
