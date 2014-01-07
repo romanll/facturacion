@@ -4,7 +4,7 @@ validaciones para usuarios/
 */
 
 var base="http://localhost:81/facturacion/";
-base="http://bitwebdev.com/facturacion/";
+//base="http://bitwebdev.com/facturacion/";
 listar();
 
 /* Validar form */

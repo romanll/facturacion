@@ -5,7 +5,7 @@ series.js => admin de series
 
 
 var base="http://localhost:81/facturacion/";
-base="http://bitwebdev.com/facturacion/";
+//base="http://bitwebdev.com/facturacion/";
 listar();
 
 /* Validar form */

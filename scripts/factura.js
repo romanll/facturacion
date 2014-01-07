@@ -4,7 +4,7 @@ factura.js : creacion de factura, validacion de campos
 */
 
 var base="http://localhost:81/facturacion/";
-base="http://bitwebdev.com/facturacion/";
+//base="http://bitwebdev.com/facturacion/";
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
 
@@ -66,7 +66,7 @@ $("#generar").click(function(event){
     }
     var request = $.ajax({
         type: "POST",
-        url: base+"facturas/crear",
+        url: base+"facturas/facturar",
         data:{cliente:cliente,conceptos:items,comprobante:comprobante},
         dataType:'json'
     });
@@ -88,6 +88,8 @@ $("#generar").click(function(event){
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
+        //habiliatr boton
+        $("#generar").attr('disabled',false);
     });
 })
 
@@ -120,36 +122,6 @@ $("#descuento").keyup(function(event){
     relistar();
 })
 
-/* Autocompletado receptor aka clientes */
-/*
-$("#receptor").autocomplete({
-    source: base+"clientes/buscar",
-    minLength:2,
-    select:function(event,ui){
-        //console.log(event);
-        //console.log(ui.item);
-        var d=ui.item;                        //obj resultado a datos
-        var direccion=d.calle+' '+d.nexterior+', Colonia '+d.colonia+', '+d.localidad+', '+d.estado+', '+d.pais+' C.P. '+d.cp;
-        $("#nombre").val(d.nombre);           //asignar valores a inputs de lectura
-        $("#rfc").val(d.rfc);
-        $("#direccion").val(direccion);
-    }
-});
-*/
-/* Autocompletado conceptos aka productos o servicios */
-/*
-$("#concepto").autocomplete({
-    source:base+"conceptos/buscar",
-    minLength:2,
-    select:function(event,ui){
-        item=ui.item;
-        var c=ui.item;
-        $("#descripcion").val(c.descripcion);
-        $("#precio").val(c.valor);
-        $("#unidad").val(c.unidad);
-    }
-})
-*/
 
 /* Al cambiar el valor del select concepto */
 $("#concepto").change(function(event){

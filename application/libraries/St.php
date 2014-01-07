@@ -49,10 +49,42 @@ class St
 		return false;
 	}
 
-	/* Sellar (archivollave,archivocadena) devuelve el sello en array*/
+	/* Retornar cadena Original: archivo xml, retorna 'String'|FALSE */
+	function cadena($pathxml,$pathcadena){
+		//Generar archivo con la cadena original
+		exec(".\libxslt\xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
+		if(file_exists($pathcadena)){
+			$cadena=file_get_contents($pathcadena);								//leo del archivo generado que contiene la cadena
+        	file_put_contents($pathcadena, $cadena);							//sobreescribo de nuevo archivo
+        	return file_get_contents($pathcadena);								//Retorno TRUE, contenido de archivo cadena
+		}
+		return false;				//FALSE si no se creo archivo
+	}
+
+
+	/* Retornar sello para archivo XML*/
+	function sello($pemfile,$cadenastring){
+		$pkeyid = openssl_get_privatekey(file_get_contents($pemfile));
+	    openssl_sign($cadenastring, $cadena_generada, $pkeyid, OPENSSL_ALGO_SHA1);
+	    openssl_free_key($pkeyid);
+	    $sello = base64_encode($cadena_generada);
+	    return $sello;
+	}
+
+
+	/* Sellar (archivo_llave.pem,ruta_archivo_cadena) devuelve el sello en string*/
 	function sellar($llavepriv,$cadena){
-		exec(".\openssl\openssl dgst -sha1 -sign $llavepriv $cadena | .\openssl\openssl enc -base64 -A ",$sello);
-		return $sello;
+		/* FORMA PELIGROSA :P */
+		//exec(".\openssl\openssl dgst -sha1 -sign $llavepriv $cadena | .\openssl\openssl enc -base64 -A ",$sello);
+		//return $sello[0];
+
+		/* FORMA IDONEA */
+		$cc=file_get_contents($cadena);
+		$pkeyid = openssl_get_privatekey(file_get_contents($llavepriv));
+	    openssl_sign($cc, $cadena_generada, $pkeyid, OPENSSL_ALGO_SHA1);
+	    openssl_free_key($pkeyid);
+	    $sello = base64_encode($cadena_generada);
+	    return $sello;
 	}
 
 	/* Timbrar xml(archivonotimbrado,archivotimbrado)*/

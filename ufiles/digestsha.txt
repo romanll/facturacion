@@ -1,1 +1,0 @@
-SHA1(./ufiles/AAA010101AAA/cadena.txt)= 2a6d759d59c859861f5e81d4e56cc57fbd3ffe62

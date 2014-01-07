@@ -49,9 +49,14 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
+$db['default']['username'] = 'root';
+$db['default']['password'] = 'mysql';
+$db['default']['database'] = 'facturacion';
+/*
 $db['default']['username'] = 'u239755_roman';
 $db['default']['password'] = '0xE3WwxPfWg0';
 $db['default']['database'] = 'u239755_facturacion';
+*/
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
