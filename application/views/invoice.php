@@ -9,75 +9,6 @@ $a=str_replace("\n", "", "||1.0|DED6E41C-FD99-458C-ABA4-56F9DFAE9903|2014-01-05T
 <head>
 	<meta charset="UTF-8">
 	<title>Invoice</title>
-	<style>
-
-	.page
-	{
-		height:279mm;
-		width:216mm;
-		page-break-after:always;
-	}
-	body{
-		font-size: 8pt;
-		font-family: "Trebuchet MS", Helvetica, sans-serif;
-	}
-	h1,h4,h5{
-		font-size: 9pt;
-		margin: 0;
-	}
-	h4{
-		font-weight: normal;
-		color:#CC0033;
-	}
-	table{
-		border-collapse: collapse;
-		width: 100%;
-	}
-	#header{
-		height: 63mm;
-		/*background-color: #666;*/
-	}
-	#dfactura{width: 30%}
-		.zebra{text-align: center;}
-		.zebra .z{
-			background-color: #eee;
-		}
-		.zebra .seriefolio{background-color: #fff;}
-		.zebra td{
-			border: 1px solid #eee;
-			padding-left: .7em;
-			padding-right: .7em;
-		}
-	#logo{vertical-align:top;}
-	#emisor{width: 50%;vertical-align: top;}
-	#receptor{width: 70%;}
-	#receptor td{padding: 0 10px 1px 2px;}
-	#receptor,#conceptos table,#conceptos tbody tr{border: 1px solid #eee;}
-	#conceptos{
-		height: 130mm;
-		/*background-color: #777;*/
-	}
-	.txtc{text-align: center;}
-	.txtr{text-align: right;padding-right: 3px;}
-	th{
-		font-weight: normal;
-		background-color: #eee;
-		padding-left: 7px;
-		padding-right: 7px;
-	}
-	#pagos{width: 77%;float: left;}
-	#pagos table{width: 95%;}
-	#pagos .zebra{text-align: left;border:1px solid #ccc;}
-	#pagos .zebra td{border:none;padding-left: 2px;padding-right: 1px;}
-	h5{color:#555;font-weight: normal;font-size: 8pt;}
-	#impuestos{width: 23%;float: right;}
-	#impuestos table{
-		border:1px solid #ccc;
-		/*float: right;*/
-	}
-	#sellos h5{font-size: 6pt;}
-	
-	</style>
 </head>
 <body>
 	<!-- Logo, Emisor & Datos de factura -->
@@ -247,8 +178,7 @@ $a=str_replace("\n", "", "||1.0|DED6E41C-FD99-458C-ABA4-56F9DFAE9903|2014-01-05T
 		<div style="clear:both;">
 		<div id="sellos">
 			<div id="qr" style="width:20%;float:left;">
-				QR Code
-				Revisar Anexo 20 pag 109
+				<img src="./ufiles/AAA010101AAA/qr.png" alt="qr">
 			</div>
 			<div style="width:80%;font-size:6pt;">
 				<h5>Sello CFDI</h5>

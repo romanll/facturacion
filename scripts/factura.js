@@ -44,7 +44,7 @@ $("#generar").click(function(event){
     $(this).attr('disabled',true);
     event.preventDefault(); 
     var cliente={                                       //datos de cliente
-        id:$("#receptor").val(),
+        id:$("#idcliente").val(),
         rfc:$("#rfc").val()
     }
     var comprobante={                                   //datos de comprobante: iva, descuento
@@ -198,6 +198,7 @@ $("#serie").change(function(event){
             option.text=cliente.nombre;
             option.value=cliente.idcliente;
             $("#receptor").append(option);
+            $("#idcliente").val(cliente.idcliente);
         });
     });
     request.fail(function(jqXHR, textStatus){

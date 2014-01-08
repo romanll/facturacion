@@ -31,6 +31,7 @@
 									<select name="receptor" id="receptor" class="uk-width-1-1">
 										<option value="NA">Seleccionar</option>
 									</select>
+									<input type="hidden" value="0" id="idcliente">
 								</div>
 								<!--
 								<div class="uk-width-3-10">
