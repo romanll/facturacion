@@ -28,7 +28,7 @@ table{border-collapse: collapse;width: 100%;}
 	}
 #logo{vertical-align:top;}
 #emisor{width: 50%;vertical-align: top;}
-#receptor{width: 70%;}
+#receptor{width: 60%;}
 #receptor td{padding: 0 10px 1px 2px;}
 #receptor,#conceptos table,#conceptos tbody tr{border: 1px solid #eee;}
 #conceptos{height: 120mm;}

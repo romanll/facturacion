@@ -333,6 +333,8 @@ class Facturas extends CI_Controller {
                     'nombre'=>$filename,
                     'qr'=>$qr
                 );
+                //print_r($datospdf);
+                //die();
                 $this->makepdf($datospdf);
             }
             
@@ -370,6 +372,7 @@ class Facturas extends CI_Controller {
     Recibe qrcode, emisor,receptor,conceptos,totales en un arreglo
     */
     function makepdf($datos){
+        $this->load->helper('numeros');                     // P/convertir numeros a letras
     //EMISOR
         $emisor=$datos['emisor'];
         $emisorhtml="<h1>{$emisor['nombre']}</h1>{$emisor['rfc']}<br>{$emisor['direccion1']}<br>{$emisor['direccion2']}";
@@ -383,19 +386,15 @@ class Facturas extends CI_Controller {
                 <td class="txtc">'.$item['cantidad'].'</td>
                 <td class="txtc">'.$item['unidad'].'</td>
                 <td>'.$item['descripcion'].'</td>
-                <td class="txtc">'.$item['valorUnitario'].'</td>
-                <td class="txtr">'.$item['importe'].'</td>
+                <td class="txtc">'.$this->moneda($item['valorUnitario']).'</td>
+                <td class="txtr">'.$this->moneda($item['importe']).'</td>
             </tr>';
         }
     //TIMBRE & SELLO
         /*
         <!-- 
         Cadena Original del complemento de certificación del SAT:
-        1.- version 1.0
-        2.- el UUID
-        3.- fecha de certificacion
-        4.- sello digital CFDI
-        5.- numero de certificado 
+        ||version 1.0|UUID||fecha de certificacion||sello digital CFDI||numero de certificado|
         */
         $comprobante=$datos['comprobante'];
         $timbre=$datos['timbre'];
@@ -403,6 +402,7 @@ class Facturas extends CI_Controller {
         $timbre_html.="<h5>Sello SAT</h5>{$timbre->SatSeal}";
         $timbre_html.="<h5>Cadena Original del complemento de certificación del SAT</h5>";
         $timbre_html.="||1.0|{$timbre->UUID}|{$timbre->Fecha}|<br>{$comprobante['sello']}|{$timbre->NoCertificadoSAT}||";
+        $totalletra=num_to_letras($comprobante['total']);
     //CREAR HTML
         $html='
         <html>
@@ -414,7 +414,7 @@ class Facturas extends CI_Controller {
                     <tr>
                         <!-- Logo : solo funciona con ruta relativa -->
                         <td id="logo">
-                            <img src="./images/cc.jpg" width="120"/>
+                            <img src="./images/logo.png" width="120"/>
                         </td>
                         <!-- Emisor -->
                         <td id="emisor">'.$emisorhtml.'</td>
@@ -428,25 +428,25 @@ class Facturas extends CI_Controller {
                                     <td><i>Folio Fiscal</i></td>
                                 </tr>
                                 <tr>
-                                    <td>1234567890000</td>
+                                    <td>'.$timbre->UUID.'</td>
                                 </tr>
                                 <tr class="z">
                                     <td><i>No. Certificado Digital</i></td>
                                 </tr>
                                 <tr>
-                                    <td>00000000000</td>
+                                    <td>'.$comprobante['noCertificado'].'</td>
                                 </tr>
                                 <tr class="z">
                                     <td><i>No. Certificado SAT</i></td>
                                 </tr>
                                 <tr>
-                                    <td>00000000000000</td>
+                                    <td>'.$timbre->NoCertificadoSAT.'</td>
                                 </tr>
                                 <tr class="z">
                                     <td><i>Fecha y hora de certificación</i></td>
                                 </tr>
                                 <tr>
-                                    <td>Fecha - Hora</td>
+                                    <td>'.$timbre->Fecha.'</td>
                                 </tr>
                             </table>
                         </td>
@@ -485,7 +485,7 @@ class Facturas extends CI_Controller {
                         <tr>
                             <td colspan="3"></td>
                             <td class="txtc"><i>Subtotal</i></td>
-                            <td class="txtr">5,896.00</td>
+                            <td class="txtr">'.$this->moneda($comprobante['subTotal']).'</td>
                         </tr>
                     </tfoot>    
                 </table>
@@ -497,11 +497,11 @@ class Facturas extends CI_Controller {
                     <table class="zebra">
                         <tr class="z">
                             <td><h5>Importe con letra</h5></td>
-                            <td>Cuatro mil setecientos noventa y siete pesos (0/100MN)</td>
+                            <td>'.$totalletra.'</td>
                         </tr>
                         <tr>
                             <td><h5>Forma de Pago</h5></td>
-                            <td>Pago en una sola exhibicion</td>
+                            <td>'.$comprobante['formaDePago'].'</td>
                         </tr>
                         <tr class="z">
                             <td><h5>Condiciones de Pago</h5></td>
@@ -509,7 +509,7 @@ class Facturas extends CI_Controller {
                         </tr>
                         <tr>
                             <td><h5>Método de Pago</h5></td>
-                            <td>Efectivo</td>
+                            <td>'.$comprobante['metodoDePago'].'</td>
                         </tr>
                         <tr class="z">
                             <td><h5>No. Cta. Pago</h5></td>
@@ -528,7 +528,7 @@ class Facturas extends CI_Controller {
                         </tr>
                         <tr>
                             <td><h5>Subtotal</h5></td>
-                            <td class="txtr">00.00</td>
+                        <td class="txtr">'.$this->moneda($comprobante['subTotal']).'</td>
                         </tr>
                         <tr>
                             <td><h5>Descuento</h5></td>
@@ -548,7 +548,7 @@ class Facturas extends CI_Controller {
                         </tr>
                         <tr>
                             <td>Total</td>
-                            <td class="txtr">0000.00</td>
+                            <td class="txtr">'.$this->moneda($comprobante['total']).'</td>
                         </tr>
                     </table>
                 </div>
@@ -571,6 +571,16 @@ class Facturas extends CI_Controller {
         $this->pdfm->WriteHTML($html);
         $filename="./ufiles/AAA010101AAA/{$datos['nombre']}.pdf";
         $this->pdfm->Output($filename,'F');
+    }
+
+/* FORMATO MONEDA */
+    /*
+    Devolver cadena con formato moneda de $valor 
+    09/01/2014
+    */
+    function moneda($valor){
+        $v=number_format($valor,2,'.',',');
+        return "$".$v;
     }
 
 //DESCARGAR XML

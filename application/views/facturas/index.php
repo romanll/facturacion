@@ -33,14 +33,6 @@
 									</select>
 									<input type="hidden" value="0" id="idcliente">
 								</div>
-								<!--
-								<div class="uk-width-3-10">
-									<input type="text" class="uk-width-1-1" id="receptor" name="receptor" placeholder="Identificador de cliente">
-								</div>
-								<div class="uk-width-1-10">
-									<button class="uk-button uk-button-success uk-width-1-1" type="button"><i class="uk-icon-search"></i></button>
-								</div>
-								-->
 							</div>
 							<!-- Nombre | Razon Social -->
 							<div class="uk-grid">
@@ -123,7 +115,7 @@
 						<div class="uk-grid">
 							<div class="uk-width-2-10"><label for="condiciones" class="uk-form-label">Condiciones de pago</label></div>
 							<div class="uk-width-4-10">
-								<input type="text" class="uk-width-1-1" name="condiciones" id="condiciones" placeholder="Contado" required>
+								<input type="text" class="uk-width-1-1" value="Contado" name="condiciones" id="condiciones" placeholder="Contado" required>
 							</div>
 						</div>
 						<!-- Metodo de pago y Num Cta-->
@@ -182,10 +174,6 @@
 								</select>
 							</div>
 						</div>
-						<div class="uk-grid">
-							<div class="uk-width-2-10"><label for="" class="uk-form-label"></label></div>
-							<div class="uk-width-2-10"></div>
-						</div>
 					</form>
 					<!-- AGREGAR CONCEPTOS -->
 					<h3 class="uk-h3">Concepto(s)</h3>
@@ -194,16 +182,10 @@
 						<div class="uk-grid">
 						    <div class="uk-width-2-10"><label for="concepto" class="uk-form-label">Concepto</label></div>
 						   	<div class="uk-width-6-10">
-						        <!--<input type="text" class="uk-width-1-1" id="concepto" name="concepto" placeholder="Identificador del bien o servicio" required>-->
 						        <select name="concepto" id="concepto" class="uk-width-1-1">
 						        	<option value="NA">Seleccionar producto/servicio</option>
 						        </select>
 						    </div>
-						    <!--
-						    <div class="uk-width-1-10">
-					        	<button class="uk-button uk-button-success uk-width-1-1" type="button" data-uk-modal="{target:'#modal',bgclose:false}"><i class="uk-icon-search"></i></button>
-					        </div>
-					    	-->
 					   	</div>
 					   	<!-- valor & unidad -->
 					    <div class="uk-grid">

@@ -8,7 +8,7 @@ var base="http://localhost:81/facturacion/";
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
 
-NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 300 })
+NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 600 })
 
 $(document).ready(function () {
     $(document).ajaxStart(function () {
@@ -44,7 +44,7 @@ $("#generar").click(function(event){
     $(this).attr('disabled',true);
     event.preventDefault(); 
     var cliente={                                       //datos de cliente
-        id:$("#idcliente").val(),
+        id:$("#receptor").val(),
         rfc:$("#rfc").val()
     }
     var comprobante={                                   //datos de comprobante: iva, descuento
