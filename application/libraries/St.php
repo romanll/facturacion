@@ -25,12 +25,17 @@ class St
 	/* generar llave privada, genera archivo .pem */
 	function genkey($pathkey,$pwd,$pathfile){
 		exec(".\openssl\openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");
+		//exec("openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");
+		//Ver si se genero archivo
+		if(file_exists($pathfile)){return TRUE;}
+		else{return FALSE;}
 	}
 
 	/* Obtener certificado formato String */
 	/* Posible cambio: Generar certificado cuando se obtenga el archivo .cer (al registra datos de contribuyente) */
 	function getcert($pathcer){
-		exec(".\openssl\openssl x509 -inform DER -in $pathcer",$cer);
+		//exec(".\openssl\openssl x509 -inform DER -in $pathcer",$cer);
+		exec("openssl x509 -inform DER -in $pathcer",$cer);
 		array_pop($cer);							//elimino el ultimo elemento
 		array_shift($cer);							//y el primero
 		$certificado=implode($cer);					//despues convierto a string
@@ -41,6 +46,7 @@ class St
 	function getcadena($pathxml,$pathcadena){
 		//Generar archivo con la cadena original
 		exec(".\libxslt\xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
+		//exec("xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
 		if(file_exists($pathcadena)){
 			$cadena=file_get_contents($pathcadena);								//leo del archivo generado que contiene la cadena
         	file_put_contents($pathcadena, $cadena);							//sobreescribo de nuevo archivo
@@ -53,6 +59,7 @@ class St
 	function cadena($pathxml,$pathcadena){
 		//Generar archivo con la cadena original
 		exec(".\libxslt\xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
+		//exec("/usr/bin/xsltproc ./libxslt/cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
 		if(file_exists($pathcadena)){
 			$cadena=file_get_contents($pathcadena);								//leo del archivo generado que contiene la cadena
         	file_put_contents($pathcadena, $cadena);							//sobreescribo de nuevo archivo

@@ -17,11 +17,122 @@ class Contribuyentes extends CI_Controller {
 
     function index() {
     	$this->load->library('form_validation');
-        $this->load->view('contribuyentes/registro');
+        //$this->load->view('contribuyentes/registro');
+        $this->load->view('contribuyentes/index');
+    }
+
+    /* Hacer el registro de los datos del nuevo emisor 11/01/2014 */
+    function registro(){
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
+        $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('correo', 'Correo', 'trim|required|valid_email|xss_clean');
+        $this->form_validation->set_rules('contrasena', 'Contrase&ntilde;a', 'trim|required|min_length[5]|max_length[12]|xss_clean');
+        $this->form_validation->set_rules('timbres', 'Timbres', 'trim|required|integer');
+        $this->form_validation->set_rules('razonsoc', 'Raz&oacute;n Social', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('rfc', 'RFC', 'trim|required|alpha_numeric|xss_clean');
+        $this->form_validation->set_rules('regimen', 'R&eacute;gimen Fiscal', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('pais', 'Pa&iacute;s', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('cp', 'Codigo Postal', 'trim|required|integer|xss_clean');
+        $this->form_validation->set_rules('municipio', 'Municipio', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('colonia', 'Colonia', 'trim|xss_clean');
+        $this->form_validation->set_rules('localidad', 'Localidad', 'trim|xss_clean');
+        $this->form_validation->set_rules('calle', 'Calle', 'trim|xss_clean');
+        $this->form_validation->set_rules('noexterior', 'No. Exterior', 'trim|xss_clean');
+        $this->form_validation->set_rules('nointerior', 'No. Interior', 'trim|xss_clean');
+        $this->form_validation->set_rules('referencia', 'Referencia', 'trim|xss_clean');
+        $this->form_validation->set_rules('llave_password', 'Contrase&ntilde;a de llave', 'trim|xss_clean');
+        $this->form_validation->set_rules('nocertificado', 'No Certificado', 'trim|required|numeric');
+        if($this->form_validation->run() == FALSE){
+            $this->load->view('contribuyentes/index');
+        }
+        else{
+            $datos=$this->input->post();
+            //Obtener el nombre de la carpeta destino: RFC del emisor
+            $rfcemisor=$datos['rfc'];
+            //Crear carpeta destino
+            $carpeta="./ufiles/$rfcemisor";
+            if(!is_dir($carpeta)){                              //Si NO existe carpeta, crearla
+                if(!mkdir($carpeta)){                           //Si no se crea, mostrar error y salir
+                    echo json_encode(array("error"=>"No se pudo crear carpeta destino"));
+                    die();
+                }
+            }
+            //Usar la carpeta destino: subir los archivos CER & Key
+            $config=array(
+                'upload_path'=>$carpeta,
+                'allowed_types'=>'*',
+                'remove_spaces'=>true,
+                'max_size'=>2048
+            );
+            $this->load->library('upload', $config);                        //Cargar la libreria
+            foreach ($_FILES as $key => $value) {
+                if(isset($value['name'])){
+                    if(!$this->upload->do_upload($key)){                    //Errores de subida
+                        $error = $this->upload->display_errors();
+                        $response['error']=$error;
+                    }
+                    else{                                                   //se subio correctamente
+                        $data = $this->upload->data();
+                        if($data['file_ext']==".cer"){                      //certificado
+                            $datos['cer']=$data['file_name'];
+                        }
+                        else if($data['file_ext']==".key"){                 //llave
+                            $datos['key']=$data['file_name'];
+                        }
+                        else{                                               //error:borrar archivo no permitido
+                            unlink($data['full_path']);
+                        }
+                    }
+                }
+            }
+            //Generar Archivo PEM
+            $keyfile="$carpeta/{$datos['key']}";
+            if(file_exists($keyfile)){                                      //Necesito el archivo KEy para generarlo
+                $filepem="$carpeta/$rfcemisor.pem.txt";                     //Ruta del nuevo archivo
+                $this->st->genkey($keyfile,$datos['llave_password'],$filepem);
+                //comprobar que exista y guardar
+            }
+            //Comprobar que dichos archivos existan
+            //Si existen, insertar en DB los datos
+                //Si existen, tratar de insertar los datos en DB
+                //Si no se inserta, borrar los archivos
+            //Si no existen, mostrar error
+
+
+                            $pathkey="$carpeta/{$data['file_name']}";       //ruta archivo .key
+                            $pathpem="$carpeta/$rfcemisor.pem.txt";         //ruta del archivo a generar RFC.pem.txt
+                            $this->st->genkey($pathkey,$datos['llave_password'],$pathpem);
+                            $datos['pem']="$rfcemisor.pem.txt";
+            /*
+                [nombre] => aaaaa
+                [correo] => qqqq@cofrreoo.com
+                [contrasena] => 1111111
+                [timbres] => 10
+                [telefono] => 
+                [razonsoc] => qqqqq
+                [rfc] => aaaaa
+                [tipo] => Persona Fisica
+                [regimen] => general
+                [pais] => México
+                [estado_label] => 2
+                [estado] => Baja California
+                [municipio] => Ensenada
+                [cp] => 22222
+                [colonia] => aaaaaa
+                [localidad] => llllll
+                [calle] => qqqqqqq
+                [referencia] => aaaaaa
+                [noexterior] => 111
+                [nointerior] => 2222
+                [llave_password] => 123456
+                [nocertificado] => 1111111
+            */
+        }
     }
 
     //registrar datos fiscales del usuario emisor, solo ADMIN tiene acceso a esta funcion
-    function registro(){
+    /*function registro(){
     	$emisor=$this->uri->segment(3);
         //ver si existe usuario id $emisor en tabla 'usuarios' y tambien en tabla 'emisor'
         if($this->existe($emisor)){                             //ok existe usuario, ver si ya se han registrado sus datos
@@ -36,11 +147,11 @@ class Contribuyentes extends CI_Controller {
         else{                                                   //aun NO existe usuario, mandar a form para registro
             redirect('usuarios');
         }  	
-    }
+    }*/
 
     /* Procesar peticion de registro */
     function registrar(){
-        $this->load->library('sslex');
+        $this->load->library('st');             //Crear llave
     	$this->load->library('form_validation');
     	$this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
     	$this->form_validation->set_rules('razonsoc', 'Raz&oacute;n Social', 'trim|required|xss_clean');
@@ -114,7 +225,7 @@ class Contribuyentes extends CI_Controller {
                                     //generar llave .pem
                                     $pathkey=$path."/".$data['file_name'];          //ruta archivo .key
                                     $pathpem=$path."/".$datos['rfc'].".pem.txt";        //ruta del archivo a generar XXX.pem.txt
-                                    $this->sslex->genkey($pathkey,$datos['llave_password'],$pathpem);
+                                    $this->st->genkey($pathkey,$datos['llave_password'],$pathpem);
                                     $update_data['pem']=$datos['rfc'].".pem.txt";
                                 }
                                 else{                               //error:borrar archivo no permitido

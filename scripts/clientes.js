@@ -5,7 +5,7 @@ clientes.js => Registrar clientes, administrarlos, etc...
 
 
 var base="http://bitwebdev.com:81/facturacion/";
-//base="http://bitwebdev.com/facturacion/";
+//base="http://162.243.127.174/facturacion/";
 listar();										//listar clientes
 $("#pais").val('México');						//al inicio asignar valor de "México"
 

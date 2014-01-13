@@ -20,17 +20,46 @@
 				</div>
 				<!-- right -->
 				<div id="right" class="uk-width-medium-5-6 uk-width-large-1-1">
-					<form class="uk-form" method="post" enctype="multipart/form-data" action='<?php echo base_url("contribuyentes/registrar"); ?>' id="regemisor">
+					<form class="uk-form" method="post" enctype="multipart/form-data" action='<?php echo base_url("contribuyentes/registro"); ?>' id="regemisor">
 						<fieldset>
-							<legend>Registro de datos de Contribuyente</legend>
 							<!-- validacion -->
 							<?php echo validation_errors(); ?>
-							<!-- user -->
-							<input type="hidden" id="ue" name="ue" value="<?php echo set_value('ue',$this->uri->segment(3)); ?>">
+							<h3 class="uk-h3">Datos de cuenta</h3>
+							<!-- Nombre -->
+							<div class="uk-grid">
+								<div class="uk-width-1-6"><label for="nombre" class="uk-form-label">Nombre</label></div>
+								<div class="uk-width-5-6">
+									<input type="text" class="uk-width-1-1" id="nombre" name="nombre" placeholder="Nombre de emisor o contacto" value="<?php echo set_value('nombre'); ?>" required>
+								</div>
+							</div>
+							<!-- E-mail & Password -->
+							<div class="uk-grid">
+								<div class="uk-width-1-6"><label for="correo" class="uk-form-label">Correo Electronico</label></div>
+								<div class="uk-width-2-6">
+									<input type="email" class="uk-width-1-1" id="correo" name="correo" placeholder="ejemplo@correo.com" value="<?php echo set_value('correo'); ?>" required>
+								</div>
+								<div class="uk-width-1-6"><label for="contrasena" class="uk-form-label">Contrase&ntilde;a</label></div>
+								<div class="uk-width-2-6">
+									<input type="password" class="uk-width-1-1" id="contrasena" name="contrasena" value="<?php echo set_value('contrasena'); ?>" required>
+								</div>
+							</div>
+							<!-- # Timbres & Telefono -->
+							<div class="uk-grid">
+								<div class="uk-width-1-6"><label for="timbres" class="uk-form-label">Cantidad de timbres</label></div>
+								<div class="uk-width-1-6">
+									<input type="text" class="uk-width-1-1" id="timbres" name="timbres" value="<?php echo set_value('timbres'); ?>" placeholder="0,1,2">
+								</div>
+								<div class="uk-width-1-6 uk-push-1-6"><label for="telefono" class="uk-form-label">Tel&eacute;fono/Celular</label></div>
+								<div class="uk-width-2-6 uk-push-1-6">
+									<input type="text" class="uk-width-1-1" id="telefono" name="telefono" value="<?php echo set_value('telefono'); ?>" placeholder="opcional">
+								</div>
+							</div>
+
+							<h3 class="uk-h3">Datos de Contribuyente</h3>
 							<!-- nombre|razon social -->
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="razonsoc">Raz&oacute;n Social</label></div>
-								<div class="uk-width-5-6"><input class="uk-width-1-1" type="text" name="razonsoc" id="razonsoc" value="<?php echo set_value('razonsoc'); ?>" placeholder="Nombre o Raz&oacute;n Social"></div>
+								<div class="uk-width-5-6"><input class="uk-width-1-1" type="text" name="razonsoc" id="razonsoc" value="<?php echo set_value('razonsoc'); ?>" placeholder="Nombre o Raz&oacute;n Social" required></div>
 							</div>
 							<!-- RFC -->
 							<div class="uk-grid">
@@ -69,20 +98,23 @@
 								<div class="uk-width-1-6"><label class="uk-form-label" for="cp">Codigo Postal</label></div>
 								<div class="uk-width-1-6"><input class="uk-width-1-1" type="text" id="cp" name="cp" maxlength="5" value="<?php echo set_value('cp'); ?>" required></div>
 							</div>
-							<!-- Colonia -->
+							<!-- Colonia & Localidad-->
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="colonia">Colonia</label></div>
-								<div class="uk-width-4-6"><input class="uk-width-1-1" type="text" id="colonia" name="colonia" value="<?php echo set_value('colonia'); ?>" placeholder="Colonia"></div>
-							</div>
-							<!-- Localidad -->
-							<div class="uk-grid">
+								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="colonia" name="colonia" value="<?php echo set_value('colonia'); ?>" placeholder="Colonia">
+								</div>
 								<div class="uk-width-1-6"><label class="uk-form-label" for="localidad">Localidad</label></div>
-								<div class="uk-width-4-6"><input class="uk-width-1-1" type="text" id="localidad" name="localidad" value="<?php echo set_value('localidad'); ?>" placeholder="Ciudad o población"></div>
+								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="localidad" name="localidad" value="<?php echo set_value('localidad'); ?>" placeholder="Ciudad o población">
+								</div>
 							</div>
-							<!-- calle -->
+							<!-- calle & Referencia -->
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="calle">Calle</label></div>
-								<div class="uk-width-4-6"><input class="uk-width-1-1" type="text" id="calle" name="calle" value="<?php echo set_value('calle'); ?>" placeholder="Avenida, calle o camino"></div>
+								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="calle" name="calle" value="<?php echo set_value('calle'); ?>" placeholder="Avenida, calle o camino">
+								</div>
+								<div class="uk-width-1-6"><label class="uk-form-label" for="referencia">Referencia</label></div>
+								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" id="referencia" name="referencia" value="<?php echo set_value('referencia'); ?>" placeholder="Opcional: Alguna referencia de ubicaci&oacute;n adicional">
+								</div>
 							</div>
 							<!-- No Exterior e Interior -->
 							<div class="uk-grid">
@@ -91,12 +123,13 @@
 								<div class="uk-width-1-6"><label class="uk-form-label" for="nointerior">No. Interior</label></div>
 								<div class="uk-width-1-6"><input class="uk-width-1-1" type="text" id="nointerior" name="nointerior" value="<?php echo set_value('nointerior'); ?>"></div>
 							</div>
-							<!-- Referencia -->
-							<div class="uk-grid">
-								<div class="uk-width-1-6"><label class="uk-form-label" for="referencia">Referencia</label></div>
-								<div class="uk-width-4-6"><input class="uk-width-1-1" type="text" id="referencia" name="referencia" value="<?php echo set_value('referencia'); ?>" placeholder="Opcional: Alguna referencia de ubicaci&oacute;n adicional"></div>
-							</div>
 							<!-- Archivos del contribuyente -->
+							<div class="uk-grid">
+								<div class="uk-width-1-6"><label for="logo" class="uk-form-label">Logo</label></div>
+								<div class="uk-width-4-6">
+									<input type="file" name="logo" id="logo" accept="image/*" required>
+								</div>
+							</div>
 							<!-- CER -->
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="certificado">Certificado (.cer)</label></div>
@@ -111,18 +144,15 @@
 									<input type="file" name="llave" id="llave" accept=".key" required>
 								</div>
 							</div>
-							<!-- PASSWORD -->
+							<!-- PASSWORD & # CER -->
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="llave_password">Contrase&ntilde;a de llave</label></div>
 								<div class="uk-width-2-6">
 									<input type="text" class="uk-width-1-1" name="llave_password" id="llave_password" value="<?php echo set_value('llave_password'); ?>">
 								</div>
-							</div>
-							<!-- # CER -->
-							<div class="uk-grid">
 								<div class="uk-width-1-6"><label for="nocertificado" class="uk-form-label">No Certificado</label></div>
 								<div class="uk-width-2-6">
-									<input type="text" class="uk-width-1-1" name="nocertificado" id="nocertificado" required>
+									<input type="text" class="uk-width-1-1" name="nocertificado" id="nocertificado" value="<?php echo set_value('nocertificado'); ?>" required>
 								</div>
 							</div>
 							<!-- boton -->

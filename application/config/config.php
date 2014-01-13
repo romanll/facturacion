@@ -15,7 +15,7 @@
 |
 */
 $config['base_url']	= 'http://localhost:81/facturacion/';
-//$config['base_url']	= 'http://bitwebdev.com/facturacion/';
+//$config['base_url']	= 'http://162.243.127.174/facturacion/';
 
 /*
 |--------------------------------------------------------------------------

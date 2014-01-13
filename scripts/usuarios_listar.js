@@ -4,7 +4,7 @@ copy paste de usuarios.js
 */
 
 var base="http://localhost:81/facturacion/";
-//base="http://bitwebdev.com/facturacion/";
+//base="http://162.243.127.174/facturacion/";
 //listar();
 
 /* Mostrar tabla de usuarios */

@@ -5,7 +5,7 @@ contribuyentes.js => validacion de form
 
 
 var base="http://localhost:81/facturacion/";
-//base="http://bitwebdev.com/facturacion/";
+//base="http://162.243.127.174/facturacion/";
 
 /* Validar form */
 $("#regemisor").validate({
@@ -41,8 +41,8 @@ $("#regemisor").validate({
 	},
 	submitHandler: function(form) {
 	    //console.log('ok, enviar form');
-	    enviar(form);
-	    //form.submit();
+	    //enviar(form);
+	    form.submit();
 	}
 });
 
@@ -87,10 +87,11 @@ function enviar(formulario){
     request.done(function(result){
     	if(!result.error){
     		$.each(result, function(index, val) {
-	        	$("#estado_label").append("<option value="+val.idestado+">"+val.estado+"</option>");
+    			if(val.estado=="Baja California"){$("#estado_label").append("<option value="+val.idestado+" selected>"+val.estado+"</option>");}
+    			else{$("#estado_label").append("<option value="+val.idestado+">"+val.estado+"</option>");}
 	        });
 	        $("#estado").val($("#estado_label option:selected").text());		//por defecto tendra el valor del estado en select
-	        municipios(1);														//llenar los municipios del primer estado (x defecto)
+	        municipios(2);														//llenar los municipios del primer estado (x defecto)
     	}
     	else{
     		console.log(result.error);

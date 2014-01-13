@@ -341,6 +341,7 @@ class Facturas extends CI_Controller {
         }
         else{
             $response['error']="Error al timbrar";
+            $response['inc']=$timbrar;
         }
         echo json_encode($response);
     }
@@ -569,7 +570,7 @@ class Facturas extends CI_Controller {
         $this->pdfm->WriteHTML($stylesheet,1); // The parameter 1 tells that this is css/style only and no html
         //escribir html
         $this->pdfm->WriteHTML($html);
-        $filename="./ufiles/AAA010101AAA/{$datos['nombre']}.pdf";
+        $filename="./ufiles/{$emisor['rfc']}/{$datos['nombre']}.pdf";
         $this->pdfm->Output($filename,'F');
     }
 
@@ -601,18 +602,22 @@ class Facturas extends CI_Controller {
     function descargar(){
         $filetype=$this->uri->segment(3);           // <= Puede ser xml|pdf
         $filename=$this->uri->segment(4);           // <= Nombre del archivo a descargar
-        $file=$filename.$filetype;                  // <= Nombre completo archivo
+        $file="$filename.$filetype";                // <= Nombre completo archivo
         $rfcemisor=$this->session->userdata('rfc'); // <= RFC emisor
         $pathfile="./ufiles/$rfcemisor/$file";
         //Buscar archivo
-        if(file_exists($filename.$filetype)){
+        if(file_exists($pathfile)){
             if($filetype=="xml"){
                 $data=file_get_contents($pathfile);
                 header('Content-type: text/xml');
-                header("Content-Disposition: attachment; filename={$xmlname}");
+                header("Content-Disposition: attachment; filename={$file}");
+                echo $data;
             }
             elseif ($filetype=="pdf") {
-                echo "Descargar PDF";
+                $data=file_get_contents($pathfile);
+                header("Content-type: application/pdf");
+                header("Content-disposition: attachment; filename={$file}");
+                echo $data;
             }
             else{
                 echo "Definir XML|PDF";
