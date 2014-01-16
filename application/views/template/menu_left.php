@@ -3,7 +3,7 @@
 						<li>
 							<a href="<?php echo base_url('contribuyentes/perfil'); ?>">
 								<i class="uk-icon-user"></i>  
-								<?php $user=explode("@", $this->session->userdata('correo')); echo $user[0]; ?>
+								<?php $user=explode("@", $this->session->userdata('email')); echo $user[0]; ?>
 							</a>
 						</li>
 						<li class="uk-parent <?php if($active=='configuracion'){echo 'uk-active';} ?>">

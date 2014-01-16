@@ -4,7 +4,7 @@ factura.js : creacion de factura, validacion de campos
 */
 
 var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
+base="http://162.243.127.174/facturacion/";
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
 
@@ -78,6 +78,7 @@ $("#generar").click(function(event){
         if(result.mensaje){
             var msj='<div class="uk-alert uk-alert-success">'+result.mensaje+'</div>';
             msj+="<a href='"+result.xml+"'><i class='uk-icon-cloud-download'></i> Descargar xml timbrado</a>";
+            msj+="<br><a href='"+result.pdf+"' target='_blank'><i class='uk-icon-cloud-download'></i> Ver PDF</a>";
             $(".modal_content").html(msj);
         }
         else{

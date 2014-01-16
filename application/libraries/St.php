@@ -22,31 +22,43 @@ class St
 	}
 
 
-	/* generar llave privada, genera archivo .pem */
+	/*
+		Generar llave PEM (archivo)
+		Recibe path de archivo KEY, PASSWORD del archivo y la ruta del archivo PEM a generar
+		Retorna TRUE | FALSE existe archivo
+	*/
 	function genkey($pathkey,$pwd,$pathfile){
-		exec(".\openssl\openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");
-		//exec("openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");
+		exec(".\openssl\openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");		//Local
+		//exec("openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");				//VPS
 		//Ver si se genero archivo
 		if(file_exists($pathfile)){return TRUE;}
 		else{return FALSE;}
 	}
 
-	/* Obtener certificado formato String */
-	/* Posible cambio: Generar certificado cuando se obtenga el archivo .cer (al registra datos de contribuyente) */
+	/*
+		Genera certificado (string)
+		Recibe ruta del archivo CER
+		Retorna String del certificado
+	*/
+	/* Posible cambio: Generar certificado cuando se obtenga el archivo .cer (al registrar datos de contribuyente) */
 	function getcert($pathcer){
-		//exec(".\openssl\openssl x509 -inform DER -in $pathcer",$cer);
-		exec("openssl x509 -inform DER -in $pathcer",$cer);
+		exec(".\openssl\openssl x509 -inform DER -in $pathcer",$cer);						//Local
+		//exec("openssl x509 -inform DER -in $pathcer",$cer);								//VPS
 		array_pop($cer);							//elimino el ultimo elemento
 		array_shift($cer);							//y el primero
 		$certificado=implode($cer);					//despues convierto a string
 		return $certificado;
 	}
 
-	/* Obtener la cadena Original */
+	/*
+		Obtener la cadena original
+		Recibe ruta de archivo XML, y del archivo a crear
+		Retorna TRUE | FALSE 
+	*/
 	function getcadena($pathxml,$pathcadena){
 		//Generar archivo con la cadena original
-		exec(".\libxslt\xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
-		//exec("xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
+		exec(".\libxslt\xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");		//Local
+		//exec("xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");				//VPS
 		if(file_exists($pathcadena)){
 			$cadena=file_get_contents($pathcadena);								//leo del archivo generado que contiene la cadena
         	file_put_contents($pathcadena, $cadena);							//sobreescribo de nuevo archivo
@@ -55,11 +67,15 @@ class St
 		return false;
 	}
 
-	/* Retornar cadena Original: archivo xml, retorna 'String'|FALSE */
+	/*
+		Obtener la cadena original
+		Recibe ruta de archivo XML, y del archivo a crear
+		Retorna TRUE (String) | FALSE 
+	*/
 	function cadena($pathxml,$pathcadena){
 		//Generar archivo con la cadena original
-		exec(".\libxslt\xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
-		//exec("/usr/bin/xsltproc ./libxslt/cadenaoriginal_3_2.xslt $pathxml > $pathcadena");
+		exec(".\libxslt\xsltproc .\libxslt\cadenaoriginal_3_2.xslt $pathxml > $pathcadena");		//Local
+		//exec("/usr/bin/xsltproc ./libxslt/cadenaoriginal_3_2.xslt $pathxml > $pathcadena");		//VPS
 		if(file_exists($pathcadena)){
 			$cadena=file_get_contents($pathcadena);								//leo del archivo generado que contiene la cadena
         	file_put_contents($pathcadena, $cadena);							//sobreescribo de nuevo archivo
@@ -68,8 +84,11 @@ class St
 		return false;				//FALSE si no se creo archivo
 	}
 
-
-	/* Retornar sello para archivo XML*/
+	/*
+		Generar sello de archivo XML
+		Recibe ruta de archivo PEM y la CADENA en String
+		Retorna sello en string
+	*/
 	function sello($pemfile,$cadenastring){
 		$pkeyid = openssl_get_privatekey(file_get_contents($pemfile));
 	    openssl_sign($cadenastring, $cadena_generada, $pkeyid, OPENSSL_ALGO_SHA1);
@@ -79,7 +98,10 @@ class St
 	}
 
 
-	/* Sellar (archivo_llave.pem,ruta_archivo_cadena) devuelve el sello en string*/
+	/* 
+	Sellar (archivo_llave.pem,ruta_archivo_cadena) devuelve el sello en string
+	MISMA DE ARRIBA, BORRAR ESTA
+	*/
 	function sellar($llavepriv,$cadena){
 		/* FORMA PELIGROSA :P */
 		//exec(".\openssl\openssl dgst -sha1 -sign $llavepriv $cadena | .\openssl\openssl enc -base64 -A ",$sello);
@@ -94,7 +116,11 @@ class St
 	    return $sello;
 	}
 
-	/* Timbrar xml(archivonotimbrado,archivotimbrado)*/
+	/* 
+	Timbrar xml(archivonotimbrado,archivotimbrado)
+	Recibe ruta del archivo a timbrar y de XML timbrado (a generar);
+	Retorna mensaje de API del PAC
+	*/
 	function timbrar($pathxml,$pathxmlt){
 		//leer archivo
 		$xml_file=fopen($pathxml,"rb");

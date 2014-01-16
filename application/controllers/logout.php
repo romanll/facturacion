@@ -9,8 +9,8 @@ class Logout extends CI_Controller {
 
     function index() {
         $data=array(
-            'correo'=>NULL,
-            'iduser' => NULL,
+            'email'=>NULL,
+            //'iduser' => NULL,
             'logged_in' => FALSE,
             'tipo'=>NULL
         );

@@ -41,8 +41,8 @@ $("#regemisor").validate({
 	},
 	submitHandler: function(form) {
 	    //console.log('ok, enviar form');
-	    //enviar(form);
-	    form.submit();
+	    enviar(form);
+	    //form.submit();
 	}
 });
 

@@ -36,23 +36,11 @@ class Usuarios extends CI_Controller {
             //cambiar indices para agregar a DB
             $datos['email']=$datos['correo'];
             $datos['password']=md5($datos['contrasena']);           //md5 al passsword
-            $datos['type']=$datos['tipo'];
-            if(isset($datos['telefono'])){                          //Recibi telefono?
-                $datos['phone']=$datos['telefono'];                 //cambiar su indice
-                unset($datos['telefono']);                          //y borrarlo despues 
-            }
-            if($datos['type']==1){$redireccionar=FALSE;}            //si tipo es '1', NO redireccionar
-            //si es '2' es contribuyente, redireccionar a registrar los datos fiscales de este
-            else{$redireccionar=TRUE;}
             //borrar indices innecesarios
-            unset($datos['correo'],$datos['contrasena'],$datos['tipo']);
+            unset($datos['correo'],$datos['contrasena']);
             $insertar=$this->users->create($datos);                 //Insertar en DB
             if($insertar){                                          //si se inserto, mostrar mensaje OK
                 $response['success']="Usuario creado correctamente.";
-                if($redireccionar){                                 //si es contribuyente, completar datos fiscales
-                    $response['success'].="<br>Redireccionando...";
-                    $response['url']=base_url("contribuyentes/registro/$insertar");
-                }
                 // ToDo: MANDAR CORREO DE CONFIRMACION CON SUS DATOS DE ACCESO ************************
             }
             else{                                                   //si NO, mostrar error
@@ -78,6 +66,26 @@ class Usuarios extends CI_Controller {
         else{
             $this->load->view('usuarios/lista', $data, FALSE);
         }
+    }
+
+    /*
+    Eliminar Usuario
+    Recibe $idusuario en url
+    Retorna mensaje de exito|error
+    13/01/2013
+    */
+    function eliminar(){
+        $id=$this->uri->segment(3);
+        if($id){
+            $this->users->delete($id);                                  //Eliminar
+            $existe=$this->users->exist(array('idusuario'=>$id));       //Ver si existe aun
+            if($existe>0){$response["error"]="Error al eliminar usuario, intente mas tarde.";}
+            else{$response["success"]="Usuario eliminado del sistema.";}
+        }
+        else{
+            $response["error"]="Especifique identificador de usuario a eliminar.";
+        }
+        echo json_encode($response);
     }
 
 

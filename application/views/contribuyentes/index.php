@@ -120,8 +120,8 @@
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="noexterior">No. Exterior</label></div>
 								<div class="uk-width-1-6"><input class="uk-width-1-1" type="text" id="noexterior" name="noexterior" value="<?php echo set_value('noexterior'); ?>"></div>
-								<div class="uk-width-1-6"><label class="uk-form-label" for="nointerior">No. Interior</label></div>
-								<div class="uk-width-1-6"><input class="uk-width-1-1" type="text" id="nointerior" name="nointerior" value="<?php echo set_value('nointerior'); ?>"></div>
+								<div class="uk-width-1-6 uk-push-1-6"><label class="uk-form-label" for="nointerior">No. Interior</label></div>
+								<div class="uk-width-1-6 uk-push-1-6"><input class="uk-width-1-1" type="text" id="nointerior" name="nointerior" value="<?php echo set_value('nointerior'); ?>"></div>
 							</div>
 							<!-- Archivos del contribuyente -->
 							<div class="uk-grid">

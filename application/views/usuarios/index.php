@@ -31,28 +31,10 @@
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="correo">Correo</label></div>
 								<div class="uk-width-2-6"><input class="uk-width-1-1" type="email" name="correo" id="correo" placeholder="correo@dominio.com" value="<?php echo set_value('correo'); ?>" required></div>
+							</div>
+							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="contrasena">Contrase&ntilde;a</label></div>
 								<div class="uk-width-2-6"><input class="uk-width-1-1" type="password" name="contrasena" id="contrasena" placeholder="contrase&ntilde;a" value="<?php echo set_value('contrasena'); ?>" required></div>
-							</div>
-							<!-- Tipo de usuario -->
-							<div class="uk-grid">
-								<div class="uk-width-1-6"><label class="uk-form-label" for="tipo">Tipo de usuario</label></div>
-								<div class="uk-width-2-6">
-									<select name="tipo" id="tipo" class="uk-width-1-1">
-										<option value="2">Contribuyente</option>
-										<option value="1">Adminstrador</option>
-									</select>
-								</div>
-								<!-- Si es contribuyente, asignar numero de timbres -->
-								<div class="uk-width-1-6"><label class="uk-form-label" for="timbres">Numero de timbres</label></div>
-								<div class="uk-width-1-6">
-									<input type="text" id="timbres" name="timbres" class="uk-width-1-1" placeholder="10,20,30...">
-								</div>
-							</div>
-							<!-- telefono -->
-							<div class="uk-grid">
-								<div class="uk-width-1-6"><label class="uk-form-label" for="telefono">Tel&eacute;fono</label></div>
-								<div class="uk-width-2-6"><input class="uk-width-1-1" type="text" name="telefono" id="telefono" placeholder="6161654321"></div>
 							</div>
 							<div class="uk-grid">
 								<div class="uk-width-1-1">

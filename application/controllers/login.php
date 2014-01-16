@@ -34,39 +34,52 @@ class Login extends CI_Controller {
             //Almacenar datos de acceso
             $datos=array('email'=>$this->input->post('correo'),'password'=>md5($this->input->post('contrasena')));
             //print_r($datos);
-            $query=$this->users->read($datos);                      //Comprobar que exista en DB
-            if($query->num_rows()>0){
-                $session_data=array();                              //existe, crear SESSION
-                $session_data['logged_in']=TRUE;                    //logeado
-                foreach ($query->result() as $row) {
-                    $session_data['correo']=$row->email;
-                    $session_data['iduser']=$row->idusuario;
-                    $session_data['tipo']=$row->type;
-                }
-                $where=array('usuario'=>$session_data['iduser']);
-                $q2=$this->contributors->read($where);                    //leer los datos fiscales del usuario
-                if($q2->num_rows()>0){
-                    foreach ($q2->result() as $row) {
-                        $session_data['nombre']=$row->razonsocial;
-                        $session_data['idemisor']=$row->idemisor;
-                        $session_data['rfc']=$row->rfc;
-                    }
-                }
-                $this->session->set_userdata($session_data);        //crear la session
-                if($session_data['tipo']==1){
-                    redirect('usuarios');                                     //redireccionar al area de gestion de usuarios (es admin)
-                    //echo 'redireccionar al area de gestion de usuarios (es admin)';
-                }
-                else{
-                    redirect('clientes');                                     //redireccionar al area de gestion de datos del contribuyente o clientes
-                    //echo 'redireccionar al area de gestion de datos del contribuyente logeado';
-                }
+            //Ver si se encuentra en Usuario|Emisor
+            $querye=$this->contributors->read($datos);                      //Comprobar que exista en tabla emisor
+            if($querye->num_rows()>0){
+                $this->crearSesion($querye->result_array(),'emisor');
             }
-            else{                                                   //No existe, mostrar mensaje error
-                $data['error']="Correo o Contrase&ntilde;a incorrecta(s).<br>Vuelve a intentar.";
-                $this->load->view('login/index', $data, FALSE);
+            else{
+                $queryu=$this->users->read($datos);                         //Comprobar que exista en tabla usuarios
+                if($queryu->num_rows()>0){
+                    $this->crearSesion($queryu->result_array(),'usuario');
+                }
+                else{                                                   //No existe, mostrar mensaje error
+                    $data['error']="Correo o Contrase&ntilde;a incorrecta(s).<br>Vuelve a intentar.";
+                    $this->load->view('login/index', $data, FALSE);
+                }
             }
     	}
+    }
+
+    /*
+        Crear Sesion
+        Recibe los datos del usuario|emisor
+        Retorna nada, solo redirecciona
+        13/01/14
+    */
+    function crearSesion($datos,$tipo){
+        $datos=$datos[0];
+        //print_r($datos);die();
+        $datos['logged_in']=TRUE;
+        if($tipo=="emisor"){                                                //crear sesion Emisor
+            //Ya no interesa KEY, ni contraseña llave, ni contraseña cuenta, ni telefono, ni numero de timbres restantes
+            unset($datos['key'],$datos['keypwd'],$datos['password'],$datos['timbres'],$datos['telefono']);
+            $datos['tipo']=2;
+        }
+        else{                                                               //crear sesion de usuario
+            unset($datos['password']);                                      //No interesa password
+            $datos['tipo']=1;
+        }
+        $this->session->set_userdata($datos);                               //crear la session
+        if($session_data['tipo']==1){
+            redirect('usuarios');                                           //redireccionar al area de gestion de usuarios (es admin)
+            //echo 'redireccionar al area de gestion de usuarios (es admin)';
+        }
+        else{
+            redirect('clientes');                                     //redireccionar al area de gestion de datos del contribuyente o clientes
+            //echo 'redireccionar al area de gestion de datos del contribuyente logeado';
+        }
     }
 
     /* Estoy logeado? */

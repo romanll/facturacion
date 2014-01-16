@@ -7,7 +7,7 @@ base.css => Estilos base para proyecto
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700);
 
 /* Redefinir algunos estilos */
-.uk-form .uk-grid,.mg7 {margin-top: 7px !important;}
+.uk-form .uk-grid,.mg7,.uk-modal .uk-grid {margin-top: 7px !important;}
 table th,table td.uk-text-bold{font-family: 'Lato';}
 .uk-table td{vertical-align: middle;}
 .uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
@@ -108,4 +108,15 @@ form input[type="checkbox"]{
 
 
 /* remover icon red */
-a.remove{color: #FF0000;}
+a.remove,a.eliminar{color: #FF0000;}
+a.editar{color: #FF6600;}
+a.info{color: #6699FF}
+
+/*
+Lato Bold
+14/01/14
+*/
+.lato-bold{
+	font-family: "Lato";
+	font-weight: 700;
+}

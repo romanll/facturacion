@@ -32,12 +32,8 @@ function enviar(formulario){
         alertify.set({ delay: 10000 });
         if(result.success){
             alertify.success(result.success);   //mostrar mensaje exito
-            if(result.url){						//si obtengo una url, redireccionar a datos de contribuyente
-            	window.setTimeout(function(){
-            		location.href=result.url;
-            	},6000)
-            }
             $(formulario)[0].reset();           //Resetear form
+            listar();
         }
         else{
             alertify.error(result.error);       //mostrar error

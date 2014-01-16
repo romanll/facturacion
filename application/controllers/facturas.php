@@ -289,6 +289,7 @@ class Facturas extends CI_Controller {
         if(isset($timbrar->CodEstatus)){
             $response['mensaje']=$timbrar->CodEstatus;
             $response['xml']=base_url("facturas/descargar/xml/{$pathxml['filename']}");
+            $response['pdf']=base_url("facturas/descargar/pdf/{$pathxml['filename']}");
         //GUARDAR EN DB
             /*$factura=array(
                 "receptor"=>$datoscliente['rfc'],
@@ -333,8 +334,6 @@ class Facturas extends CI_Controller {
                     'nombre'=>$filename,
                     'qr'=>$qr
                 );
-                //print_r($datospdf);
-                //die();
                 $this->makepdf($datospdf);
             }
             

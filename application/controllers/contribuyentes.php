@@ -8,11 +8,14 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Contribuyentes extends CI_Controller {
 
+    private $permiso=FALSE;
+
     function __construct() {
         parent::__construct();
         $this->load->model('contributors');
         $this->load->model('users');
         $this->load->model('series');
+        $this->permiso=$this->privilegios();
     }
 
     function index() {
@@ -24,6 +27,7 @@ class Contribuyentes extends CI_Controller {
     /* Hacer el registro de los datos del nuevo emisor 11/01/2014 */
     function registro(){
         $this->load->library('form_validation');
+        $this->load->library('St');
         $this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
         $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
         $this->form_validation->set_rules('correo', 'Correo', 'trim|required|valid_email|xss_clean');
@@ -74,80 +78,100 @@ class Contribuyentes extends CI_Controller {
                     }
                     else{                                                   //se subio correctamente
                         $data = $this->upload->data();
-                        if($data['file_ext']==".cer"){                      //certificado
-                            $datos['cer']=$data['file_name'];
-                        }
-                        else if($data['file_ext']==".key"){                 //llave
-                            $datos['key']=$data['file_name'];
-                        }
-                        else{                                               //error:borrar archivo no permitido
-                            unlink($data['full_path']);
+                        switch ($data['file_ext']) {                        //determinar tipo de archivo
+                            case '.cer':
+                                $datos['cer']=$data['file_name'];
+                                break;
+                            case '.key':
+                                $datos['key']=$data['file_name'];
+                                break;
+                            case '.jpg':
+                            case '.jpeg':
+                            case '.png':
+                                $datos['logo']=$data['file_name'];
+                                //Si la imagen en mayor a 400px => Redimensionar imagen
+                                if(isset($data['image_width']) && $data['image_width']>300){
+                                    $this->redimensionar($data['full_path']);
+                                }
+                                break;
+                            default:
+                                unlink($data['full_path']);
+                                break;
                         }
                     }
                 }
             }
             //Generar Archivo PEM
             $keyfile="$carpeta/{$datos['key']}";
-            if(file_exists($keyfile)){                                      //Necesito el archivo KEy para generarlo
+            if(file_exists($keyfile)){                                      //Necesito el archivo KEY para generarlo
                 $filepem="$carpeta/$rfcemisor.pem.txt";                     //Ruta del nuevo archivo
-                $this->st->genkey($keyfile,$datos['llave_password'],$filepem);
+                $generado=$this->st->genkey($keyfile,$datos['llave_password'],$filepem);
                 //comprobar que exista y guardar
+                if($generado){
+                    $datos['pem']="$rfcemisor.pem.txt";
+                }
+                //Insertar en DB
+                $insertar=$this->insertar($datos);
+                if($insertar){
+                    $result["success"]="Registro insertado correctamente.";
+                }
+                else{
+                    //borrar los archivos
+                    //lanzar mensaje de error
+                    $result["error"]="Error en registro, intente mas tarde.";
+                }
+                echo json_encode($result);
             }
-            //Comprobar que dichos archivos existan
-            //Si existen, insertar en DB los datos
-                //Si existen, tratar de insertar los datos en DB
-                //Si no se inserta, borrar los archivos
-            //Si no existen, mostrar error
-
-
-                            $pathkey="$carpeta/{$data['file_name']}";       //ruta archivo .key
-                            $pathpem="$carpeta/$rfcemisor.pem.txt";         //ruta del archivo a generar RFC.pem.txt
-                            $this->st->genkey($pathkey,$datos['llave_password'],$pathpem);
-                            $datos['pem']="$rfcemisor.pem.txt";
-            /*
-                [nombre] => aaaaa
-                [correo] => qqqq@cofrreoo.com
-                [contrasena] => 1111111
-                [timbres] => 10
-                [telefono] => 
-                [razonsoc] => qqqqq
-                [rfc] => aaaaa
-                [tipo] => Persona Fisica
-                [regimen] => general
-                [pais] => México
-                [estado_label] => 2
-                [estado] => Baja California
-                [municipio] => Ensenada
-                [cp] => 22222
-                [colonia] => aaaaaa
-                [localidad] => llllll
-                [calle] => qqqqqqq
-                [referencia] => aaaaaa
-                [noexterior] => 111
-                [nointerior] => 2222
-                [llave_password] => 123456
-                [nocertificado] => 1111111
-            */
+            else{
+                echo json_encode(array('error'=>'Archivo KEY no existe'));
+                die();
+            }
         }
     }
 
-    //registrar datos fiscales del usuario emisor, solo ADMIN tiene acceso a esta funcion
-    /*function registro(){
-    	$emisor=$this->uri->segment(3);
-        //ver si existe usuario id $emisor en tabla 'usuarios' y tambien en tabla 'emisor'
-        if($this->existe($emisor)){                             //ok existe usuario, ver si ya se han registrado sus datos
-            if($this->yaregistrado($emisor)){                   //ya fue registrado, mandar a editar sus datos
-                redirect('usuarios');                           // <<==== CAMBIAR REDIRECT
-            }
-            else{                                               //aun no ha sido registrado, mostra form
-                $this->load->library('form_validation');
-                $this->load->view('contribuyentes/registro');
-            }
+
+    
+    /* 
+        Insertar en DB
+        Recibe array de datos 
+        Retorna id insertado | FALSE
+        13/01/2013
+    */
+    function insertar($emisor){
+        //cambiar keys y agregar fecha de registro
+        $emisor['razonsocial']=$emisor['razonsoc'];
+        $emisor['ninterior']=$emisor['nointerior'];
+        $emisor['nexterior']=$emisor['noexterior'];
+        $emisor['keypwd']=$emisor['llave_password'];
+        $emisor['password']=md5($emisor['contrasena']);
+        $emisor['fecha']=date("Y-m-d");
+        unset($emisor['razonsoc'],$emisor['nointerior'],$emisor['noexterior'],$emisor['llave_password'],$emisor['contrasena'],$emisor['estado_label']);
+        //insertar datos
+        $insertar=$this->contributors->create($emisor);
+        return $insertar;
+    }
+
+    /*
+        Redimensionar imagen
+        Recibe url de imagen
+        Retorna TRUE | FALSE 
+        13/01/2013 
+    */
+    function redimensionar($pathimagen){
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = $pathimagen;
+        $config['create_thumb'] = FALSE;
+        $config['maintain_ratio'] = TRUE;
+        $config['width']     = 300;
+        $config['height']   = 240;
+        $this->load->library('image_lib', $config);
+        if ( ! $this->image_lib->resize())
+        {
+            //echo $this->image_lib->display_errors();
+            return FALSE;
         }
-        else{                                                   //aun NO existe usuario, mandar a form para registro
-            redirect('usuarios');
-        }  	
-    }*/
+        return TRUE;
+    }
 
     /* Procesar peticion de registro */
     function registrar(){
@@ -299,6 +323,68 @@ class Contribuyentes extends CI_Controller {
         $exist=$this->contributors->exist(array('usuario'=>$id_usuario));
         if($exist>0){return TRUE;}
         return FALSE;
+    }
+
+    /*
+        Listar contribuyentes en el sistema
+        Recibe Nada
+        Retorna Vista de lista
+        14/01/2014
+    */
+    function listar(){
+        //Ver si tengo privilegios para estar aqui
+        if($this->permiso){
+            //realizar $query
+            $query=$this->contributors->read();
+            if($query->num_rows()>0){
+                $data['result']=$query->result();
+            }
+            else{
+                $data['error']="No existen registros.";
+            }
+            $this->load->view('contribuyentes/listar',$data);
+        }
+        else{
+            //echo "No privilegios";
+            redirect();
+        }
+    }
+
+    /*
+        Revisar los privilegios de usuario en base a sesion
+        Retorna TRUE|FALSE
+        13/01/2014
+    */
+    function privilegios(){
+        $logeado=$this->session->userdata('logged_in');
+        if($logeado){                                           //Estoy logeado?
+            $tipo=$this->session->userdata('tipo');             //tipo de usuario
+            if($tipo==1){return TRUE;}                          //Soy usuario :)
+            else{return FALSE;}                                 //Soy un simple mortal
+        }
+        else{redirect('login');}                                //Nisiquiera estoy logeado
+    }
+
+    /*
+        Obtener info de emisor
+        Recibe en URL el identificador del emisor
+        Retorna los datos en HTML(vista)
+        14/01/14
+    */
+    function info(){
+        if($this->permiso){                                                 //ver si tengo privilegios
+            $emisor=$this->uri->segment(3);                                 //Identificador de emeisor
+            if($emisor){
+                $where=array("idemisor"=>$emisor);
+                $q=$this->contributors->read($where);
+                if($q->num_rows()>0){$data['datos']=$q->result();}
+                else{$data['error']="No existe emisor";}
+            }
+            else{$data['error']="Especifique identificador de emisor";}
+            $this->load->view('contribuyentes/info', $data, FALSE);
+        }
+        else{redirect();}                                                   //Redireccionar ya que no puedo estar aqui
+        
     }
 
 
