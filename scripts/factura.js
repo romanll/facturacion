@@ -4,9 +4,11 @@ factura.js : creacion de factura, validacion de campos
 */
 
 var base="http://localhost:81/facturacion/";
-base="http://162.243.127.174/facturacion/";
+//base="http://162.243.127.174/facturacion/";
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
+var cliente={};                                     //Datos de cliente
+var comprobante={}                                  //Datos de comprobante: iva, isr, pago, etc....
 
 NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 600 })
 
@@ -32,11 +34,71 @@ $("#additem").validate({
     },
     submitHandler: function(form) {
         //console.log('ok, enviar form');
-        agregar();
+        //agregar();
+        additem();
     }
 });
 
+
+/*
+    additem
+    Agregar item a lista de items
+    24/01/2012
+*/
+function additem(){
+    item.cantidad=$("#cantidad").val();                             // campo cantidad agregar a item
+    item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s) (valor*cantidad)
+    items[item.noidentificacion]=item;                              //agregar el item a la lista de items
+    //Obtener totales
+    totales();
+    /*
+    relistar();                                                     //recrear tabla items
+    $("#additem")[0].reset();                                       //vaciar form de item
+    $("#additem button").attr('disabled',true);                     //y deshabilitar boton de nuevo
+    */
+}
+
+/*
+    totales
+    calcular los totales en base a lista de items
+    24/01/2014
+*/
+function totales(){
+    var subtotal=0;
+    var ivatotal=0;
+    var ivaret=0;
+    var isr=0;
+    //Recorrer items, con jQuery ya que :P, 'val' es el objeto item
+    $.each(items, function(index, val) {
+        subtotal+=val.importe;
+    });
+    //hacer las operaciones con impuestos y descuentos
+    if(comprobante.desctipo=="porcentaje"){
+        comprobante.desc=(comprobante.desc/100)*subtotal;
+    }
+    ivatotal=(subtotal-comprobante.desc)*(comprobante.iva/100);         //IVA total, como es 16%, dividir /100
+    isr=(subtotal-comprobante.desc)*(comprobante.isr/100);              //ISR retenido
+    if(comprobante.ivaret=="2/3"){ivaret=(ivatotal*2)/3;}               //IVA retenido
+    //ahora poner en tabla correspondiente
+    $("#subtval").text(subtotal.toFixed(2));
+    $("#descval").text(comprobante.desc.toFixed(2));
+    $("#ivaval").text(ivatotal.toFixed(2));
+    $("#isrval").text(isr.toFixed(2));
+    $("#ivaretval").text(ivaret.toFixed(2));
+    $("#totalval").text((subtotal-comprobante.desc+ivatotal-ivaret-isr).toFixed(2));
+}
+
 /* ========== EVENTOS ========== */
+
+/* Mostrar/Ocultar areas en crear factura: impuestos, pago, descuento */
+$(document).on('click','a.toggle',function(event){
+    event.preventDefault();
+    var ref=$(this).attr('href');
+    var icon=$(this).children('i');
+    $(ref).slideToggle('slow',function(){
+        icon.toggleClass("uk-icon-caret-down uk-icon-caret-up");
+    });
+})
 
 /* Al dar click en 'generar factura' */
 $("#generar").click(function(event){
@@ -105,31 +167,58 @@ $(document).on('click','a.remove',function(event){
 
 /* Al cambiar valor de IVA  */
 $("#iva").change(function(event){
-    relistar();
+    //relistar();
+    comprobante.iva=$(this).val();                      //Asignar valor a 'iva' en comprobante
+    totales();                                          //Volver a calcular totales
 })
 
 /* Al cambiar valor de IVA RETENIDO */
 $("#ivaretencion").change(function(event){
-    relistar();
+    //relistar();
+    comprobante.ivaret=$(this).val();                   //Asignar valor a 'iva retenido' en comprobante
+    totales();                                          //Volver a calcular totales
 })
 
 /* Al cambiar valor de ISR */
 $("#isr").change(function(event){
-    relistar();
+    //relistar();
+    comprobante.isr=$(this).val();                      //Asignar valor a 'isr' en comprobante
+    totales();                                          //Volver a calcular totales
 })
 
 /* Al cambiar valor de descuento */
 $("#descuento").keyup(function(event){
-    relistar();
+    //relistar();
+    comprobante.desc=$(this).val();                     //Asignar valor a 'desc' en comprobante
+    comprobante.desctipo=$("#desctipo").val();          //y de una vez el tipo de descuento
+    totales();                                          //Volver a calcular totales
 })
 
+/* Al cambiar valor de descuento tipo: porcentaje||moneda */
+$("#desctipo").change(function(event){
+    //relistar();
+    comprobante.desctipo=$(this).val();                 //Asignar valor a 'desctipo' en comprobante
+    totales();                                          //Volver a calcular totales
+})
+
+/* Al cambiar valor de cantidad */
+$("#cantidad").keyup(function(event){
+    var valor=$("#concepto").val();
+    var cantidad=$(this).val();
+    if(!isNaN(valor) && cantidad.length!=0){
+        $("#additem button").attr('disabled',false);                //habilitar boton "agregar concepto"
+    }
+})
 
 /* Al cambiar el valor del select concepto */
 $("#concepto").change(function(event){
     var valor=$(this).val();
+    var cantidad=$("#cantidad").val();
     if(!isNaN(valor)){
-        $("#additem button").attr('disabled',false);                //habilitar boton "agregar concepto"
-        getItem(valor);                                             //obtener valorer de item
+        getItem(valor);                                             //obtener valor de item
+        if(cantidad.length!=0){
+            $("#additem button").attr('disabled',false);            //habilitar boton "agregar concepto"
+        }
     }
     else{
         $("#additem button").attr('disabled',true);                 //deshabilitar boton
@@ -154,13 +243,64 @@ $("#serie").change(function(event){
     var valor=$(this).val();
     if(!isNaN(valor)){
         getSerie(valor);
+        //Y mostrar campo Folio
+        $("#folioarea").slideDown('fast');
+        comprobante.serie=valor;                    //asignar serie en comprobante
     }
     else{
         $("#folio").val("");
+        //Y esconder campo Folio
+        $("#folioarea").slideUp('fast');
+        //y borrar de datos de comprobante
+        delete comprobante.serie;                   //eliminar serie y folio en comprobante
+        delete comprobante.folio;
     }
 });
 
+/* Al cambiar valor en tipo comprobante 24/01/2014 */
+$("#tipocomp").change(function(event){comprobante.tipocomp=$(this).val();});
+
+/* Al cambiar valor en forma pago 24/01/2014 */
+$("#formapago").change(function(event){comprobante.formapago=$(this).val();});
+
+/* Al cambiar valor en condiciones pago 24/01/2014 */
+$("#condiciones").keyup(function(event){comprobante.condapago=$(this).val();});
+
+/* Al cambiar valor en metodo pago 24/01/2014 */
+$("#metodopago").change(function(event){comprobante.metpago=$(this).val();});
+
+/* Al cambiar valor en cuenta pago 24/01/2014 */
+$("#numcuenta").keyup(function(event){comprobante.cuentapago=$(this).val();});
+
+/* Al cambiar valor en motivo descuento 24/01/2014 */
+$("#motivodesc").keyup(function(event){comprobante.descmotivo=$(this).val();});
+
+/* Al cambiar valor en moneda 24/01/2014 */
+$("#moneda").change(function(event){comprobante.moneda=$(this).val();});
+
+/* Al cambiar valor tipo cambio 24/01/2014 */
+$("#tipocambio").keyup(function(event){comprobante.tipocambio=$(this).val();});
+
+
 /*  ========== FUNCIONES ========== */
+
+/*
+    Incializar 'comprobante'
+    25/01/2014
+*/
+(function(){
+    comprobante.iva=$("#iva").val();
+    comprobante.ivaret=$("#ivaretencion").val();
+    comprobante.isr=$("#isr").val();
+    comprobante.desc=$("#descuento").val();
+    comprobante.desctipo=$("#desctipo").val();
+    comprobante.tipocomp=$("#tipocomp").val();
+    comprobante.formapago=$("#formapago").val();
+    comprobante.condapago=$("#condiciones").val();
+    comprobante.metpago=$("#metodopago").val();
+    comprobante.moneda=$("#moneda").val();
+    comprobante.tipocambio=$("#tipocambio").val();
+})();
 
 /* Llenar <select> series */
 (function(){
@@ -218,6 +358,7 @@ function getSerie(serie){
         var serie=result[0];
         //llenar el campo folio con el folio actual
         $("#folio").val(serie.folio_actual);
+        comprobante.folio=serie.folio_actual;
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
@@ -234,8 +375,6 @@ function getItem(iditem){
     });
     request.done(function(result){
         item=result;
-        //console.log(result);
-        //$("#descripcion").val(result.descripcion);
         $("#precio").val(result.valor);
         $("#unidad").val(result.unidad);
     });
@@ -253,6 +392,7 @@ function getCustomer(idcustomer){
         dataType:'json'
     });
     request.done(function(result){
+        cliente=result;                             //objeto cliente
         //console.log(result);
         var d=result;
         var direccion=d.calle+' '+d.nexterior+', Colonia '+d.colonia+', '+d.localidad+', '+d.estado+', '+d.pais+' C.P. '+d.cp;

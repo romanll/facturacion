@@ -1,4 +1,4 @@
-/*! UIkit 2.0.0 | http://www.getuikit.com | (c) 2013 YOOtheme | MIT License */
+/*! UIkit 2.2.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 
 /*
  * Based on https://github.com/garand/sticky
@@ -77,7 +77,7 @@
 
             if(stickyElement.data("sticky")) return;
 
-            var stickyId      = stickyElement.attr('id') || ("s"+Math.random()),
+            var stickyId      = stickyElement.attr('id') || ("s"+Math.ceil(Math.random()*10000)),
                 wrapper       = $('<div></div>').attr('id', stickyId + '-sticky-wrapper').addClass(o.clswrapper);
 
             stickyElement.wrapAll(wrapper);
@@ -138,4 +138,4 @@
       }, 0);
     });
 
-})(this, jQuery, jQuery.UIkit, $(window), $(document));
+})(this, jQuery, jQuery.UIkit, jQuery(window), jQuery(document));

@@ -73,6 +73,7 @@ class Clientes extends CI_Controller {
             $q=$this->customers->read(array('idcliente'=>$cliente));
             if($q->num_rows()>0){
                 $data['cliente']=$q->result();
+                //Almacenar datos del cliente en SESSION para despues obtenerlos para generar factura
             }
             else{
                 $data['error']="No existe cliente";

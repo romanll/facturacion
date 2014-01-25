@@ -1,6 +1,7 @@
 <?php 
-
-/* facturas: admininstracion de facturas */
+/*
+    facturas: admininstracion de facturas
+*/
 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
@@ -37,13 +38,19 @@ class Facturas extends CI_Controller {
 
     /* Mostrar por defecto facturas */
     function index() {
-        $this->load->view('facturas/index');
+        /*
+        echo "<pre>";
+        print_r($this->session->all_userdata());
+        echo "</pre>";
+        */
+        //$this->load->view('facturas/index');
+        $this->load->view('facturas/nuevo');
     }
 
 
 /* Crear factura: XML -> CadenaOriginal -> Sellar -> Timbrar -> Descargar XML timbrado */
     function facturar(){
-        $this->load->library('st');                                     //para generar certificado, sello y cadenaorg
+        $this->load->library('st');                                                 //para generar certificado, sello y cadenaorg
         /*Datos de entrada*/
         $cliente=$this->input->post('cliente');
         $items=$this->input->post('conceptos');

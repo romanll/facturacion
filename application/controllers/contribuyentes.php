@@ -52,6 +52,8 @@ class Contribuyentes extends CI_Controller {
         }
         else{
             $datos=$this->input->post();
+            $datos['email']=$datos['correo'];
+            unset($datos['correo']);
             //Obtener el nombre de la carpeta destino: RFC del emisor
             $rfcemisor=$datos['rfc'];
             //Crear carpeta destino

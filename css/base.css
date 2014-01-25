@@ -5,10 +5,11 @@ base.css => Estilos base para proyecto
 
 /* Importar algunas fuentes */
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
 
 /* Redefinir algunos estilos */
 .uk-form .uk-grid,.mg7,.uk-modal .uk-grid {margin-top: 7px !important;}
-table th,table td.uk-text-bold{font-family: 'Lato';}
+table th,table td.uk-text-bold{font-family: 'Lato';color: #000;}
 .uk-table td{vertical-align: middle;}
 .uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
 /* label generado por jquery.validate */
@@ -33,10 +34,7 @@ label.error{
 	background: #FFF !important;
 	border-top: none !important;
 }
-.alertify-button{
-	border-radius: 0 !important;
-}
-
+.alertify-button{border-radius: 0 !important;}
 .alertify-log-success {
 	background-color: #8cc14c !important;
   	color: #ffffff !important;
@@ -47,7 +45,6 @@ label.error{
   	color: #ffffff !important;
   	border: none !important;
 }
-
 .alertify-log{
 	border-radius: 0 !important;
 	text-shadow:none !important;
@@ -99,6 +96,24 @@ header{
 form input[type="checkbox"]{
 	margin-top: 4px;
 }
+form label{
+	margin-top: 3px !important;
+	float:left;
+}
+
+/* foliarea en crear fectura 24042014 */
+form #folioarea{
+	display: none;
+}
+/* tabla importes 24/01/2014 */
+table#importe td{
+	font-size: 19px;
+	font-family: "Open Sans";
+}
+/* crear factura areas */
+#descuentoarea,#pagoarea,#impuestosarea{
+	display: none;
+}
 
 /* De layout */
 #container{
@@ -119,4 +134,13 @@ Lato Bold
 .lato-bold{
 	font-family: "Lato";
 	font-weight: 700;
+}
+
+
+/*
+	Estilos de form
+	23/01/2014
+*/
+input[readonly]{
+	border-color:#EEE !important;
 }

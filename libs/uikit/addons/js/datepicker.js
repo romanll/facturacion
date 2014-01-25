@@ -1,4 +1,4 @@
-/*! UIkit 2.0.0 | http://www.getuikit.com | (c) 2013 YOOtheme | MIT License */
+/*! UIkit 2.2.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 
 (function(global, $, UI){
 
@@ -66,29 +66,36 @@
 
             content += '<table class="uk-datepicker-table">';
             content += '<thead>';
-            for(var i in data.weekdays) {
-                content += '<th>'+data.weekdays[i]+'</th>';
+            for(var i = 0; i < data.weekdays.length; i++) {
+                if (data.weekdays[i]) {
+                    content += '<th>'+data.weekdays[i]+'</th>';
+                }
             }
             content += '</thead>';
 
             content += '<tbody>';
-            for(var i in data.days) {
-                content += '<tr>';
-                for(var d in data.days[i]) {
+            for(var i = 0; i < data.days.length; i++) {
+                if (data.days[i] && data.days[i].length){
+                    content += '<tr>';
+                    for(var d = 0; d < data.days[i].length; d++) {
+                        if (data.days[i][d]) {
+                            var day = data.days[i][d],
+                                cls = [];
 
-                    var day = data.days[i][d],
-                        cls = [];
+                            if(!day.inmonth) cls.push("uk-datepicker-table-muted");
+                            if(day.selected) cls.push("uk-active");
 
-                    if(!day.inmonth) cls.push("uk-datepicker-table-muted");
-                    if(day.selected) cls.push("uk-active");
-
-                    content += '<td><a href="" class="'+cls.join(" ")+'" data-date="'+day.day.format()+'">'+day.day.format("D")+'</a></td>';
+                            content += '<td><a href="" class="'+cls.join(" ")+'" data-date="'+day.day.format()+'">'+day.day.format("D")+'</a></td>';
+                        }
+                    }
+                    content += '</tr>';
                 }
-                content += '</tr>';
             }
             content += '</tbody>';
 
             content += '</table>';
+
+
 
             return content;
         }
@@ -202,6 +209,8 @@
             return data;
         }
     });
+
+    UI["datepicker"] = DatePicker;
 
     // init code
     $(document).on("focus.datepicker.uikit", "[data-uk-datepicker]", function(e) {

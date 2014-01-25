@@ -1,4 +1,4 @@
-/*! UIkit 2.0.0 | http://www.getuikit.com | (c) 2013 YOOtheme | MIT License */
+/*! UIkit 2.2.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 
 (function($, UI){
 
@@ -28,8 +28,8 @@
     };
 
     FormPassword.defaults = {
-        "lblShow": "Mostrar",
-        "lblHide": "Esconder"
+        "lblShow": "Show",
+        "lblHide": "Hide"
     };
 
     UI["formPassword"] = FormPassword;
