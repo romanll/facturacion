@@ -31,6 +31,24 @@ class Crearxml
 		}
 	}
 
+	/*
+		Agregar complemento:TimbreFiscalDigital
+		Recibe en array los datos de timbrado
+		Inserta en XML el complemento
+	*/
+	function timbre($datos){
+		//Insertar nodo "Complemento"
+		$complemento=$this->root->appendChild($this->xmlfile->createElement('cfdi:Complemento'));
+		//Insertar nodo "TimbreFiscalDigital"
+		$timbre=$complemento->appendChild($this->xmlfile->createElementNS("http://www.sat.gob.mx/TimbreFiscalDigital","tfd:TimbreFiscalDigital"));
+		//Agregar atributo xsi:schemaLocation
+		$this->agregarAtributo("xsi:schemaLocation","http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/TimbreFiscalDigital/TimbreFiscalDigital.xsd",$timbre);
+		//Y los datos del array timbre
+		foreach ($datos as $key => $value) {
+			$this->agregarAtributo($key,$value,$timbre);
+		}
+	}
+
 
 	/* 
 	Agregar Emisor array(rfc,nombre,domicilio fiscal,calle...)
@@ -146,6 +164,7 @@ class Crearxml
 	}
 
 	function getxml(){
+		$this->xmlfile->formatOutput=true;
 		return $this->xmlfile->saveXML();
 	}
 

@@ -6,11 +6,6 @@ tabla de items agregados a la factura, suma de importes
 */
 
 if(isset($items)):
-	$iva=$comprobante['iva'];
-	$descuento=(isset($comprobante['descuento'] ) && $comprobante['descuento']!="NaN" ?$comprobante['descuento']:0);
-	$desctipo=(isset($comprobante['desctipo'])?$comprobante['desctipo']:'decimal');
-	$isr=(isset($comprobante['isr'])?$comprobante['isr']:0);
-	$ivaret=$comprobante['ivaret'];
 ?>
 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
 	<caption>Productos/Servicios en factura</caption>
@@ -27,7 +22,6 @@ if(isset($items)):
 	</thead>
 	<tbody>
 <?php
-	$subtotal=0;
 	foreach($items as $item):
 ?>
 		<tr>
@@ -38,62 +32,16 @@ if(isset($items)):
 			<td class="uk-text-center uk-width-1-10"><?php echo $item['unidad']; ?></td>
 			<td class="uk-text-right uk-width-1-10"><?php echo number_format($item['importe'],2); ?></td>
 			<td class="uk-text-center uk-width-1-10">
-				<!-- Aplicar editar despues
-				<a href="<?php echo "#".$item['noidentificacion']; ?>" data-uk-tooltip title="Actualizar cantidad">
-					<i class="uk-icon-refresh"></i>
-				</a>
-				-->
 				<a href="<?php echo "#".$item['noidentificacion']; ?>" class="remove">
 					<icon class="uk-icon-times"></icon>
 				</a>
 			</td>
 		</tr>
 <?php
-		$subtotal=$subtotal+$item['importe'];
 	endforeach;
-	//hacer operaciones
-	if($desctipo=="porcentaje"){						//descuento en %
-		$descuento=($descuento/100)*$subtotal;	
-	}
-	$ivatotal=($subtotal-$descuento)*".$iva";			//IVA total
-	$isrret=($subtotal-$descuento)*".$isr";				//ISR
-	if($ivaret=="2/3"){$ivaret=($ivatotal*2)/3;}		//IVA Retenido
-	else{$ivaret=0;}
 ?>
 	</tbody>
 </table>
-<div class="uk-grid">
-	<div class="uk-width-1-3 uk-push-2-3">
-		<table class="uk-table uk-table-condensed uk-float-right">
-			<tr>
-				<td class="uk-text-bold">Subtotal</td>
-				<td class="uk-text-right uk-text-success"><?php echo number_format($subtotal,2); ?></td>
-				<!-- suma de los importes antes de descuentos e impuestos -->
-			</tr>
-			<tr>
-				<td class="uk-text-bold">Descuento</td>
-				<td class="uk-text-right uk-text-danger"><?php echo number_format($descuento,2); ?></td>
-			</tr>
-			<tr>
-				<td class="uk-text-bold">Retencion ISR</td>
-				<td class="uk-text-right uk-text-info"><?php echo number_format($isrret,2); ?></td>
-			</tr>
-			<tr>
-				<td class="uk-text-bold">Retencion IVA</td>
-				<td class="uk-text-right uk-text-info"><?php echo number_format($ivaret,2); ?></td>
-			</tr>
-			<tr>
-				<td class="uk-text-bold">IVA <?php echo "($iva %)"; ?></td>
-				<td class="uk-text-right uk-text-success"><?php echo number_format($ivatotal,2); ?></td>
-			</tr>
-			<tr>
-				<td class="uk-text-bold">Total</td>
-				<td class="uk-text-right uk-text-bold"><?php echo number_format($subtotal-$descuento+$ivatotal-$ivaret-$isrret,2); ?></td>
-				<!-- subtotal - descuentos + impuestos trasladados - impuestos retenidos -->
-			</tr>
-		</table>
-	</div>
-</div>
 <?php
 else:
 ?>

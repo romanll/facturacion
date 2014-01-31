@@ -8,6 +8,11 @@ var base="http://localhost:81/facturacion/";
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
 var cliente={};                                     //Datos de cliente
+var clientelabel={                                  //Almacenar aqui los datos de cliente: direccion completa
+    nombre:"Nombre del cliente",
+    rfc:"RFC del cliente",
+    direccion:"Dirección de cliente"
+};
 var comprobante={}                                  //Datos de comprobante: iva, isr, pago, etc....
 
 NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 600 })
@@ -40,54 +45,6 @@ $("#additem").validate({
 });
 
 
-/*
-    additem
-    Agregar item a lista de items
-    24/01/2012
-*/
-function additem(){
-    item.cantidad=$("#cantidad").val();                             // campo cantidad agregar a item
-    item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s) (valor*cantidad)
-    items[item.noidentificacion]=item;                              //agregar el item a la lista de items
-    //Obtener totales
-    totales();
-    /*
-    relistar();                                                     //recrear tabla items
-    $("#additem")[0].reset();                                       //vaciar form de item
-    $("#additem button").attr('disabled',true);                     //y deshabilitar boton de nuevo
-    */
-}
-
-/*
-    totales
-    calcular los totales en base a lista de items
-    24/01/2014
-*/
-function totales(){
-    var subtotal=0;
-    var ivatotal=0;
-    var ivaret=0;
-    var isr=0;
-    //Recorrer items, con jQuery ya que :P, 'val' es el objeto item
-    $.each(items, function(index, val) {
-        subtotal+=val.importe;
-    });
-    //hacer las operaciones con impuestos y descuentos
-    if(comprobante.desctipo=="porcentaje"){
-        comprobante.desc=(comprobante.desc/100)*subtotal;
-    }
-    ivatotal=(subtotal-comprobante.desc)*(comprobante.iva/100);         //IVA total, como es 16%, dividir /100
-    isr=(subtotal-comprobante.desc)*(comprobante.isr/100);              //ISR retenido
-    if(comprobante.ivaret=="2/3"){ivaret=(ivatotal*2)/3;}               //IVA retenido
-    //ahora poner en tabla correspondiente
-    $("#subtval").text(subtotal.toFixed(2));
-    $("#descval").text(comprobante.desc.toFixed(2));
-    $("#ivaval").text(ivatotal.toFixed(2));
-    $("#isrval").text(isr.toFixed(2));
-    $("#ivaretval").text(ivaret.toFixed(2));
-    $("#totalval").text((subtotal-comprobante.desc+ivatotal-ivaret-isr).toFixed(2));
-}
-
 /* ========== EVENTOS ========== */
 
 /* Mostrar/Ocultar areas en crear factura: impuestos, pago, descuento */
@@ -102,56 +59,34 @@ $(document).on('click','a.toggle',function(event){
 
 /* Al dar click en 'generar factura' */
 $("#generar").click(function(event){
+    event.preventDefault();
     //deshabilitar boton
     $(this).attr('disabled',true);
-    event.preventDefault(); 
-    var cliente={                                       //datos de cliente
-        id:$("#receptor").val(),
-        rfc:$("#rfc").val()
-    }
-    var comprobante={                                   //datos de comprobante: iva, descuento
-        iva:$("#iva").val(),
-        ivaretencion:$("#ivaretencion").val(),
-        isr:$("#isr").val(),
-        formapago:$("#formapago").val(),
-        condiciones:$("#condiciones").val(),
-        metodopago:$("#metodopago").val(),
-        numcuenta:$("#numcuenta").val(),
-        descuento:$("#descuento").val(),
-        motivodesc:$("#motivodesc").val(),
-        moneda:$("#moneda").val(),
-        tipocambio:$("#tipocambio").val(),
-        tipocomp:$("#tipocomp").val(),
-        serie:$("#serie").val(),
-        serietxt:$("#serie :selected").text(),
-        folio:$("#folio").val()
-    }
     var request = $.ajax({
         type: "POST",
-        url: base+"facturas/facturar",
-        data:{cliente:cliente,conceptos:items,comprobante:comprobante},
-        dataType:'json'
+        url: base+"factura/doinvoice",
+        data: {comprobante:comprobante,cliente:cliente,items:items},
+        dataType:"json"
     });
     request.done(function(result){
-        console.log(result);
-        //habiliatr boton
+        //habilitar boton de nuevo
         $("#generar").attr('disabled',false);
-        //mostra resultado
+        //Mostrar resultado
         if(result.mensaje){
-            var msj='<div class="uk-alert uk-alert-success">'+result.mensaje+'</div>';
-            msj+="<a href='"+result.xml+"'><i class='uk-icon-cloud-download'></i> Descargar xml timbrado</a>";
-            msj+="<br><a href='"+result.pdf+"' target='_blank'><i class='uk-icon-cloud-download'></i> Ver PDF</a>";
-            $(".modal_content").html(msj);
+            var texto='<div class="uk-alert uk-alert-success"><i class="uk-icon-check"></i> '+result.mensaje+'</div>';
+            texto+="<a href='"+result.xml+"'><i class='uk-icon-cloud-download'></i> Descargar XML</a>";
+            texto+="<br><a href='"+result.pdf+"' target='_blank'><i class='uk-icon-external-link-square'></i> Descargar/Ver PDF</a>";
+            //Resetear formularios, tabla de items y totales
         }
         else{
-            var msj='<div class="uk-alert uk-alert-danger">'+result.error+'</div>';
-            $(".modal_content").html(msj);
+            var texto='<div class="uk-alert uk-alert-danger"><i class="uk-icon-times"></i> '+result.error+'</div>';
         }
+        $(".modal_content").html(texto);
         shmodal();
+        
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
-        //habiliatr boton
         $("#generar").attr('disabled',false);
     });
 })
@@ -161,8 +96,8 @@ $(document).on('click','a.remove',function(event){
     event.preventDefault();
     var iditem=$(this).attr('href');
     var iditem=iditem.substring(iditem.indexOf('#')+1);
-    console.log(items);
-    remover(iditem);
+    remover(iditem);                                    //remover elementos
+    totales()                                           //Volver a generar totales
 })
 
 /* Al cambiar valor de IVA  */
@@ -193,9 +128,25 @@ $("#descuento").keyup(function(event){
     comprobante.desctipo=$("#desctipo").val();          //y de una vez el tipo de descuento
     totales();                                          //Volver a calcular totales
 })
+/* Acéptar solo numeros y caracteres epeciales */
+$('#descuento').keydown(function(event) {
+    // Allow special chars + arrows 
+    if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 
+        || event.keyCode == 27 || event.keyCode == 13 
+        || (event.keyCode == 65 && event.ctrlKey === true) 
+        || (event.keyCode >= 35 && event.keyCode <= 39)){
+        return;
+    }else {
+        // If it's not a number stop the keypress
+        if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+            event.preventDefault(); 
+        }   
+    }
+});
 
 /* Al cambiar valor de descuento tipo: porcentaje||moneda */
 $("#desctipo").change(function(event){
+    //console.log($(this).val());
     //relistar();
     comprobante.desctipo=$(this).val();                 //Asignar valor a 'desctipo' en comprobante
     totales();                                          //Volver a calcular totales
@@ -230,22 +181,30 @@ $("#concepto").change(function(event){
 /* Al cambiar el valor de select receptor */
 $("#receptor").change(function(event){
     var valor=$(this).val();
-    if(!isNaN(valor)){getCustomer(valor)}
-    else{
-        $("#nombre").val("");
-        $("#rfc").val("");
-        $("#direccion").val("");
+    if(!isNaN(valor)){
+        //ver que no sea el mismo almacenado por ultima vez
+        if(cliente.hasOwnProperty('idcliente') && cliente.idcliente==valor){
+            showcdata();                                //Mostra datos de cliente leido la ultima vez
+        }
+        else{getCustomer(valor);}
     }
+    else{
+        $("#nombre").text("Nombre del cliente");
+        $("#rfc").text("RFC del cliente");
+        $("#direccion").text("Dirección de cliente");
+    }
+    buttong();                                      //habilitar boton 'generar'
 });
 
 /* Al cambiar el valor de select 'serie' */
 $("#serie").change(function(event){
     var valor=$(this).val();
+    var valortxt=$("#serie :selected").text();
     if(!isNaN(valor)){
         getSerie(valor);
         //Y mostrar campo Folio
         $("#folioarea").slideDown('fast');
-        comprobante.serie=valor;                    //asignar serie en comprobante
+        comprobante.serie=valortxt;                    //asignar serie en comprobante
     }
     else{
         $("#folio").val("");
@@ -264,7 +223,7 @@ $("#tipocomp").change(function(event){comprobante.tipocomp=$(this).val();});
 $("#formapago").change(function(event){comprobante.formapago=$(this).val();});
 
 /* Al cambiar valor en condiciones pago 24/01/2014 */
-$("#condiciones").keyup(function(event){comprobante.condapago=$(this).val();});
+$("#condiciones").keyup(function(event){comprobante.condpago=$(this).val();});
 
 /* Al cambiar valor en metodo pago 24/01/2014 */
 $("#metodopago").change(function(event){comprobante.metpago=$(this).val();});
@@ -285,6 +244,108 @@ $("#tipocambio").keyup(function(event){comprobante.tipocambio=$(this).val();});
 /*  ========== FUNCIONES ========== */
 
 /*
+    additem
+    Agregar item a lista de items
+    24/01/2012
+*/
+function additem(){
+    item.cantidad=$("#cantidad").val();                             // campo cantidad agregar a item
+    item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s) (valor*cantidad)
+    items[item.noidentificacion]=item;                              //agregar el item a la lista de items
+    //Obtener totales
+    totales();
+    
+    $("#additem")[0].reset();                                       //vaciar form de item
+    $("#additem button").attr('disabled',true);                     //y deshabilitar boton de nuevo
+    
+    //Generar tabla en servidor y pasarle los items
+    var request = $.ajax({
+        type: "POST",
+        url: base+"factura/additems",
+        data: {items:items},
+        dataType:'html'
+    });
+    request.done(function(result){
+        $("#agregados").html(result);
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+
+    //ver si item esta vacio, si no, habilitar boton 'generar factura'
+    buttong();
+}
+
+/*
+    totales
+    calcular los totales en base a lista de items
+    24/01/2014
+*/
+function totales(){
+    var subtotal=0;
+    var ivatotal=0;
+    var ivaret=0;
+    var isr=0;
+    var descuento=0;
+    //Recorrer items, con jQuery ya que :P, 'val' es el objeto item
+    $.each(items, function(index, val) {
+        subtotal+=val.importe;
+    });
+    //hacer las operaciones con impuestos y descuentos
+    if(comprobante.desctipo=="porcentaje"){
+        descuento=(comprobante.desc/100)*subtotal;
+    }
+    else{descuento=parseFloat(comprobante.desc);}
+    ivatotal=(subtotal-descuento)*(comprobante.iva/100);         //IVA total, como es 16%, dividir /100
+    isr=(subtotal-descuento)*(comprobante.isr/100);              //ISR retenido
+    if(comprobante.ivaret=="2/3"){ivaret=(ivatotal*2)/3;}               //IVA retenido
+    //ahora poner en tabla correspondiente
+    $("#subtval").text(addCommas(subtotal.toFixed(2)));
+    $("#descval").text(addCommas(descuento.toFixed(2)));
+    $("#ivaval").text(addCommas(ivatotal.toFixed(2)));
+    $("#isrval").text(addCommas(isr.toFixed(2)));
+    $("#ivaretval").text(addCommas(ivaret.toFixed(2)));
+    $("#totalval").text(addCommas((subtotal-descuento+ivatotal-ivaret-isr).toFixed(2)));   
+}
+
+/* Habilitar boton generar factura 27/01/2014 */
+function buttong(){
+    var receptor=$("#receptor").val();
+    //ver si item esta vacio, y si select 'receptor' sea difetente a "N/A", entonces habilitar boton 'generar factura'
+    if(!$.isEmptyObject(items) && receptor!="NA") {
+        $("#generar").attr('disabled',false);
+    }
+    else{
+        $("#generar").attr('disabled',true);
+    }
+}
+
+/* Reset Forms 29/01/2014  Reincial formularios, tabla de items y totales */
+function resetforms(){
+    $("#fcliente")[0].reset();
+    $("#additem")[0].reset();
+    $("#fcomprobante")[0].reset();
+    $("#agregados").html('<br><div class="uk-alert uk-alert-warning">No hay conceptos en lista.</div>');
+    $("#subtval").text("");
+    $("#descval").text("");
+    $("#ivaval").text("");
+    $("#isrval").text("");
+    $("#ivaretval").text("");
+    $("#totalval").text("");
+    $("#nombre").val(clientelabel.nombre);
+    $("#rfc").val(clientelabel.rfc);
+    $("#direccion").val(clientelabel.direccion);
+    $("#generar").attr('disabled',true);
+}
+
+/* Mostrar datos de cliente en divs a partir de clientelabel 26/01/2014 */
+function showcdata(){
+    $("#nombre").text(clientelabel.nombre);           //asignar valores a divs
+    $("#rfc").text(clientelabel.rfc);
+    $("#direccion").text(clientelabel.direccion);
+}
+
+/*
     Incializar 'comprobante'
     25/01/2014
 */
@@ -296,7 +357,7 @@ $("#tipocambio").keyup(function(event){comprobante.tipocambio=$(this).val();});
     comprobante.desctipo=$("#desctipo").val();
     comprobante.tipocomp=$("#tipocomp").val();
     comprobante.formapago=$("#formapago").val();
-    comprobante.condapago=$("#condiciones").val();
+    comprobante.condpago=$("#condiciones").val();
     comprobante.metpago=$("#metodopago").val();
     comprobante.moneda=$("#moneda").val();
     comprobante.tipocambio=$("#tipocambio").val();
@@ -393,12 +454,18 @@ function getCustomer(idcustomer){
     });
     request.done(function(result){
         cliente=result;                             //objeto cliente
-        //console.log(result);
         var d=result;
-        var direccion=d.calle+' '+d.nexterior+', Colonia '+d.colonia+', '+d.localidad+', '+d.estado+', '+d.pais+' C.P. '+d.cp;
-        $("#nombre").val(d.nombre);           //asignar valores a inputs de lectura
-        $("#rfc").val(d.rfc);
-        $("#direccion").val(direccion);
+        var direccion=d.calle;
+        if(d.nexterior){direccion+=" "+d.nexterior;}
+        if(d.colonia){direccion+=", "+d.colonia;}
+        if(d.localidad){direccion+=", "+d.localidad;}
+        if(d.estado){direccion+=", "+d.estado;}
+        if(d.pais){direccion+=", "+d.pais;}
+        if(d.cp){direccion+=" "+d.cp;}
+        clientelabel.nombre=d.nombre;
+        clientelabel.rfc=d.rfc;
+        clientelabel.direccion=direccion;
+        showcdata();                                //Mostra datos del cliente leido
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
@@ -458,7 +525,7 @@ function relistar(){
     //console.log(comprobante);
     var request = $.ajax({
         type: "POST",
-        url: base+"facturas/agregaritem",
+        url: base+"factura/agregaritem",
         data: {items:items,datosf:comprobante},
         dataType:'html'
     });
@@ -491,4 +558,21 @@ function shmodal(){
     } else {
         modal.show();
     }
+}
+
+
+/*
+    addComas() de http://www.mredkj.com/javascript/numberFormat.html
+    26/01/2014
+*/
+function addCommas(nStr){
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
 }

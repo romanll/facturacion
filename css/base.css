@@ -115,6 +115,14 @@ table#importe td{
 	display: none;
 }
 
+div#nombre,div#rfc,div#direccion{
+	font-family: Open Sans;
+	font-size: 15px;
+	font-weight: 700;
+}
+
+
+
 /* De layout */
 #container{
 	margin-top: 1em;

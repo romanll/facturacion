@@ -38,7 +38,7 @@
 							<!-- Pais & estado -->	
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label for="pais" class="uk-form-label">Pa&iacute;s</label></div>
-								<div class="uk-width-2-6"><input type="text" class="uk-width-1-1" id="pais" name="pais" value="<?php echo set_value('pais'); ?>" placeholder="País del Domicilio Fiscal del Receptor" required value="Mexico"></div>
+								<div class="uk-width-2-6"><input type="text" class="uk-width-1-1" id="pais" name="pais" value="<?php echo set_value('pais','México'); ?>" placeholder="País del Domicilio Fiscal del Receptor" required value="Mexico"></div>
 								<div class="uk-width-1-6"><label for="estado_label" class="uk-form-label">Estado</label></div>
 								<div class="uk-width-2-6">
 									<select name="estado_label" id="estado_label" class="uk-width-1-1"></select>

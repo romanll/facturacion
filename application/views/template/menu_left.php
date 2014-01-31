@@ -26,11 +26,11 @@
 							</ul>
 						</li>
 						<?php else: ?>
-						<li class="uk-parent <?php if($active=='facturas'){echo 'uk-active';} ?>">
+						<li class="uk-parent <?php if($active=='factura'){echo 'uk-active';} ?>">
 							<a href="#"><i class="uk-icon-file-text-o"></i> Facturas</a>
 							<ul class="uk-nav-sub">
-								<li><a href="<?php echo base_url('facturas') ?>">Nueva</a></li>
-								<li><a href="<?php echo base_url('facturas/listar') ?>">Emitidas</a></li>
+								<li><a href="<?php echo base_url('factura') ?>">Nueva</a></li>
+								<li><a href="<?php echo base_url('factura/emitidas') ?>">Emitidas</a></li>
 								<li><a href="#">Busqueda</a></li>
 							</ul>
 						</li>

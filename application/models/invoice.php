@@ -28,6 +28,23 @@ class Invoice extends CI_Model {
         return $this->db->get($this->tabla);
     }
 
+    /* Obtener los datos con paginacion */
+    function read_pag($condicion, $per_page, $offset){
+        $this->db->select('idfactura,receptor,fecha,emisor,nodo_comprobante,nodo_receptor,estado,filename');
+        $this->db->where($condicion);
+        //$this->db->order_by('idfactura', 'desc');
+        return $this->db->get($this->tabla, $per_page, $offset);
+    }
+
+    /* Obtener el nuemro de registros */
+    function read_num($condicion=FALSE){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->order_by('idfactura','ASC');
+        $this->db->from($this->tabla);
+        return $this->db->count_all_results();
+        //return $this->db->get($this->tabla);
+    }
+
 
     /* Eliminar registro */
     function delete($where){

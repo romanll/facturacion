@@ -24,7 +24,7 @@
 						<!-- Datos de cliente y productos -->
 						<div class="uk-width-4-6">
 							<!-- Seleccionar Cliente -->
-							<form action="#" class="uk-form">
+							<form action="#" class="uk-form" id="fcliente">
 								<fieldset>
 									<legend>Cliente</legend>
 									<!-- Autocompletado cliente -->
@@ -37,30 +37,18 @@
 											<input type="hidden" value="0" id="idcliente">
 										</div>
 									</div>
-									<!-- Nombre | Razon Social -->
 									<div class="uk-grid">
-										<div class="uk-width-2-10"><label for="nombre" class="uk-form-label">Nombre</label></div>
-										<div class="uk-width-8-10">
-											<input type="text" class="uk-width-1-1" id="nombre" name="nombre" readonly>
-										</div>
+										<!-- Nombre | Razon Social -->
+										<div class="uk-width-1-1" id="nombre">Nombre del cliente</div>
+										<!-- RFC -->
+										<div class="uk-width-1-1" id="rfc">RFC del cliente</div>
+										<!-- Dirección -->
+										<div class="uk-width-1-1" id="direccion">Direcci&oacute;n de cliente</div>
 									</div>
-									<!-- RFC -->
-									<div class="uk-grid">
-										<div class="uk-width-2-10"><label for="rfc" class="uk-form-label">RFC</label></div>
-										<div class="uk-width-3-10">
-											<input type="text" class="uk-width-1-1" id="rfc" name="rfc" readonly>
-										</div>
-									</div>
-									<!-- Dirección -->
-									<div class="uk-grid">
-										<div class="uk-width-2-10"><label for="direccion" class="uk-form-label">Direcci&oacute;n</label></div>
-										<div class="uk-width-8-10">
-											<input type="text" class="uk-width-1-1" id="direccion" name="direccion" readonly>
-										</div>
-									</div>
+									<br>
 								</fieldset>
 							</form>
-							<form action="<?php echo base_url('facturas/agregaritem'); ?>" class="uk-form" id="additem" method="post">
+							<form action="<?php echo base_url('factura/agregaritem'); ?>" class="uk-form" id="additem" method="post">
 								<fieldset>
 									<legend>Concepto(s)</legend>
 									<!-- Label: Cantidad - Item - Precio -->
@@ -73,7 +61,7 @@
 									<!-- Input: Cantidad - Item - Precio -->
 									<div class="uk-grid">
 									    <div class="uk-width-1-10">
-									    	<input type="text" class="uk-width-1-1" id="cantidad" name="cantidad" placeholder="1" required>
+									    	<input type="text" class="uk-width-1-1" id="cantidad" name="cantidad" value="1" placeholder="1" required>
 									    </div>
 									   	<div class="uk-width-5-10">
 									        <select name="concepto" id="concepto" class="uk-width-1-1">
@@ -102,7 +90,7 @@
 						</div>
 						<!-- Datos de factura: totales, impuestos, etc... -->
 						<div class="uk-width-2-6">
-							<form action="#" class="uk-form">
+							<form action="#" class="uk-form" id="fcomprobante">
 								<fieldset>
 									<legend>Comprobante</legend>
 									<!-- Fecha -->
@@ -308,15 +296,17 @@
 							</div>
 						</div>
 					</div>
-					<!-- Lista de Facturas -->
-					<!-- <h3 class="uk-h3">Ultimas facturas</h3>
-					<div id="facturas"></div> -->
 					<!-- Modal -->
 					<div id="modal" class="uk-modal modal">
-					    <div class="uk-modal-dialog uk-modal-dialog-slide">
+					    <div class="uk-modal-dialog uk-modal-dialog-slide" style="overflow:hidden;">
 					        <a href="#" class="uk-modal-close uk-close"></a>
 					        <div class="modal_content">
 					        	Mostrar resultado de generar factura
+					        </div>
+					        <div class="uk-grid-">
+					        	<div class="uk-width-1-1">
+					        		<button class="uk-button uk-modal-close uk-button-primary uk-float-right" onclick="resetforms()">Aceptar</button>
+					        	</div>
 					        </div>
 					    </div>
 					</div>

@@ -25,12 +25,12 @@
 			            </div>
 					</li>
 				<?php else: ?>
-					<li class="uk-parent <?php if($active=='facturas'){echo 'uk-active';} ?>" data-uk-dropdown>
-						<a href="<?php echo base_url('facturas') ?>"><i class="uk-icon-file-text-o"></i> Facturas <i class="uk-icon-caret-down"></i></a>
+					<li class="uk-parent <?php if($active=='factura'){echo 'uk-active';} ?>" data-uk-dropdown>
+						<a href="<?php echo base_url('factura') ?>"><i class="uk-icon-file-text-o"></i> Facturas <i class="uk-icon-caret-down"></i></a>
 						<div class="uk-dropdown uk-dropdown-navbar">
 			        		<ul class="uk-nav uk-nav-navbar">
-			                    <li><a href="<?php echo base_url('facturas') ?>">Nuevo CFDI</a></li>
-								<li><a href="<?php echo base_url('facturas/listar') ?>">Emitidas</a></li>
+			                    <li><a href="<?php echo base_url('factura') ?>">Nuevo CFDI</a></li>
+								<li><a href="<?php echo base_url('factura/emitidas') ?>">Emitidas</a></li>
 								<li><a href="#">Busqueda</a></li>
 			                </ul>
 			            </div>
