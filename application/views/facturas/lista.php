@@ -47,7 +47,11 @@
 								<td class="uk-text-center">
 									<a href="<?php echo base_url("factura/descargar/pdf/$f->filename"); ?>" download="<?php echo $f->filename; ?>" target="_blank" title="Ver PDF" data-uk-tooltip><img src="<?php echo base_url("images/pdf.png"); ?>" alt="pdf"></a>
 									<a href="<?php echo base_url("factura/descargar/xml/$f->filename"); ?>" download="<?php echo $f->filename; ?>" title="Ver XML" data-uk-tooltip><img src="<?php echo base_url("images/xml.png"); ?>" alt="xml"></a>
-									<a href="<?php echo base_url("factura/cancelar/$f->idfactura"); ?>" title="Cancelar factura" data-uk-tooltip><img src="<?php echo base_url("images/cancel.png"); ?>" alt="cancel"></a>
+									<?php if($f->estado=="Cancelado"): ?>
+									<img src="<?php echo base_url("images/cancel_disabled.png"); ?>" alt="cancel">
+									<?php else: ?>
+									<a href="<?php echo base_url("factura/cancel/$f->idfactura"); ?>" class="cancelar" title="Cancelar factura" data-uk-tooltip><img src="<?php echo base_url("images/cancel.png"); ?>" alt="cancel"></a>
+									<?php endif; ?>
 								</td>
 							</tr>
 					<?php endforeach; ?>
@@ -57,6 +61,20 @@
 					<?php else: ?>
 						<div class="uk-alert uk-alert-warning"><?php echo $error; ?></div>
 					<?php endif; ?>
+					<!-- Modal -->
+					<div id="modal" class="uk-modal modal">
+					    <div class="uk-modal-dialog uk-modal-dialog-slide" style="overflow:hidden;">
+					        <a href="#" class="uk-modal-close uk-close"></a>
+					        <div class="modal_content">
+					        	Mostrar resultado de cancelar factura
+					        </div>
+					        <div class="uk-grid-">
+					        	<div class="uk-width-1-1">
+					        		<button class="uk-button uk-modal-close uk-button-primary uk-float-right" >Aceptar</button>
+					        	</div>
+					        </div>
+					    </div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -68,6 +86,6 @@
 		<script src='<?php echo base_url("libs/jquery_validation/localization/messages_es.js"); ?>'></script>
 		<link rel="stylesheet" href='<?php echo base_url("libs/nprogress/nprogress.css"); ?>'></link>
 		<script src='<?php echo base_url("libs/nprogress/nprogress.js"); ?>'></script>
-		<script src='<?php echo base_url("scripts/factura.js"); ?>'></script>
+		<script src='<?php echo base_url("scripts/factura_lista.js"); ?>'></script>
 	</body>
 </html>

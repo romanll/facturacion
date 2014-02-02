@@ -63,8 +63,8 @@ class Login extends CI_Controller {
         //print_r($datos);die();
         $datos['logged_in']=TRUE;
         if($tipo=="emisor"){                                                //crear sesion Emisor
-            //Ya no interesa KEY, ni contraseña llave, ni contraseña cuenta, ni telefono, ni numero de timbres restantes
-            unset($datos['key'],$datos['keypwd'],$datos['password'],$datos['timbres'],$datos['telefono']);
+            //Ya no interesa contraseña cuenta, ni telefono, ni numero de timbres restantes
+            unset($datos['password'],$datos['timbres'],$datos['telefono']);
             $datos['tipo']=2;
         }
         else{                                                               //crear sesion de usuario

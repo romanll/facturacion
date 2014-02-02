@@ -32,6 +32,19 @@ class Opnssl
 		else{return FALSE;}
 	}
 
+	/*
+		cettopem => Generar certificado en PEM(archivo)
+		Recibe path de archivo CER y la ruta del archvio a generar
+		Retorna TRUE|FALSE si existe o no archivo
+		31/01/2014
+	*/
+	function certopem($pathcer,$pathcerpem){
+		exec("openssl\openssl x509 -inform DER -outform PEM -in $pathcer -pubkey -out $pathcerpem");			//Local
+		//exec("openssl x509 -inform DER -outform PEM -in $pathcer -pubkey -out $pathcerpem");					//VPS
+		if(file_exists($pathcerpem)){return TRUE;}
+		else{return FALSE;}
+	}
+
 
 	/*
 		stringcer => Genera certificado (string)

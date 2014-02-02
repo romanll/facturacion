@@ -45,6 +45,18 @@ class Invoice extends CI_Model {
         //return $this->db->get($this->tabla);
     }
 
+    /* 
+        Actualizar datos 
+        Recibe datos a atualizar en array y datos para la condicion en array
+        Retorna TRUE|FALSE
+        01/02/2014
+    */
+    public function update($where,$newdata){
+        $this->db->where($where)->update($this->tabla,$newdata);
+        if($this->db->affected_rows()==1){return TRUE;}
+        else{return FALSE;}
+    }
+
 
     /* Eliminar registro */
     function delete($where){

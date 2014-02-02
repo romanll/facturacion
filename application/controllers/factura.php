@@ -154,7 +154,8 @@ class Factura extends CI_Controller {
                     "nodo_timbre"=>json_encode($timbre_node),
                     "estado"=>"Activo",
                     "filename"=>$filename,
-                    "impuestos"=>json_encode($datos['impuestos'])                        //Para facilidad al crear PDF
+                    "uuid"=>$timbre_node['uuid'],                                   //Para facilidad al cancelar
+                    "impuestos"=>json_encode($datos['impuestos'])                   //Para facilidad al crear PDF
                     //Agregar Serie?folio
                 );
                 $insertar=$this->invoice->create($factura);
@@ -174,8 +175,116 @@ class Factura extends CI_Controller {
 
     /* 
         Cancelar factura
-        Recibe identificador de factura
+        Recibe identificador de factura en uri segment
     */
+    function cancel(){
+        $facturaid=$this->uri->segment(3);
+        if($facturaid){
+            //PEM KEY de emisor
+            $keypem=$this->emisor['rfc'].".pem";                                                //KEYPEM simepre se llamara rfc+.pem, no es necesario agregarlo a la DB
+            $keypem_path="./ufiles/{$this->emisor['rfc']}/$keypem";
+            $enckey_path="./ufiles/{$this->emisor['rfc']}/{$this->emisor['rfc']}.enc.key";      //Archivo a crear (encriptado con clave fnkk)     
+            //CER de emisor
+            $certificado=$this->emisor['cer'];
+            $certificado_path="./ufiles/{$this->emisor['rfc']}/$certificado";
+            $cerpem_path="./ufiles/{$this->emisor['rfc']}/$certificado.pem";
+            //echo $keypem_path;die();
+            if(file_exists($keypem_path)){                                                      //Ver que exista archivo
+                #Obtener la llave encriptada con la contraseña Finkok
+                $encriptarkey=$this->opnssl->encriptfinkok($keypem_path,$enckey_path);
+                if($encriptarkey){                                                              //Si se encripto la llave, proceder a cancelar
+                    //obtener certificado en formato PEM
+                    $certpem=$this->opnssl->certopem($certificado_path,$cerpem_path);
+                    if($certpem){
+                        //Ahora si a obtener factura (UUID nadamas)
+                        $factura=$this->getinvoice($facturaid);
+                        if($factura){
+                            //Cancelar y actualizar DB
+                            $response=$this->cancel_update($facturaid,$factura['filename'],$factura['uuid'],$cerpem_path,$enckey_path);
+                        }
+                    }
+                    else{$response['error']="Error al generar CER PEM";}
+                }
+                else{$response['error']="Error al generar KEYPEM ENC.";}
+            }
+            else{                                                               //NO existe, crearlo
+                #crear keypem con los mismos datos de archivo arriba descritos
+                $generado=$this->opnssl->keytopem($this->emisor['key'],$this->emisor['keypwd'],$keypem_path);
+                if($generado){
+                    $encriptarkey=$this->opnssl->encriptfinkok($keypem_path,$enckey_path);
+                    if($encriptarkey){
+                        //obtener certificado en formato PEM
+                        $certpem=$this->opnssl->certopem($certificado_path,$cerpem_path);
+                        if($certpem){
+                            //Ahora si a obtener factura (UUID nadamas)
+                            $factura=$this->getinvoice($facturaid);
+                            if($factura){
+                                //Cancelar y actualizar DB
+                                $response=$this->cancel_update($facturaid,$factura['filename'],$factura['uuid'],$cerpem_path,$enckey_path);
+                            }
+                        }
+                        else{$response['error']="Error al generar CER PEM";}
+                    }
+                    else{$response['error']="Error al generar KEYPEM ENC.";}
+                }
+                else{$response['error']="Error al generar KEYPEM.";}
+            }
+        }
+        else{$response['error']="Especifique factura a cancelar.";}
+        echo json_encode($response);
+    }
+
+    /* 
+        Tratar de cancelar y actualizar en DB
+        Recibe datos de UUID, certificado path, enc key path
+        Retorna Array en caso de exito
+        01/02/2014
+    */
+    function cancel_update($facturaid,$filename,$uuid,$cert,$enckey){
+        $this->load->library('Finkok');                                                 //Libreria para cancelar
+        $xml_cancel=$filename."_cancelado.xml";                                         //nombre del archivo a crear con la cancelacion
+        $xml_cancel_path="./ufiles/{$this->emisor['rfc']}/$xml_cancel";                 //Path de archivo a crear
+        $cancelar=$this->finkok->cancelar($uuid,$this->emisor['rfc'],$cert,$enckey);
+        $result['cancelar']=$cancelar;                                                  //Resultado de cancelacion
+        if($cancelar->cancelResult->Folios->Folio->EstatusUUID==201){                   //Correcto: 201
+            file_put_contents($xml_cancel_path, $cancelar->cancelResult->Acuse);        //Guardar Acuse en XML
+            //Imprimirlo bonito
+            $xmlfile_canceled=new DOMDocument();
+            $xmlfile_canceled->load($xml_cancel_path);
+            $xmlfile_canceled->formatOutput=true;
+            $xmlfile_canceled->save($xml_cancel_path);
+            $response['xmlc']=$xml_cancel_path;
+            $response['success']="La factura ha sido cancelada.";
+            //Actualizar en DB
+            $new_data=array("estado"=>"Cancelado");
+            $where=array("idfactura"=>$facturaid,"emisor"=>$this->emisor['idemisor']);
+            $update=$this->invoice->update($where,$new_data);
+            if($update){$response['db']="Actualización correcta en DB";}
+            else{$response['db']="Error al actualizar en DB";}                          //No se actualizo en DB
+        }
+        else{
+            $response['error']="Error al cancelar factura: ".$cancelar->cancelResult->Folios->Folio->EstatusUUID;
+        }
+        return $response;
+    }
+
+    /*
+        Obtener datos de la factura a cancelar
+        Recibe identificador de factura
+        Retorna la factura|FALSE
+        31/01/2014
+    */
+    function getinvoice($idi){
+        $query=$this->invoice->read(array("idfactura"=>$idi,"emisor"=>$this->emisor['idemisor']));
+        if($query->num_rows()>0){
+            $data=$query->result_array();
+            $factura=$data[0];
+            return $factura;
+        }
+        else{
+            return FALSE;
+        }
+    }
 
 
     /*

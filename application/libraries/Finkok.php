@@ -56,7 +56,7 @@ class Finkok{
 		Recibe UUID de factura, RFC de emisor,el CER e PEM y KEY encriptada en -des3 en PEM
 		31/01/2014
 	*/
-	function cancelar($uuid,$emisor_rfc;,$cer_path,$keyenc_path){
+	function cancelar($uuid,$emisor_rfc,$cer_path,$keyenc_path){
 		//Leer certificado en formato PEM
 		$cer_file = fopen($cer_path, "r");
 		$cer_content = fread($cer_file, filesize($cer_path));

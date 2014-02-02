@@ -27,7 +27,7 @@ class Contribuyentes extends CI_Controller {
     /* Hacer el registro de los datos del nuevo emisor 11/01/2014 */
     function registro(){
         $this->load->library('form_validation');
-        $this->load->library('St');
+        $this->load->library('opnssl');                                 //Sellar, crear cadena XML
         $this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
         $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
         $this->form_validation->set_rules('correo', 'Correo', 'trim|required|valid_email|xss_clean');
@@ -106,11 +106,11 @@ class Contribuyentes extends CI_Controller {
             //Generar Archivo PEM
             $keyfile="$carpeta/{$datos['key']}";
             if(file_exists($keyfile)){                                      //Necesito el archivo KEY para generarlo
-                $filepem="$carpeta/$rfcemisor.pem.txt";                     //Ruta del nuevo archivo
-                $generado=$this->st->genkey($keyfile,$datos['llave_password'],$filepem);
+                $filepem="$carpeta/$rfcemisor.pem";                         //Ruta del nuevo archivo RFC+.pem
+                $generado=$this->opnssl->keytopem($keyfile,$datos['llave_password'],$filepem);
                 //comprobar que exista y guardar
                 if($generado){
-                    $datos['pem']="$rfcemisor.pem.txt";
+                    $datos['pem']="$rfcemisor.pem";
                 }
                 //Insertar en DB
                 $insertar=$this->insertar($datos);
@@ -118,7 +118,7 @@ class Contribuyentes extends CI_Controller {
                     $result["success"]="Registro insertado correctamente.";
                 }
                 else{
-                    //borrar los archivos
+                    //borrar los archivos               ///TO DO *******************************
                     //lanzar mensaje de error
                     $result["error"]="Error en registro, intente mas tarde.";
                 }
@@ -175,121 +175,6 @@ class Contribuyentes extends CI_Controller {
         return TRUE;
     }
 
-    /* Procesar peticion de registro */
-    function registrar(){
-        $this->load->library('st');             //Crear llave
-    	$this->load->library('form_validation');
-    	$this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
-    	$this->form_validation->set_rules('razonsoc', 'Raz&oacute;n Social', 'trim|required|xss_clean');
-    	$this->form_validation->set_rules('rfc', 'RFC', 'trim|required|alpha_numeric|xss_clean');
-    	$this->form_validation->set_rules('regimen', 'R&eacute;gimen Fiscal', 'trim|required|xss_clean');
-    	$this->form_validation->set_rules('pais', 'Pa&iacute;s', 'trim|required|xss_clean');
-    	$this->form_validation->set_rules('cp', 'Codigo Postal', 'trim|required|integer|xss_clean');
-    	$this->form_validation->set_rules('municipio', 'Municipio', 'trim|required|xss_clean');
-    	$this->form_validation->set_rules('colonia', 'Colonia', 'trim|xss_clean');
-    	$this->form_validation->set_rules('localidad', 'Localidad', 'trim|xss_clean');
-    	$this->form_validation->set_rules('calle', 'Calle', 'trim|xss_clean');
-    	$this->form_validation->set_rules('noexterior', 'No. Exterior', 'trim|xss_clean');
-    	$this->form_validation->set_rules('nointerior', 'No. Interior', 'trim|xss_clean');
-    	$this->form_validation->set_rules('referencia', 'Referencia', 'trim|xss_clean');
-    	$this->form_validation->set_rules('llave_password', 'Contrase&ntilde;a de llave', 'trim|xss_clean');
-    	$this->form_validation->set_rules('ue', 'Usuario Emisor', 'trim|xss_clean');
-        if($this->form_validation->run() == FALSE){
-            $this->load->view('contribuyentes/registro');
-        }
-        else{
-        	//Paso Validación, registrar
-        	$datos=$this->input->post();
-        	$new_emisor=array(										//datos a insertar en DB
-        		'razonsocial'=>$datos['razonsoc'],
-        		'rfc'=>$datos['rfc'],
-        		'regimen'=>$datos['regimen'],
-        		'calle'=>$datos['calle'],
-        		'ninterior'=>$datos['nointerior'],
-        		'nexterior'=>$datos['noexterior'],
-        		'colonia'=>$datos['colonia'],
-        		'localidad'=>$datos['localidad'],
-        		'referencia'=>$datos['referencia'],
-        		'municipio'=>$datos['municipio'],
-        		'estado'=>$datos['estado'],
-        		'pais'=>$datos['pais'],
-        		'cp'=>$datos['cp'],
-        		'usuario'=>$datos['ue'],
-        		'tipo'=>$datos['tipo'],
-        		'keypwd'=>$datos['llave_password'],
-                'nocertificado'=>$datos['nocertificado']
-        	);
-        	$insertar=$this->contributors->create($new_emisor);		//insertar en DB, retorna id de registro
-        	if($insertar){                                          //se inserto, manipular sus arhivos
-        		$carpeta=$datos['rfc'];
-        		$path="./ufiles/$carpeta";                          //crear carpeta con nombre 'RFCXXXXX'
-                //ver si existe directorio
-                if(is_dir($path)){$existe=true;}                    //existe, solo moverlos a este directorio
-                else{                                               //no existe, crearlo y moverlos aqui
-                    if(mkdir($path)){$existe=true;}
-                    else{$existe=false;}
-                }
-                if($existe){                                        //existe:mover aqui archivos
-                    $config['upload_path'] = $path;
-                    $config['allowed_types'] = '*';
-                    $config['remove_spaces']=true;
-                    $config['max_size']=2048;
-                    $this->load->library('upload', $config);
-                    foreach ($_FILES as $key => $value) {
-                        if(isset($value['name'])){
-                            if ( ! $this->upload->do_upload($key)){
-                                $error = $this->upload->display_errors();
-                                $response['error']=$error;
-                            }
-                            else{                                   //se subio correctamente
-                                $data = $this->upload->data();
-                                if($data['file_ext']==".cer"){      //certificado
-                                    $update_data['cer']=$data['file_name'];
-                                }
-                                else if($data['file_ext']==".key"){ //llave
-                                    $update_data['key']=$data['file_name'];
-                                    //generar llave .pem
-                                    $pathkey=$path."/".$data['file_name'];          //ruta archivo .key
-                                    $pathpem=$path."/".$datos['rfc'].".pem.txt";        //ruta del archivo a generar XXX.pem.txt
-                                    $this->st->genkey($pathkey,$datos['llave_password'],$pathpem);
-                                    $update_data['pem']=$datos['rfc'].".pem.txt";
-                                }
-                                else{                               //error:borrar archivo no permitido
-                                    unlink($data['full_path']);
-                                }
-                            }
-                        }
-                    }
-
-                    //ahora con el 'id' de registro, actualizar datos, si es que existen
-                    if(isset($update_data) && count($update_data)>0){                      //si el arreglo contiene datos por actualizar
-                        $actualizar=$this->contributors->update($update_data,array('idemisor'=>$insertar));
-                        if($actualizar){
-                            $response['success']="Registro insertado correctamente.";
-                        }
-                        else{                                       //si NO, mostrar error de no subida archivos
-                            $response['error']="Error:No se pudieron almacenar los archivos.";
-                        }
-                        //comprobar que existan los 2 archivos, si no generar mensaje error
-                        if(!array_key_exists('key', $update_data)){$response['error']="Archivo 'key' no encontrado, debera subirlo despues.";}
-                        if(!array_key_exists('cer', $update_data)){$response['error']="Archivo 'cer' no encontrado, debera subirlo despues";}
-                    }
-                    else{
-                        //error: no hay datos por actualizar (no hay archivos por subir)
-                        $response['error']="Error:No hay archivos por guardar.Debera subirlos despues.";
-                    }
-                }
-                else{
-                    //error: no existe o no se pudo crear directorio
-                    $response['error']="Error:No se pudo crear directorio.";
-                }
-        	}
-            else{
-                $response['error']="Error:No se pudo registrar datos, intente mas tarde.";
-            }
-        }
-        echo json_encode($response);
-    }
 
     /* Mostrar perfil del usuario : datos de usuario y de contribuyente, lo puede ver el usuario emisor */
     function perfil(){
