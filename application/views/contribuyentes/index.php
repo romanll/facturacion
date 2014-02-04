@@ -47,7 +47,7 @@
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label for="timbres" class="uk-form-label">Cantidad de timbres</label></div>
 								<div class="uk-width-1-6">
-									<input type="text" class="uk-width-1-1" id="timbres" name="timbres" value="<?php echo set_value('timbres'); ?>" placeholder="0,1,2">
+									<input type="number" min="1" max="10000" class="uk-width-1-2" id="timbres" name="timbres" value="<?php echo set_value('timbres'); ?>" placeholder="0,1,2">
 								</div>
 								<div class="uk-width-1-6 uk-push-1-6"><label for="telefono" class="uk-form-label">Tel&eacute;fono/Celular</label></div>
 								<div class="uk-width-2-6 uk-push-1-6">
@@ -148,11 +148,11 @@
 							<div class="uk-grid">
 								<div class="uk-width-1-6"><label class="uk-form-label" for="llave_password">Contrase&ntilde;a de llave</label></div>
 								<div class="uk-width-2-6">
-									<input type="text" class="uk-width-1-1" name="llave_password" id="llave_password" value="<?php echo set_value('llave_password'); ?>">
+									<input type="text" class="uk-width-1-1" name="llave_password" id="llave_password" value="<?php echo set_value('llave_password'); ?>" required>
 								</div>
 								<div class="uk-width-1-6"><label for="nocertificado" class="uk-form-label">No Certificado</label></div>
 								<div class="uk-width-2-6">
-									<input type="text" class="uk-width-1-1" name="nocertificado" id="nocertificado" value="<?php echo set_value('nocertificado'); ?>" required>
+									<input type="text" class="uk-width-1-1" name="nocertificado" id="nocertificado" value="<?php echo set_value('nocertificado'); ?>" placeholder="Opcional">
 								</div>
 							</div>
 							<!-- boton -->

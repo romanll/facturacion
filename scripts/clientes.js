@@ -32,8 +32,8 @@ $("#nuevo_cliente").validate({
 		}
 	},
 	submitHandler: function(form) {
-	    //console.log('ok, enviar form');
-	    enviar(form);
+        //console.log('ok, enviar form');
+        enviar(form);
 	}
 });
 

@@ -26,12 +26,39 @@ class Contributors extends CI_Model {
     	$this->db->from($this->tabla);
     	return $this->db->count_all_results();
     }
+    
+    /*
+        Busqueda de emisor cuando $where['field'] LIKE $where['keyword']
+        04/02/2014
+    */
+    function search($where){
+        $this->db->order_by('idemisor', 'desc');
+        $this->db->select('idemisor,razonsocial,rfc,email,timbres,telefono');
+        $this->db->like($where['field'],$where['keyword']);
+        return $this->db->get($this->tabla);
+    }
 
     /* Obtener los datos de emisor, $condicion es array(); */
     function read($condicion=FALSE){
         if($condicion){$this->db->where($condicion);}
         $this->db->order_by('idemisor','DESC');
         return $this->db->get($this->tabla);
+    }
+    
+    /* Obtener los datos con paginacion */
+    function read_pag($condicion=FALSE, $per_page, $offset){
+        $this->db->select('idemisor,razonsocial,rfc,email,timbres,telefono');
+        if($condicion){$this->db->where($condicion);}
+        $this->db->order_by('idemisor', 'desc');
+        return $this->db->get($this->tabla, $per_page, $offset);
+    }
+
+    /* Obtener el numero de registros que cumplen con la condicion => 04/02/2014 */
+    function read_num($condicion=FALSE){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->order_by('idemisor','DESC');
+        $this->db->from($this->tabla);
+        return $this->db->count_all_results();
     }
 
     /* Actualizar Registro */

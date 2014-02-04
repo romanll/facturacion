@@ -17,6 +17,27 @@ class Opnssl
         $this->ci =& get_instance();
         $this->passfinkok="Prueba@123";
 	}
+	
+	/*
+	    numcer => Obtener el numero de certificado
+	    Recibe pathfile CER
+	    Retorna numero de certificado en string
+	    04/02/2014
+	*/
+	function numcer($certificado){
+	    $numero="";
+	    exec(".\openssl\openssl x509 -inform DER -in $certificado -serial",$datacer);                        //Local
+	    //exec("openssl x509 -inform DER -in $certificado -serial", $datacer);                                //VPS
+	    // si funciona retorna un array como: Array ( [0] => "serial=323030303130303030303032303030303032393"
+	    $serialnumbers=str_split(str_replace("serial=","",$datacer[0]));
+	    for($i=0;$i<count($serialnumbers);$i++){
+	        if($i%2!=0){
+	            $numero.=$serialnumbers[$i];
+	        }
+	    }
+	    return $numero;
+	}
+	
 
 	/*
 		keytopem => Generar llave PEM (archivo)

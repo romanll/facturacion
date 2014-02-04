@@ -23,6 +23,38 @@ class Contribuyentes extends CI_Controller {
         //$this->load->view('contribuyentes/registro');
         $this->load->view('contribuyentes/index');
     }
+    
+    /*
+        Buscar emisor cuando
+        Recibe por post la keyword y el campo donde buscar
+        04/02/2014
+    */
+    function buscar(){
+        $data=$this->input->post();
+        if($data){
+            $campo="";
+            if($data['optionsearch']=="razon"){$campo="razonsocial";}
+            else if($data['optionsearch']=="rfc"){$campo="rfc";}
+            else if($data['optionsearch']=="correo"){$campo="email";}
+            else{$campo="telefono";}
+            $where=array(
+                'field'=>$campo,
+                'keyword'=>$data['busqueda']
+            );
+            $query=$this->contributors->search($where);
+            if($query->num_rows()>0){
+                $response['emisores']=$query->result();
+            }
+            else{
+                $response['error']="No existen registros que cumplan con los requisitos.";
+            }
+        }
+        else{
+            $response['error']="Especifique datos a buscar";
+        }
+        //echo json_encode($response);
+        $this->load->view("contribuyentes/busqueda_result",$response);
+    }
 
     /* Hacer el registro de los datos del nuevo emisor 11/01/2014 */
     function registro(){
@@ -45,8 +77,8 @@ class Contribuyentes extends CI_Controller {
         $this->form_validation->set_rules('noexterior', 'No. Exterior', 'trim|xss_clean');
         $this->form_validation->set_rules('nointerior', 'No. Interior', 'trim|xss_clean');
         $this->form_validation->set_rules('referencia', 'Referencia', 'trim|xss_clean');
-        $this->form_validation->set_rules('llave_password', 'Contrase&ntilde;a de llave', 'trim|xss_clean');
-        $this->form_validation->set_rules('nocertificado', 'No Certificado', 'trim|required|numeric');
+        $this->form_validation->set_rules('llave_password', 'Contrase&ntilde;a de llave', 'required|trim|xss_clean');
+        $this->form_validation->set_rules('nocertificado', 'No Certificado', 'trim|numeric');
         if($this->form_validation->run() == FALSE){
             $this->load->view('contribuyentes/index');
         }
@@ -71,18 +103,31 @@ class Contribuyentes extends CI_Controller {
                 'remove_spaces'=>true,
                 'max_size'=>2048
             );
-            $this->load->library('upload', $config);                        //Cargar la libreria
+            $this->load->library('upload', $config);                                //Cargar la libreria
             foreach ($_FILES as $key => $value) {
                 if(isset($value['name'])){
-                    if(!$this->upload->do_upload($key)){                    //Errores de subida
+                    if(!$this->upload->do_upload($key)){                            //Errores de subida
                         $error = $this->upload->display_errors();
                         $response['error']=$error;
                     }
-                    else{                                                   //se subio correctamente
+                    else{                                                           //se subio correctamente
                         $data = $this->upload->data();
-                        switch ($data['file_ext']) {                        //determinar tipo de archivo
+                        switch ($data['file_ext']) {                                //determinar tipo de archivo
                             case '.cer':
-                                $datos['cer']=$data['file_name'];
+                                $datos['cer']=$data['file_name'];                   //Certificado
+                                $numcer=$this->numerocert($data['full_path']);      //Obtener el numero de certificado y coparar si esque existe
+                                if($numcer){
+                                    if(empty($datos['nocertificado'])){
+                                    $datos['nocertificado']=$numcer;
+                                    }
+                                    else if($datos['nocertificado'] != $numcer){
+                                        $response['incidencia']="Numero de certificado no coincide.";
+                                        $datos['nocertificado']=$numcer;
+                                    }
+                                    else{
+                                        $datos['nocertificado']=$numcer;                //de cualquier modo usar el obtenido desde el archivo
+                                    }
+                                }
                                 break;
                             case '.key':
                                 $datos['key']=$data['file_name'];
@@ -103,6 +148,7 @@ class Contribuyentes extends CI_Controller {
                     }
                 }
             }
+            //echo "<pre>";print_r($datos);echo "</pre>";die();
             //Generar Archivo PEM
             $keyfile="$carpeta/{$datos['key']}";
             if(file_exists($keyfile)){                                      //Necesito el archivo KEY para generarlo
@@ -131,7 +177,6 @@ class Contribuyentes extends CI_Controller {
         }
     }
 
-
     
     /* 
         Insertar en DB
@@ -151,6 +196,20 @@ class Contribuyentes extends CI_Controller {
         //insertar datos
         $insertar=$this->contributors->create($emisor);
         return $insertar;
+    }
+    
+    /*
+        Obtener el numero de certificado
+        Recibe path de certificado
+        Retorna el numero en string (TRUE) | FALSE
+        04/02/2014
+    */
+    function numerocert($certificado){
+        $this->load->library('opnssl');
+        if(file_exists($certificado)){
+            return $this->opnssl->numcer($certificado);
+        }
+        else{return FALSE;}
     }
 
     /*
@@ -216,15 +275,49 @@ class Contribuyentes extends CI_Controller {
         Listar contribuyentes en el sistema
         Recibe Nada
         Retorna Vista de lista
-        14/01/2014
+        14/01/2014 -> Creado
+        04/02/2014 -> Paginacion agregada
     */
     function listar(){
         //Ver si tengo privilegios para estar aqui
         if($this->permiso){
-            //realizar $query
-            $query=$this->contributors->read();
-            if($query->num_rows()>0){
-                $data['result']=$query->result();
+            $emisores=$this->contributors->read_num();                                  //Obtener el total de emisores
+            if($emisores>0){
+                //realizar paginacion
+                $this->load->library('pagination');      
+                $config['base_url'] = base_url("contribuyentes/listar/");               //Url de paginacion
+                $config['total_rows'] = $emisores;                                      //Num total de registros a listar
+                $config['per_page'] = 25;                                                //Registros por pagina
+                $config['uri_segment'] = 3;                                             //Numero de links en paginacion
+                $config['num_links'] = 2;
+                $config['full_tag_open'] = '<ul class="uk-pagination">';
+                $config['full_tag_close'] = '</ul>';
+                $config['first_link'] = '<i class="uk-icon-angle-double-left" title="Primer página"></i>';
+                $config['first_tag_open'] = '<li>';
+                $config['first_tag_close'] = '</li>';
+                $config['last_link'] = '<i class="uk-icon-angle-double-right" title="Ultima página"></i>';
+                $config['last_tag_open'] = '<li>';
+                $config['last_tag_close'] = '</li>';
+                $config['next_link'] = '<i class="uk-icon-angle-right" title="Siguiente"></i>';
+                $config['next_tag_open'] = '<li class="uk-pagination-next">';
+                $config['next_tag_close'] = '</li>';
+                $config['prev_link'] = '<i class="uk-icon-angle-left" title="Anterior"></i>';
+                $config['prev_tag_open'] = '<li class="uk-pagination-previous">';
+                $config['prev_tag_close'] = '</li>';
+                $config['cur_tag_open'] = '<li class="uk-active"><span>';
+                $config['cur_tag_close'] = '</span></li>';
+                $config['num_tag_open'] = '<li>';
+                $config['num_tag_close'] = '</li>';
+                $this->pagination->initialize($config);
+                $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+                $query=$this->contributors->read_pag(FALSE,$config['per_page'],$page);    //Obtener todos
+                if($query->num_rows()>0){
+                    $data['emisores']=$query->result();
+                    $data['links']=$this->pagination->create_links();
+                }
+                else{
+                    $data['error']="No existen registros";
+                }
             }
             else{
                 $data['error']="No existen registros.";

@@ -10,6 +10,10 @@ var base="http://localhost:81/facturacion/";
 /* Validar form */
 $("#regemisor").validate({
 	rules:{
+        timbres:{
+            required:true,
+            digits:true
+        },
 		cp:{
 			required:true,
 			digits:true
@@ -17,8 +21,7 @@ $("#regemisor").validate({
 		rfc:{
 			required:true,
 			alphanumeric:true
-		}
-		,
+		},
 		certificado:{
 			required:true,
 			accept:"application/x-x509-ca-cert,application/pkix-cert, application/keychain_access"
@@ -30,6 +33,10 @@ $("#regemisor").validate({
 		}
 	},
 	messages: {
+        timbres:{
+            required:"Este campo es obligatorio.",
+            digits:"Sólo numeros."
+        },
         cp: {
 			required: "Este campo es obligatorio.",
             digits: "Sólo numeros."
@@ -40,9 +47,9 @@ $("#regemisor").validate({
 		}
 	},
 	submitHandler: function(form) {
-	    //console.log('ok, enviar form');
-	    enviar(form);
-	    //form.submit();
+        //console.log('ok, enviar form');
+        enviar(form);
+        //form.submit();
 	}
 });
 
@@ -68,7 +75,7 @@ function enviar(formulario){
             municipios(1);                      //reiniciar valores en municipio
         }
         if(result.error){						//puede haber mensaje de exito y error
-        	alertify.error(result.error);       //mostrar error
+            alertify.error(result.error);       //mostrar error
         }
     });
     request.fail(function(jqXHR, textStatus){
@@ -85,22 +92,20 @@ function enviar(formulario){
         dataType:'json'                         //o html
     });
     request.done(function(result){
-    	if(!result.error){
-    		$.each(result, function(index, val) {
-    			if(val.estado=="Baja California"){$("#estado_label").append("<option value="+val.idestado+" selected>"+val.estado+"</option>");}
-    			else{$("#estado_label").append("<option value="+val.idestado+">"+val.estado+"</option>");}
-	        });
-	        $("#estado").val($("#estado_label option:selected").text());		//por defecto tendra el valor del estado en select
-	        municipios(2);														//llenar los municipios del primer estado (x defecto)
-    	}
-    	else{
-    		console.log(result.error);
-    	}
+        if(!result.error){
+            $.each(result, function(index, val) {
+                if(val.estado=="Baja California"){$("#estado_label").append("<option value="+val.idestado+" selected>"+val.estado+"</option>");}
+                else{$("#estado_label").append("<option value="+val.idestado+">"+val.estado+"</option>");}
+            });
+            $("#estado").val($("#estado_label option:selected").text());		//por defecto tendra el valor del estado en select
+            municipios(2);														//llenar los municipios del primer estado (x defecto)
+        }
+        else{console.log(result.error);}
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
     });
-})()
+})();
 
 
 /* municipios: llenar input en base al estado seleccionado en <select> */
@@ -114,9 +119,7 @@ function municipios(estado){
 		//console.log(data);
 		var lista=data;
 		if(!lista.error){
-		    $("#municipio").autocomplete({
-				source:lista
-		    })
+            $("#municipio").autocomplete({source:lista});
 		}
 		else{
 			console.log(lista.error);
@@ -134,4 +137,4 @@ $("#estado_label").change(function(event){
 	municipios($(this).val());
 	//limpiar input y darle foco
 	$("#municipio").val('').focus();
-})
+});

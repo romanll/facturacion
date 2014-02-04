@@ -3,7 +3,7 @@ factura.js : creacion de factura, validacion de campos
 24/12/2013
 */
 
-var base="http://localhost:81/facturacion/";
+var base = "http://localhost:81/facturacion/";
 //base="http://162.243.127.174/facturacion/";
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
@@ -13,9 +13,9 @@ var clientelabel={                                  //Almacenar aqui los datos d
     rfc:"RFC del cliente",
     direccion:"Dirección de cliente"
 };
-var comprobante={}                                  //Datos de comprobante: iva, isr, pago, etc....
+var comprobante={};                                 //Datos de comprobante: iva, isr, pago, etc....
 
-NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 600 })
+NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 600 });
 
 $(document).ready(function () {
     $(document).ajaxStart(function () {
@@ -55,7 +55,7 @@ $(document).on('click','a.toggle',function(event){
     $(ref).slideToggle('slow',function(){
         icon.toggleClass("uk-icon-caret-down uk-icon-caret-up");
     });
-})
+});
 
 /* Al dar click en 'generar factura' */
 $("#generar").click(function(event){
@@ -72,14 +72,15 @@ $("#generar").click(function(event){
         //habilitar boton de nuevo
         $("#generar").attr('disabled',false);
         //Mostrar resultado
+        var texto="";
         if(result.mensaje){
-            var texto='<div class="uk-alert uk-alert-success"><i class="uk-icon-check"></i> '+result.mensaje+'</div>';
+            texto='<div class="uk-alert uk-alert-success"><i class="uk-icon-check"></i> '+result.mensaje+'</div>';
             texto+="<a href='"+result.xml+"'><i class='uk-icon-cloud-download'></i> Descargar XML</a>";
             texto+="<br><a href='"+result.pdf+"' target='_blank'><i class='uk-icon-external-link-square'></i> Descargar/Ver PDF</a>";
             //Resetear formularios, tabla de items y totales
         }
         else{
-            var texto='<div class="uk-alert uk-alert-danger"><i class="uk-icon-times"></i> '+result.error+'</div>';
+            texto='<div class="uk-alert uk-alert-danger"><i class="uk-icon-times"></i> '+result.error+'</div>';
         }
         $(".modal_content").html(texto);
         shmodal();
@@ -89,37 +90,37 @@ $("#generar").click(function(event){
         console.log(textStatus);
         $("#generar").attr('disabled',false);
     });
-})
+});
 
 /* Al remover concepto */
 $(document).on('click','a.remove',function(event){
     event.preventDefault();
     var iditem=$(this).attr('href');
-    var iditem=iditem.substring(iditem.indexOf('#')+1);
+    iditem=iditem.substring(iditem.indexOf('#')+1);
     remover(iditem);                                    //remover elementos
-    totales()                                           //Volver a generar totales
-})
+    totales() ;                                         //Volver a generar totales
+});
 
 /* Al cambiar valor de IVA  */
 $("#iva").change(function(event){
     //relistar();
     comprobante.iva=$(this).val();                      //Asignar valor a 'iva' en comprobante
     totales();                                          //Volver a calcular totales
-})
+});
 
 /* Al cambiar valor de IVA RETENIDO */
 $("#ivaretencion").change(function(event){
     //relistar();
     comprobante.ivaret=$(this).val();                   //Asignar valor a 'iva retenido' en comprobante
     totales();                                          //Volver a calcular totales
-})
+});
 
 /* Al cambiar valor de ISR */
 $("#isr").change(function(event){
     //relistar();
     comprobante.isr=$(this).val();                      //Asignar valor a 'isr' en comprobante
     totales();                                          //Volver a calcular totales
-})
+});
 
 /* Al cambiar valor de descuento */
 $("#descuento").keyup(function(event){
@@ -127,14 +128,12 @@ $("#descuento").keyup(function(event){
     comprobante.desc=$(this).val();                     //Asignar valor a 'desc' en comprobante
     comprobante.desctipo=$("#desctipo").val();          //y de una vez el tipo de descuento
     totales();                                          //Volver a calcular totales
-})
+});
+
 /* Acéptar solo numeros y caracteres epeciales */
 $('#descuento').keydown(function(event) {
     // Allow special chars + arrows 
-    if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 
-        || event.keyCode == 27 || event.keyCode == 13 
-        || (event.keyCode == 65 && event.ctrlKey === true) 
-        || (event.keyCode >= 35 && event.keyCode <= 39)){
+    if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9  || event.keyCode == 27 || event.keyCode == 13  || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39)){
         return;
     }else {
         // If it's not a number stop the keypress
@@ -150,16 +149,16 @@ $("#desctipo").change(function(event){
     //relistar();
     comprobante.desctipo=$(this).val();                 //Asignar valor a 'desctipo' en comprobante
     totales();                                          //Volver a calcular totales
-})
+});
 
 /* Al cambiar valor de cantidad */
 $("#cantidad").keyup(function(event){
     var valor=$("#concepto").val();
     var cantidad=$(this).val();
-    if(!isNaN(valor) && cantidad.length!=0){
+    if(!isNaN(valor) && cantidad.length!==0){
         $("#additem button").attr('disabled',false);                //habilitar boton "agregar concepto"
     }
-})
+});
 
 /* Al cambiar el valor del select concepto */
 $("#concepto").change(function(event){
@@ -167,7 +166,7 @@ $("#concepto").change(function(event){
     var cantidad=$("#cantidad").val();
     if(!isNaN(valor)){
         getItem(valor);                                             //obtener valor de item
-        if(cantidad.length!=0){
+        if(cantidad.length!==0){
             $("#additem button").attr('disabled',false);            //habilitar boton "agregar concepto"
         }
     }
@@ -493,7 +492,7 @@ function getCustomer(idcustomer){
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
     });
-})()
+})();
 
 /* Al agregar concepto */
 function agregar(){
@@ -513,7 +512,7 @@ function relistar(){
         iva:parseInt($("#iva").val()),                  //IVA
         isr:parseInt($("#isr").val()),                  //ISR
         ivaret:$("#ivaretencion").val()                 //IVA retenido
-    }
+    };
     var percent=descuento.search("%");                  //ver si es en %
     if(percent!=-1){
         descuento.replace("%","");                      //si es, eliminar % y dejar el numero
@@ -537,7 +536,7 @@ function relistar(){
     });
     //ver si item esta vacio, si no, habilitar boton 'generar factura'
     if(!$.isEmptyObject(items)){
-        $("#generar").attr('disabled',false)
+        $("#generar").attr('disabled',false);
     }
     else{
         $("#generar").attr('disabled',true);

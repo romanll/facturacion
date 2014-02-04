@@ -24,6 +24,19 @@ class Factura extends CI_Controller {
     function index() {
         $this->load->view('facturas/nuevo');
     }
+    
+    /*
+        Obtener el numero de certificado
+        Recibe path de certificado
+        Retorna el numero en string (TRUE) | FALSE
+        04/02/2014
+    */
+    function numero($certificado){
+        if(file_exist($certificado)){
+            return $this->opnssl->numcer($certificado);
+        }
+        else{return FALSE;}
+    }
 
     /*
         Agregar item
@@ -241,10 +254,11 @@ class Factura extends CI_Controller {
         01/02/2014
     */
     function cancel_update($facturaid,$filename,$uuid,$cert,$enckey){
-        $this->load->library('Finkok');                                                 //Libreria para cancelar
+        $this->load->library('finkok');                                                 //Libreria para cancelar
         $xml_cancel=$filename."_cancelado.xml";                                         //nombre del archivo a crear con la cancelacion
         $xml_cancel_path="./ufiles/{$this->emisor['rfc']}/$xml_cancel";                 //Path de archivo a crear
         $cancelar=$this->finkok->cancelar($uuid,$this->emisor['rfc'],$cert,$enckey);
+        var_dump($cancelar);die();
         $result['cancelar']=$cancelar;                                                  //Resultado de cancelacion
         if($cancelar->cancelResult->Folios->Folio->EstatusUUID==201){                   //Correcto: 201
             file_put_contents($xml_cancel_path, $cancelar->cancelResult->Acuse);        //Guardar Acuse en XML
