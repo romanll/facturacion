@@ -6,7 +6,6 @@ clientes.js => Registrar clientes, administrarlos, etc...
 
 var base="http://localhost:81/facturacion/";
 //base="http://162.243.127.174/facturacion/";
-listar();										//listar clientes
 $("#pais").val('México');						//al inicio asignar valor de "México"
 
 /* Validar form */
@@ -67,10 +66,6 @@ function enviar(formulario){
     });
 }
 
-/* Mostrar tabla de clientes */
-function listar(){
-    $("#clientes").load(base+'clientes/listar');
-}
 
 /* Mostrar lista de estados: autoejecutable ya uque solo se requerira al mostrar la vista */
 (function(){
@@ -80,23 +75,17 @@ function listar(){
         dataType:'json'                         //o html
     });
     request.done(function(result){
-    	if(!result.error){
-    		$.each(result, function(index, val) {
-	        	//console.log(val.idestado);
-	        	//console.log(val.estado);
-	        	$("#estado_label").append("<option value="+val.idestado+">"+val.estado+"</option>");
-	        });
-	        $("#estado").val($("#estado_label option:selected").text());		//por defecto tendra el valor del estado en select
-	        municipios(1);														//llenar los municipios del primer estado (x defecto)
-    	}
-    	else{
-    		console.log(result.error);
-    	}
+        if(!result.error){
+            $.each(result, function(index, val) {$("#estado_label").append("<option value="+val.idestado+">"+val.estado+"</option>");});
+            $("#estado").val($("#estado_label option:selected").text());		//por defecto tendra el valor del estado en select
+            municipios(1);														//llenar los municipios del primer estado (x defecto)
+        }
+        else{console.log(result.error);}
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
     });
-})()
+})();
 
 $("#estado_label").change(function(event){
 	var estado=$("#estado_label option:selected").text();
@@ -105,7 +94,7 @@ $("#estado_label").change(function(event){
 	municipios($(this).val());
 	//limpiar input y darle foco
 	$("#municipio").val('').focus();
-})
+});
 
 /* municipios: llenar input en base al estado seleccionado en <select> */
 function municipios(estado){
@@ -118,17 +107,11 @@ function municipios(estado){
 		//console.log(data);
 		var lista=data;
 		if(!lista.error){
-		    $("#municipio").autocomplete({
-				source:lista
-		    })
+            $("#municipio").autocomplete({source:lista})
 		}
-		else{
-			console.log(lista.error);
-		}
+		else{console.log(lista.error);}
 	})
-	.fail(function() {
-		console.log("error");
-	});
+	.fail(function() {console.log("error");});
 }
 
 /* Al eliminar cliente */
@@ -161,12 +144,10 @@ $(document).on('click','a.eliminar',function(event){
             });
             request.fail(function(jqXHR,textStatus){
                 console.log(textStatus);
-            })
+            });
         } else {
             // user clicked "cancel"
             console.log('cancel');
         }
     });
-})
-
-//rastreo estafeta: 3527383905
+});

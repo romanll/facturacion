@@ -12,12 +12,8 @@ class Contributors extends CI_Model {
 
 	function create($datos){
     	$this->db->insert($this->tabla,$datos);
-        if($this->db->affected_rows()==1){
-            return $this->db->insert_id(); //TRUE
-        }
-        else{
-            return FALSE;
-        }
+        if($this->db->affected_rows()==1){return $this->db->insert_id();}             //TRUE
+        else{return FALSE;}
     }
 
     /* Ver si emisor existe: retorna valor numerico */
@@ -65,12 +61,8 @@ class Contributors extends CI_Model {
     function update($data,$where){
         $this->db->where($where);
         $this->db->update($this->tabla,$data);
-        if($this->db->affected_rows()==1){
-            return TRUE;
-        }
-        else{
-            return FALSE;
-        }
+        if($this->db->affected_rows()==1){return TRUE;}
+        else{return FALSE;}
     }
 
 

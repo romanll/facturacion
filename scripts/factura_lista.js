@@ -4,7 +4,28 @@
 */
 
 var base="http://localhost:81/facturacion/";
-base="http://162.243.127.174/facturacion/";
+//base="http://162.243.127.174/facturacion/";
+
+/* Busqueda 01/02/2014 */
+$("#buscarform").submit(function(event){
+    event.preventDefault();
+    var formulario=new FormData(document.getElementById("buscarform"));
+    var request=$.ajax({
+        type:"POST",
+        url:$(this).attr('action'),
+        processData: false,                     //necesario para enviar FormData()
+        contentType: false,
+        data:formulario,
+        dataType:"html"
+    });
+    request.done(function(result){
+        //console.log(result);
+        $("#resultados").html(result);
+    });
+    request.fail(function(jqXHR, textStatus){
+        console.log(textStatus);
+    });
+});
 
 //Al cancelar factura
 $(document).on('click','a.cancelar',function(event){
@@ -50,7 +71,7 @@ $(document).on('click','a.cancelar',function(event){
             });
             request.fail(function(jqXHR,textStatus){
                 console.log(textStatus);
-            })
+            });
         } else {
             // user clicked "cancel"
             console.log('cancel');

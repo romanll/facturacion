@@ -13,6 +13,18 @@ class Invoice extends CI_Model {
             return FALSE;
         }
     }
+    
+    /*
+        Busqueda de factura cuando $where['field'] LIKE $where['keyword'] y cuando yo sea el emisor
+        04/02/2014
+    */
+    function search($where){
+        $this->db->order_by('idfactura', 'desc');
+        $this->db->select('idfactura,receptor,fecha,emisor,nodo_comprobante,nodo_receptor,estado,filename');
+        $this->db->like($where['field'],$where['keyword']);
+        $this->db->where('emisor',$where['emisor']);
+        return $this->db->get($this->tabla);
+    }
 
     /* Ver si existe serie: retorna valor numerico */
     function exist($condicion){

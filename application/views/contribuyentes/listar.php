@@ -36,7 +36,7 @@
                                     </select>
                                 </div>
                                 <div class="uk-width-1-10 uk-push-5-10">
-                                    <button class="uk-button uk-button-primary"><i class="uk-icon-search"></i> Buscar</button>
+                                    <button class="uk-button uk-button-primary uk-width-1-1"><i class="uk-icon-search"></i></button>
                                 </div>
 					        </div>
 					    </form>

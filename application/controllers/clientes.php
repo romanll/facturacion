@@ -87,40 +87,83 @@ class Clientes extends CI_Controller {
 
     /* Listar clientes del contribuyente */
     function listar(){
-        $format=$this->uri->segment(3);
-        $where=array('emisor'=>$this->emisor['idemisor']);              //emisor se obtienen de session
-        $query=$this->customers->read($where,array('by'=>'nombre','direction'=>'ASC'));
-        if($query->num_rows()>0){
-            $data['customers']=$query->result();
-        }
-        else{
-            $data['error']="No existen registros.";
-        }
-        if($format && $format=='json'){
-            $this->load->view('clientes/clientes_json', $data, FALSE);
-        }
-        else{
-            if($this->input->is_ajax_request()){
-                $this->load->view('clientes/tabla', $data, FALSE);
+        //Obtener el total de registros a mostrar
+        $where=array("emisor"=>$this->emisor['idemisor']);
+        $numreg=$this->customers->read_num($where);
+        if($numreg>0){
+            $this->load->library('pagination');      
+            $config['base_url'] = base_url("clientes/listar/");                     //Url de paginacion
+            $config['total_rows'] = $numreg;                                        //Num total de registros a listar
+            $config['per_page'] = 25;                                                //Registros por pagina
+            $config['uri_segment'] = 3;                                             //Numero de links en paginacion
+            $config['num_links'] = 2;
+            $config['full_tag_open'] = '<ul class="uk-pagination">';
+            $config['full_tag_close'] = '</ul>';
+            $config['first_link'] = '<i class="uk-icon-angle-double-left" title="Primer página"></i>';
+            $config['first_tag_open'] = '<li>';
+            $config['first_tag_close'] = '</li>';
+            $config['last_link'] = '<i class="uk-icon-angle-double-right" title="Ultima página"></i>';
+            $config['last_tag_open'] = '<li>';
+            $config['last_tag_close'] = '</li>';
+            $config['next_link'] = '<i class="uk-icon-angle-right" title="Siguiente"></i>';
+            $config['next_tag_open'] = '<li class="uk-pagination-next">';
+            $config['next_tag_close'] = '</li>';
+            $config['prev_link'] = '<i class="uk-icon-angle-left" title="Anterior"></i>';
+            $config['prev_tag_open'] = '<li class="uk-pagination-previous">';
+            $config['prev_tag_close'] = '</li>';
+            $config['cur_tag_open'] = '<li class="uk-active"><span>';
+            $config['cur_tag_close'] = '</span></li>';
+            $config['num_tag_open'] = '<li>';
+            $config['num_tag_close'] = '</li>';
+            $this->pagination->initialize($config);
+            $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+            $query=$this->customers->read_pag($where,$config['per_page'],$page);
+            if($query->num_rows()>0){
+                $data['customers']=$query->result();
+                $data['links']=$this->pagination->create_links();
             }
             else{
-                $this->load->view('clientes/lista', $data, FALSE);
+                $data['error']="No existen registros";
             }
         }
+        else{
+            $data['error']="No existen registros";
+        }
+        $this->load->view('clientes/lista',$data);
     }
 
-    /* buscar clientes, llenar autocomplete de jqueryui */
+    /* 
+        Buscar clientes
+        Recibe en POST la keyword y el campo donde buscar
+        06/02/2014
+    */
     function buscar(){
-        $keyword=$this->input->get('term');
-        //echo $keyword;
-        $where=array('emisor'=>$this->emisor['idemisor'],'like'=>$keyword);
-        $query=$this->customers->like($where);
-        if($query->num_rows()>0){
-            //echo json_encode($query->result());
-            $data['result']=$query->result_array();
+        $field=$this->input->post('optionsearch');
+        $keyword=$this->input->post('busqueda');
+        if($field){
+            $where=array('emisor'=>$this->emisor['idemisor'],'keyword'=>$keyword,'field'=>$field);
+            $query=$this->customers->search($where);
+            if($query->num_rows()>0){$data['customers']=$query->result();}
+            else{$data['error']="No existen registros que cumplan con el criterio.";}
         }
-        else{$data['error']='No data';}
-        $this->load->view('clientes/likejson', $data, FALSE);
+        $this->load->view('clientes/busqueda', $data, FALSE);
+    }
+    
+    /* 
+        Obtener info de cliente para mostrar en modal
+        Recibe identificador en uri->segment()
+        06/02/2014
+    */
+    function info(){
+        $cliente=$this->uri->segment(3);
+        if($cliente){
+            $where=array('idcliente'=>$cliente,'emisor'=>$this->emisor['idemisor']);
+            $query=$this->customers->read($where,FALSE);
+            if($query->num_rows()>0){$data['customer']=$query->result();}
+            else{$data['error']="No existen datos de cliente";}
+        }
+        else{$data['error']="Especifique identificador de cliente";}
+        $this->load->view('clientes/info',$data);
     }
 
 
@@ -128,14 +171,11 @@ class Clientes extends CI_Controller {
     function eliminar(){
         $cliente=$this->uri->segment(3);
         if($cliente){
-            $where=array('idcliente'=>$cliente);                                //obtener info del cliente
-            $query=$this->customers->read();
+            $where=array('idcliente'=>$cliente,'emisor'=>$this->emisor['idemisor']);    //obtener info del cliente cuando yo sea su emisor
+            $query=$this->customers->read($where);
             if($query->num_rows()>0){
-                $row=$query->row();
-                $proveedor=$row->emisor;
-            }
-            //soy el proveedor del cliente?: comparar con 'session'
-            if($proveedor==$this->emisor['idemisor']){                          //si:eliminar
+                //$row=$query->row();
+                //$proveedor=$row->emisor;
                 $eliminar=$this->customers->delete($cliente);
                 //comprobar que no exista
                 $num_clientes=$this->customers->exist($where);

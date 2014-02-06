@@ -95,9 +95,6 @@
 							</div>
 						</fieldset>
 					</form>
-					<!-- Lista de Clientes -->
-					<h3 class="uk-h3">Lista de Clientes</h3>
-					<div id="clientes"></div>
 				</div>
 			</div>
 		</div>

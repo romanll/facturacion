@@ -21,36 +21,61 @@
 						<?php
 						if(isset($items)):
 						?>
-						<table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-							<caption>Productos/Servicios en lista</caption>
-							<thead>
-								<tr>
-									<th class="uk-text-center">No Identificaci&oacute;n</th>
-									<th>Descripci&oacute;n</th>
-									<th class="uk-text-center">Precio Unitario</th>
-									<th class="uk-text-center">Unidad</th>
-									<th class="uk-text-center">Opciones</th>
-								</tr>
-							</thead>
-							<tbody>
-						<?php
-							foreach($items as $item):
-						?>
-								<tr>
-									<td class="uk-text-center uk-width-2-10"><?php echo $item->noidentificacion; ?></td>
-									<td class="uk-width-5-10"><?php echo $item->descripcion; ?></td>
-									<td class="uk-text-center uk-width-1-10"><?php echo $item->valor; ?></td>
-									<td class="uk-text-center uk-width-1-10"><?php echo $item->unidad; ?></td>
-									<td class="uk-text-center uk-width-1-10">
-										<a href='<?php echo base_url("conceptos/editar/$item->idconcepto"); ?>' class="editar"><i class="uk-icon-edit"></i></a>
-										<a href='<?php echo base_url("conceptos/eliminar/$item->idconcepto"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
-									</td>
-								</tr>
-						<?php
-							endforeach;
-						?>
-							</tbody>
-						</table>
+						<div class="uk-grid">
+                            <form action="<?php echo base_url("conceptos/buscar"); ?>" class="uk-form" method="post" id="buscarform">
+                                <div class="uk-grid">
+                                    <div class="uk-width-2-10 uk-push-5-10">
+                                        <input type="search" name="busqueda" id="busqueda" class="uk-width-1-1" placeholder="Buscar...." required>
+                                    </div>
+                                    <div class="uk-width-2-10 uk-push-5-10">
+                                        <select name="optionsearch" id="optionsearch" class="uk-width-1-1">
+                                            <option value="descripcion">Descripci&oacute;n</option>
+                                            <option value="noidentificacion">Identificador</option>
+                                            <option value="valor">Valor</option>
+                                            <option value="observaciones">Observaciones</option>
+                                        </select>
+                                    </div>
+                                    <div class="uk-width-1-10 uk-push-5-10">
+                                        <button class="uk-button uk-button-primary uk-width-1-1"><i class="uk-icon-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <br>
+                        <div id="resultados">
+                            <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+                                <caption>Productos/Servicios en lista</caption>
+                                <thead>
+                                    <tr>
+                                        <th class="uk-text-center">No Identificaci&oacute;n</th>
+                                        <th>Descripci&oacute;n</th>
+                                        <th class="uk-text-center">Precio Unitario</th>
+                                        <th class="uk-text-center">Unidad</th>
+                                        <th class="uk-text-center">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                            <?php
+                                foreach($items as $item):
+                            ?>
+                                    <tr>
+                                        <td class="uk-text-center uk-width-2-10"><?php echo $item->noidentificacion; ?></td>
+                                        <td class="uk-width-5-10"><?php echo $item->descripcion; ?></td>
+                                        <td class="uk-text-right uk-width-1-10"><?php echo number_format($item->valor,2,'.',',') ; ?></td>
+                                        <td class="uk-text-center uk-width-1-10"><?php echo $item->unidad; ?></td>
+                                        <td class="uk-text-center uk-width-1-10">
+                                            <a href='<?php echo base_url("conceptos/info/$item->idconcepto"); ?>' class="info" title="Ver información del concepto"><i class="uk-icon-info-circle"></i></a>
+                                            <a href='<?php echo base_url("conceptos/editar/$item->idconcepto"); ?>' class="editar" title="Editar datos del concepto"><i class="uk-icon-edit"></i></a>
+                                            <a href='<?php echo base_url("conceptos/eliminar/$item->idconcepto"); ?>' class="eliminar" title="Eliminar concepto"><i class="uk-icon-trash-o"></i></a>
+                                        </td>
+                                    </tr>
+                            <?php
+                                endforeach;
+                            ?>
+                                </tbody>
+                            </table>
+                            <div id="pagination"><?php echo $links;?></div>
+                        </div>
 						<?php
 						else:
 						?>
@@ -58,6 +83,20 @@
 						<?php
 						endif;
 						?>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+			<div id="modal" class="uk-modal">
+				<div class="uk-modal-dialog">
+					<a href="#" class="uk-modal-close uk-close"></a>
+					<div id="modal_content">
+					Contenido de modal
+					</div>
+					<div class="uk-grid">
+						<div class="uk-width-1-1">
+							<button class="uk-button uk-button-primary uk-float-right uk-modal-close">Aceptar</button>
+						</div>
 					</div>
 				</div>
 			</div>

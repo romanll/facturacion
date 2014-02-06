@@ -80,36 +80,83 @@ class Conceptos extends CI_Controller {
 
     /* Listar conceptos de usuario */
     function listar(){
-        $format=$this->uri->segment(3);
-        $where=array('emisor'=>$this->emisor['idemisor']);                      //emisor se obtienen de session
-        $query=$this->items->read($where,array('by'=>'descripcion','direction'=>'ASC'));
-        if($query->num_rows()>0){$data['items']=$query->result();}
-        else{$data['error']="No existen registros";}
-        //si $format =='json', retornar items en ese formato
-        if($format && $format=='json'){
-            $this->load->view('conceptos/items_json', $data, FALSE);
-        }
-        else{
-            if($this->input->is_ajax_request()){
-                $this->load->view('conceptos/tabla', $data, FALSE);
+        //Obtener el total de registros a mostrar
+        $where=array("emisor"=>$this->emisor['idemisor']);
+        $numreg=$this->items->read_num($where);
+        if($numreg>0){
+            $this->load->library('pagination');      
+            $config['base_url'] = base_url("conceptos/listar/");                     //Url de paginacion
+            $config['total_rows'] = $numreg;                                        //Num total de registros a listar
+            $config['per_page'] = 25;                                                //Registros por pagina
+            $config['uri_segment'] = 3;                                             //Numero de links en paginacion
+            $config['num_links'] = 2;
+            $config['full_tag_open'] = '<ul class="uk-pagination">';
+            $config['full_tag_close'] = '</ul>';
+            $config['first_link'] = '<i class="uk-icon-angle-double-left" title="Primer página"></i>';
+            $config['first_tag_open'] = '<li>';
+            $config['first_tag_close'] = '</li>';
+            $config['last_link'] = '<i class="uk-icon-angle-double-right" title="Ultima página"></i>';
+            $config['last_tag_open'] = '<li>';
+            $config['last_tag_close'] = '</li>';
+            $config['next_link'] = '<i class="uk-icon-angle-right" title="Siguiente"></i>';
+            $config['next_tag_open'] = '<li class="uk-pagination-next">';
+            $config['next_tag_close'] = '</li>';
+            $config['prev_link'] = '<i class="uk-icon-angle-left" title="Anterior"></i>';
+            $config['prev_tag_open'] = '<li class="uk-pagination-previous">';
+            $config['prev_tag_close'] = '</li>';
+            $config['cur_tag_open'] = '<li class="uk-active"><span>';
+            $config['cur_tag_close'] = '</span></li>';
+            $config['num_tag_open'] = '<li>';
+            $config['num_tag_close'] = '</li>';
+            $this->pagination->initialize($config);
+            $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+            $query=$this->items->read_pag($where,$config['per_page'],$page);
+            if($query->num_rows()>0){
+                $data['items']=$query->result();
+                $data['links']=$this->pagination->create_links();
             }
             else{
-                $this->load->view('conceptos/lista', $data, FALSE);
+                $data['error']="No existen registros.";
             }
         }
+        else{
+            $data['error']="No existen registros.";
+        }
+        $this->load->view('conceptos/lista',$data);
     }
 
 
-    /* buscar conceptos, llenar 'autocomplete' de jqueryui */
+    /* 
+        Buscar conceptos
+        Recibe los criterios en POST
+    */
     function buscar(){
-        $keyword=$this->input->get('term');
-        $where=array('emisor'=>$this->emisor['idemisor'],'like'=>$keyword);
-        $query=$this->items->like($where);
-        if($query->num_rows()>0){
-            $data['result']=$query->result_array();
+        $field=$this->input->post('optionsearch');
+        $keyword=$this->input->post('busqueda');
+        if($field){
+            $where=array('emisor'=>$this->emisor['idemisor'],'keyword'=>$keyword,'field'=>$field);
+            $query=$this->items->search($where);
+            if($query->num_rows()>0){$data['items']=$query->result();}
+            else{$data['error']="No existen registros que cumplan con el criterio.";}
         }
-        else{$data['error']='No data';}
-        $this->load->view('conceptos/likejson', $data, FALSE);
+        $this->load->view('conceptos/busqueda', $data, FALSE);
+    }
+    
+    /*
+        Mostrar info de producto
+        Recibe identificador en uri->segment()
+        06/02/2014
+    */
+    function info(){
+        $item=$this->uri->segment(3);
+        if($item){
+            $where=array('idconcepto'=>$item,'emisor'=>$this->emisor['idemisor']);
+            $query=$this->items->read($where,FALSE);
+            if($query->num_rows()>0){$response['items']=$query->result();}
+            else{$response['error']="No existe registro.";}
+        }
+        else{$response['error']="Especifique identificador de concepto.";}
+        $this->load->view('conceptos/info',$response);
     }
 
 
@@ -118,7 +165,7 @@ class Conceptos extends CI_Controller {
         $item=$this->uri->segment(3);
         if($item){
             $where=array('idconcepto'=>$item);                                  //obtener info del item
-            $query=$this->items->read();
+            $query=$this->items->read($where);
             if($query->num_rows()>0){
                 $row=$query->row();
                 $propietario=$row->emisor;

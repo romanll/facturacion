@@ -25,6 +25,39 @@ class Factura extends CI_Controller {
         $this->load->view('facturas/nuevo');
     }
     
+    /* 
+        Buscar de acuerdo a criterios
+        Recibe en POST el campo donde buscar y la palabra clave
+        01/02/2014
+    */
+    function buscar(){
+        $data=$this->input->post();
+        if($data){
+            $campo="";
+            if($data['optionsearch']=="cliente"){$campo="nodo_receptor";}
+            else if($data['optionsearch']=="rfc"){$campo="receptor";}
+            else if($data['optionsearch']=="fecha"){$campo="fecha";}
+            else{$campo="estado";}
+            $where=array(
+                'field'=>$campo,
+                'keyword'=>$data['busqueda'],
+                'emisor'=>$this->emisor['idemisor']
+            );
+            $query=$this->invoice->search($where);
+            if($query->num_rows()>0){
+                $response['facturas']=$query->result();
+            }
+            else{
+                $response['error']="No existen registros que cumplan con los requisitos.";
+            }
+        }
+        else{
+            $response['error']="Especifique datos a buscar";
+        }
+        //echo json_encode($response);
+        $this->load->view("facturas/busqueda_result",$response);
+    }
+    
     /*
         Obtener el numero de certificado
         Recibe path de certificado
@@ -167,7 +200,7 @@ class Factura extends CI_Controller {
                     "nodo_timbre"=>json_encode($timbre_node),
                     "estado"=>"Activo",
                     "filename"=>$filename,
-                    "uuid"=>$timbre_node['uuid'],                                   //Para facilidad al cancelar
+                    "uuid"=>$timbre_node['UUID'],                                   //Para facilidad al cancelar
                     "impuestos"=>json_encode($datos['impuestos'])                   //Para facilidad al crear PDF
                     //Agregar Serie?folio
                 );
@@ -258,7 +291,7 @@ class Factura extends CI_Controller {
         $xml_cancel=$filename."_cancelado.xml";                                         //nombre del archivo a crear con la cancelacion
         $xml_cancel_path="./ufiles/{$this->emisor['rfc']}/$xml_cancel";                 //Path de archivo a crear
         $cancelar=$this->finkok->cancelar($uuid,$this->emisor['rfc'],$cert,$enckey);
-        var_dump($cancelar);die();
+        //var_dump($cancelar);die();
         $result['cancelar']=$cancelar;                                                  //Resultado de cancelacion
         if($cancelar->cancelResult->Folios->Folio->EstatusUUID==201){                   //Correcto: 201
             file_put_contents($xml_cancel_path, $cancelar->cancelResult->Acuse);        //Guardar Acuse en XML

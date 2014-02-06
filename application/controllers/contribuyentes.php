@@ -258,15 +258,15 @@ class Contribuyentes extends CI_Controller {
 
 
     /* Ver si existe usuario en tabla usuario */
-    function existe($id_usuario){
-        $exist=$this->users->exist(array('idusuario'=>$id_usuario));
+    function existe($id_emisor){
+        $exist=$this->contributors->exist(array('idemisor'=>$id_emisor));
         if($exist>0){return TRUE;}
         return FALSE;
     }
 
     /* Ver si existe en tabla emisor (si ya se registraron sus datos anteriormente) */
     function yaregistrado($id_usuario){
-        $exist=$this->contributors->exist(array('usuario'=>$id_usuario));
+        $exist=$this->contributors->exist(array('idemisor'=>$id_usuario));
         if($exist>0){return TRUE;}
         return FALSE;
     }

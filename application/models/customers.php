@@ -39,13 +39,30 @@ class Customers extends CI_Model {
         }
         return $this->db->get($this->tabla);
     }
+    
+    /* Obtener el numero de registros que cumplen con la condicion => 04/02/2014 */
+    function read_num($condicion=FALSE){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->from($this->tabla);
+        return $this->db->count_all_results();
+    }
+    
+    /* Obtener los datos con paginacion */
+    function read_pag($condicion=FALSE, $per_page, $offset){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->order_by('idcliente','DESC');
+        return $this->db->get($this->tabla, $per_page, $offset);
+    }
 
-    /* like : $where recibe emisor y termino a buscar */
-    function like($condicion){
-        //retornar id, label y value para autocompletado, y los demas campos tambien
-        //$this->db->select("identificador as label, identificador as value, rfc as id");
-        $this->db->like('identificador',$condicion['like']);
-        $this->db->where('emisor',$condicion['emisor']);
+    /*
+        Busqueda de cliente cuando $where['field'] LIKE $where['keyword'] y emisor $where['emisor']
+        06/02/2014
+    */
+    function search($where){
+        $this->db->order_by('idcliente', 'desc');
+        $this->db->select('idcliente,identificador,nombre,rfc,telefono');
+        $this->db->like($where['field'],$where['keyword']);
+        $this->db->where('emisor',$where['emisor']);
         return $this->db->get($this->tabla);
     }
 

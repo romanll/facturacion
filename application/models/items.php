@@ -34,6 +34,31 @@ class Items extends CI_Model {
         }
         return $this->db->get($this->tabla);
     }
+    
+    /* Obtener los datos con paginacion */
+    function read_pag($condicion=FALSE, $per_page, $offset){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->order_by('idconcepto', 'desc');
+        return $this->db->get($this->tabla, $per_page, $offset);
+    }
+    
+    /*
+        Busqueda de item cuando $where['field'] LIKE $where['keyword'] y yo sea el dueño
+        06/02/2014
+    */
+    function search($where){
+        $this->db->order_by('idconcepto', 'desc');
+        $this->db->like($where['field'],$where['keyword']);
+        $this->db->where('emisor',$where['emisor']);
+        return $this->db->get($this->tabla);
+    }
+    
+    /* Obtener el numero de registros que cumplen con la condicion => 06/02/2014 */
+    function read_num($condicion=FALSE){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->from($this->tabla);
+        return $this->db->count_all_results();
+    }
 
     /* like : $where recibe emisor y termino a buscar */
     function like($condicion){

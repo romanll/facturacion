@@ -78,6 +78,7 @@ $("#generar").click(function(event){
             texto+="<a href='"+result.xml+"'><i class='uk-icon-cloud-download'></i> Descargar XML</a>";
             texto+="<br><a href='"+result.pdf+"' target='_blank'><i class='uk-icon-external-link-square'></i> Descargar/Ver PDF</a>";
             //Resetear formularios, tabla de items y totales
+            resetforms();
         }
         else{
             texto='<div class="uk-alert uk-alert-danger"><i class="uk-icon-times"></i> '+result.error+'</div>';
@@ -92,7 +93,7 @@ $("#generar").click(function(event){
     });
 });
 
-/* Al remover concepto */
+/* Al remover CONCEPTO */
 $(document).on('click','a.remove',function(event){
     event.preventDefault();
     var iditem=$(this).attr('href');
@@ -122,7 +123,7 @@ $("#isr").change(function(event){
     totales();                                          //Volver a calcular totales
 });
 
-/* Al cambiar valor de descuento */
+/* Al cambiar valor de DESCUENTO */
 $("#descuento").keyup(function(event){
     //relistar();
     comprobante.desc=$(this).val();                     //Asignar valor a 'desc' en comprobante
@@ -130,7 +131,7 @@ $("#descuento").keyup(function(event){
     totales();                                          //Volver a calcular totales
 });
 
-/* Acéptar solo numeros y caracteres epeciales */
+/* Acéptar solo numeros y caracteres epeciales DESCUENTO */
 $('#descuento').keydown(function(event) {
     // Allow special chars + arrows 
     if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9  || event.keyCode == 27 || event.keyCode == 13  || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39)){
@@ -143,7 +144,7 @@ $('#descuento').keydown(function(event) {
     }
 });
 
-/* Al cambiar valor de descuento tipo: porcentaje||moneda */
+/* Al cambiar valor de DESCUENTO tipo: porcentaje||moneda */
 $("#desctipo").change(function(event){
     //console.log($(this).val());
     //relistar();
@@ -151,7 +152,7 @@ $("#desctipo").change(function(event){
     totales();                                          //Volver a calcular totales
 });
 
-/* Al cambiar valor de cantidad */
+/* Al cambiar valor de CANTIDAD */
 $("#cantidad").keyup(function(event){
     var valor=$("#concepto").val();
     var cantidad=$(this).val();
@@ -160,7 +161,7 @@ $("#cantidad").keyup(function(event){
     }
 });
 
-/* Al cambiar el valor del select concepto */
+/* Al cambiar el valor del select CONCEPTO */
 $("#concepto").change(function(event){
     var valor=$(this).val();
     var cantidad=$("#cantidad").val();
@@ -177,7 +178,7 @@ $("#concepto").change(function(event){
     }
 });
 
-/* Al cambiar el valor de select receptor */
+/* Al cambiar el valor de select receptor ::CLIENTE */
 $("#receptor").change(function(event){
     var valor=$(this).val();
     if(!isNaN(valor)){
@@ -218,19 +219,19 @@ $("#serie").change(function(event){
 /* Al cambiar valor en tipo comprobante 24/01/2014 */
 $("#tipocomp").change(function(event){comprobante.tipocomp=$(this).val();});
 
-/* Al cambiar valor en forma pago 24/01/2014 */
+/* Al cambiar valor en forma PAGO 24/01/2014 */
 $("#formapago").change(function(event){comprobante.formapago=$(this).val();});
 
-/* Al cambiar valor en condiciones pago 24/01/2014 */
+/* Al cambiar valor en condiciones PAGO 24/01/2014 */
 $("#condiciones").keyup(function(event){comprobante.condpago=$(this).val();});
 
-/* Al cambiar valor en metodo pago 24/01/2014 */
+/* Al cambiar valor en metodo PAGO 24/01/2014 */
 $("#metodopago").change(function(event){comprobante.metpago=$(this).val();});
 
-/* Al cambiar valor en cuenta pago 24/01/2014 */
+/* Al cambiar valor en cuenta PAGO 24/01/2014 */
 $("#numcuenta").keyup(function(event){comprobante.cuentapago=$(this).val();});
 
-/* Al cambiar valor en motivo descuento 24/01/2014 */
+/* Al cambiar valor en motivo DESCUENTO 24/01/2014 */
 $("#motivodesc").keyup(function(event){comprobante.descmotivo=$(this).val();});
 
 /* Al cambiar valor en moneda 24/01/2014 */
@@ -331,10 +332,14 @@ function resetforms(){
     $("#isrval").text("");
     $("#ivaretval").text("");
     $("#totalval").text("");
-    $("#nombre").val(clientelabel.nombre);
-    $("#rfc").val(clientelabel.rfc);
-    $("#direccion").val(clientelabel.direccion);
+    $("#nombre").text("Nombre del cliente");
+    $("#rfc").text("RFC del cliente");
+    $("#direccion").text("Dirección de cliente");
     $("#generar").attr('disabled',true);
+    $("#additem button").attr('disabled',true);                     //y deshabilitar boton de nuevo
+    items={};
+    item={};
+    cliente={};
 }
 
 /* Mostrar datos de cliente en divs a partir de clientelabel 26/01/2014 */
@@ -507,25 +512,10 @@ function agregar(){
 
 /* Actualizar tabla de items */
 function relistar(){
-    var descuento=$("#descuento").val();                //valor descuento aplicado
-    var comprobante={
-        iva:parseInt($("#iva").val()),                  //IVA
-        isr:parseInt($("#isr").val()),                  //ISR
-        ivaret:$("#ivaretencion").val()                 //IVA retenido
-    };
-    var percent=descuento.search("%");                  //ver si es en %
-    if(percent!=-1){
-        descuento.replace("%","");                      //si es, eliminar % y dejar el numero
-        comprobante.desctipo="porcentaje";
-    }
-    descuento=parseFloat(descuento);
-    if(isNaN(descuento)){descuento=0;}
-    comprobante.descuento=descuento;        //agregar descuento
-    //console.log(comprobante);
     var request = $.ajax({
         type: "POST",
-        url: base+"factura/agregaritem",
-        data: {items:items,datosf:comprobante},
+        url: base+"factura/additems",
+        data: {items:items},
         dataType:'html'
     });
     request.done(function(result){
