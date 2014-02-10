@@ -3,8 +3,9 @@ factura.js : creacion de factura, validacion de campos
 24/12/2013
 */
 
-var base = "http://localhost:81/facturacion/";
+//var base = "http://localhost:81/facturacion/";
 //base="http://162.243.127.174/facturacion/";
+
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados
 var cliente={};                                     //Datos de cliente
@@ -64,7 +65,7 @@ $("#generar").click(function(event){
     $(this).attr('disabled',true);
     var request = $.ajax({
         type: "POST",
-        url: base+"factura/doinvoice",
+        url: "factura/doinvoice",
         data: {comprobante:comprobante,cliente:cliente,items:items},
         dataType:"json"
     });
@@ -261,7 +262,7 @@ function additem(){
     //Generar tabla en servidor y pasarle los items
     var request = $.ajax({
         type: "POST",
-        url: base+"factura/additems",
+        url: "factura/additems",
         data: {items:items},
         dataType:'html'
     });
@@ -371,7 +372,7 @@ function showcdata(){
 (function(){
     var request = $.ajax({
         type: "POST",
-        url: base+"configuracion/listarseries/json",
+        url: "configuracion/listarseries/json",
         dataType:'json'
     });
     request.done(function(result){
@@ -393,7 +394,7 @@ function showcdata(){
 (function(){
     var request = $.ajax({
         type: "POST",
-        url: base+"clientes/listar/json",
+        url: "clientes/listar/json",
         dataType:'json'
     });
     request.done(function(result){
@@ -416,7 +417,7 @@ function showcdata(){
 function getSerie(serie){
     var request = $.ajax({
         type: "POST",
-        url: base+"configuracion/verserie/"+serie,
+        url: "configuracion/verserie/"+serie,
         dataType:'json'
     });
     request.done(function(result){
@@ -435,7 +436,7 @@ function getItem(iditem){
     var request = $.ajax({
         type: "POST",
         data:{item:iditem},
-        url: base+"conceptos/ver",
+        url: "conceptos/ver",
         dataType:'json'
     });
     request.done(function(result){
@@ -453,7 +454,7 @@ function getCustomer(idcustomer){
     var request = $.ajax({
         type: "POST",
         data:{cliente:idcustomer},
-        url: base+"clientes/ver",
+        url: "clientes/ver",
         dataType:'json'
     });
     request.done(function(result){
@@ -481,7 +482,7 @@ function getCustomer(idcustomer){
     //console.log('obtener conceptos y mostrar select');
     var request = $.ajax({
         type: "POST",
-        url: base+"conceptos/listar/json",
+        url: "conceptos/listar/json",
         dataType:'json'
     });
     request.done(function(result){
@@ -514,7 +515,7 @@ function agregar(){
 function relistar(){
     var request = $.ajax({
         type: "POST",
-        url: base+"factura/additems",
+        url: "factura/additems",
         data: {items:items},
         dataType:'html'
     });

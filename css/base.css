@@ -1,154 +1,121 @@
-/* 
-base.css => Estilos base para proyecto
-15/12/2013
+/*
+	Estilos para sitio con menu iIZQ y contenido DER
+	08/02/2014
 */
 
 /* Importar algunas fuentes */
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans);
 
-/* Redefinir algunos estilos */
-.uk-form .uk-grid,.mg7,.uk-modal .uk-grid {margin-top: 7px !important;}
-table th,table td.uk-text-bold{font-family: 'Lato';color: #000;}
-.uk-table td{vertical-align: middle;}
-.uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
-/* label generado por jquery.validate */
-label.error{
-	color: #EC0000;
-	font-size: 13px;
-}
-
-.ui-autocomplete {
-    max-height: 300px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
-  }
-
-/* sobreescibiri alertify confirm */
-.alertify{
-	border-radius: 0 !important;
-	font-family: inherit !important;
-}
-.alertify-buttons{
-	background: #FFF !important;
-	border-top: none !important;
-}
-.alertify-button{border-radius: 0 !important;}
-.alertify-log-success {
-	background-color: #8cc14c !important;
-  	color: #ffffff !important;
-	border: none !important;
-}
-.alertify-log-error {
-	background-color: #da314b !important;
-  	color: #ffffff !important;
-  	border: none !important;
-}
-.alertify-log{
-	border-radius: 0 !important;
-	text-shadow:none !important;
-}
-
-
-/* Propios */
-/*header*/
-header{
-	background-color: #000;
-	color: #FFF;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	font-size: 1em;
-	font-family: 'Lato';
-}
-
-/* sobreescribir para menu */
-.uk-navbar-brand,.uk-navbar-brand:hover{color: #FFF;}
-.uk-navbar-nav > li > a {color:#DDD;cursor: pointer !important;}
-.uk-dropdown-navbar{
-	-moz-box-shadow: 0 0 5px #444;
-	-webkit-box-shadow: 0 0 5px#444;
-	box-shadow: 0 0 5px #444;
-	border:none;
-}
-.uk-navbar-flip{
-	margin-top: 10px;
-}
-.uk-navbar-flip a{
-	color: #FFF;
-	text-decoration: none;
-}
-.uk-navbar-flip a:hover{
-	color: #00a8e6;
-}
-/* /sobreescribir para menu */
-
-.modal_content{
-	overflow: hidden;
-	max-height: 500px;
-}
-.modal_content form table{
-	overflow-y: auto;
-}
-.modal form table{height: 345px;display: block}
-.modal .uk-grid .uk-button-danger{margin-left: 5px;}
-
-form input[type="checkbox"]{
-	margin-top: 4px;
-}
-form label{
-	margin-top: 3px !important;
-	float:left;
-}
-
-/* foliarea en crear fectura 24042014 */
-form #folioarea{
-	display: none;
-}
-/* tabla importes 24/01/2014 */
-table#importe td{
-	font-size: 19px;
-	font-family: "Open Sans";
-}
-/* crear factura areas */
-#descuentoarea,#pagoarea,#impuestosarea{
-	display: none;
-}
-
-div#nombre,div#rfc,div#direccion{
-	font-family: Open Sans;
-	font-size: 15px;
-	font-weight: 700;
-}
-
-
-
-/* De layout */
-#container{
-	margin-top: 1em;
-	margin-bottom: 1em;
-}
-
-
-/* remover icon red */
-a.remove,a.eliminar{color: #FF0000;}
-a.editar{color: #FF6600;}
-a.info{color: #6699FF}
-
-/*
-Lato Bold
-14/01/14
-*/
-.lato-bold{
-	font-family: "Lato";
-	font-weight: 700;
-}
-
-
-/*
-	Estilos de form
-	23/01/2014
-*/
-input[readonly]{
-	border-color:#EEE !important;
-}
+/* BODY */
+html,body{height: 100%;position: relative;}
+/* LAYOUT */
+	/* IZQ */
+		#izq{
+			background-color:#252525;
+	        color: #FFF;
+	        font-family:"Noto Sans";
+		    font-size:13px;
+		    height: 100%;
+		}
+		/* Menu: Solo redefinir estilos de Uikit */
+			.uk-nav-side > li > a:hover, .uk-nav-side > li > a:focus {
+	            background: rgba(0, 0, 0, 0.25);
+	        }
+	        .uk-nav-sub > li > a:hover, .uk-nav-sub > li > a:focus {
+	            color: #00C2FF !important;
+	        }
+			.uk-nav a{
+			    cursor:pointer !important;
+			    color:inherit !important;
+			}
+			.uk-nav-side > li{line-height:25px;}
+			.uk-nav a i{font-size:15px;width:18px;}
+		/* / Menu*/
+	/* DER */
+		#der{padding:7px;overflow-y:auto;height: 100%;  }
+		/* Encabezado*/
+			#encabezado{
+			    border-bottom:1px solid #ccc;
+			    padding-top:10px;
+			    padding-bottom:10px;
+			}
+			#encabezado a{color:#000;}
+			#encabezado a:hover{color:#0066FF;text-decoration:none;}
+		/* Contenido */
+			#contenido{margin-top: 20px;margin-bottom: 20px;}
+			/* Home */
+				a.link-box{
+				    display: block;
+		            padding: 15px;
+		            background-color: #F7F7F7;
+		            border: 1px solid #DADADA;
+		            text-align:center;
+		            text-decoration:none;
+		             -webkit-transition: all .25s ease-in-out;
+		              -moz-transition: all .25s ease-in-out;
+		              -o-transition: all .25s ease-in-out;
+		              transition: all .25s ease-in-out;
+				}
+				a.link-box:hover{
+				    background-color:#0099FF;
+				    border-color:#0066FF;
+				    color:#FFF;
+				}
+				#buscarform{margin-bottom: 10px;}
+			/* /Home */
+			/* Nueva Factura*/
+				#descuentoarea,#pagoarea,#impuestosarea{
+					display: none;
+				}
+				div#nombre,div#rfc,div#direccion{
+					font-family: Open Sans;
+					font-size: 15px;
+					font-weight: 700;
+				}
+			/* /Nueva Factura */
+/* Extras */
+		.uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
+		.lato-bold{
+			font-family: "Lato";
+			font-weight: 700;
+		}
+	/* Uikit */
+		.uk-form .uk-grid,.mg7,.uk-modal .uk-grid {margin-top: 7px !important;}
+		table th,table td.uk-text-bold{font-family: 'Lato';}
+		.uk-table td{vertical-align: middle;}
+	/* Alertify */
+		.alertify{
+			border-radius: 0 !important;
+			font-family: inherit !important;
+		}
+		.alertify-buttons{
+			background: #FFF !important;
+			border-top: none !important;
+		}
+		.alertify-button{border-radius: 0 !important;}
+		.alertify-log-success {
+			background-color: #8cc14c !important;
+		  	color: #ffffff !important;
+			border: none !important;
+		}
+		.alertify-log-error {
+			background-color: #da314b !important;
+		  	color: #ffffff !important;
+		  	border: none !important;
+		}
+		.alertify-log{
+			border-radius: 0 !important;
+			text-shadow:none !important;
+		}
+	/* jquery validate */
+		label.error{
+			color: #EC0000;
+			font-size: 13px;
+		}
+	/* Icons tables */
+		a.editar,a.remover,a.info{font-size:15px}
+		a.remove,a.eliminar{color: #FF0000;}
+		a.editar{color: #FF6600;}
+		a.info{color: #3399FF;}

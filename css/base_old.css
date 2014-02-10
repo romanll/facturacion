@@ -1,0 +1,154 @@
+/* 
+base.css => Estilos base para proyecto
+15/12/2013
+*/
+
+/* Importar algunas fuentes */
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+/* Redefinir algunos estilos */
+.uk-form .uk-grid,.mg7,.uk-modal .uk-grid {margin-top: 7px !important;}
+table th,table td.uk-text-bold{font-family: 'Lato';color: #000;}
+.uk-table td{vertical-align: middle;}
+.uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
+/* label generado por jquery.validate */
+label.error{
+	color: #EC0000;
+	font-size: 13px;
+}
+
+.ui-autocomplete {
+    max-height: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+
+/* sobreescibiri alertify confirm */
+.alertify{
+	border-radius: 0 !important;
+	font-family: inherit !important;
+}
+.alertify-buttons{
+	background: #FFF !important;
+	border-top: none !important;
+}
+.alertify-button{border-radius: 0 !important;}
+.alertify-log-success {
+	background-color: #8cc14c !important;
+  	color: #ffffff !important;
+	border: none !important;
+}
+.alertify-log-error {
+	background-color: #da314b !important;
+  	color: #ffffff !important;
+  	border: none !important;
+}
+.alertify-log{
+	border-radius: 0 !important;
+	text-shadow:none !important;
+}
+
+
+/* Propios */
+/*header*/
+header{
+	background-color: #000;
+	color: #FFF;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 1em;
+	font-family: 'Lato';
+}
+
+/* sobreescribir para menu */
+.uk-navbar-brand,.uk-navbar-brand:hover{color: #FFF;}
+.uk-navbar-nav > li > a {color:#DDD;cursor: pointer !important;}
+.uk-dropdown-navbar{
+	-moz-box-shadow: 0 0 5px #444;
+	-webkit-box-shadow: 0 0 5px#444;
+	box-shadow: 0 0 5px #444;
+	border:none;
+}
+.uk-navbar-flip{
+	margin-top: 10px;
+}
+.uk-navbar-flip a{
+	color: #FFF;
+	text-decoration: none;
+}
+.uk-navbar-flip a:hover{
+	color: #00a8e6;
+}
+/* /sobreescribir para menu */
+
+.modal_content{
+	overflow: hidden;
+	max-height: 500px;
+}
+.modal_content form table{
+	overflow-y: auto;
+}
+.modal form table{height: 345px;display: block}
+.modal .uk-grid .uk-button-danger{margin-left: 5px;}
+
+form input[type="checkbox"]{
+	margin-top: 4px;
+}
+form label{
+	margin-top: 3px !important;
+	float:left;
+}
+
+/* foliarea en crear fectura 24042014 */
+form #folioarea{
+	display: none;
+}
+/* tabla importes 24/01/2014 */
+table#importe td{
+	font-size: 19px;
+	font-family: "Open Sans";
+}
+/* crear factura areas */
+#descuentoarea,#pagoarea,#impuestosarea{
+	display: none;
+}
+
+div#nombre,div#rfc,div#direccion{
+	font-family: Open Sans;
+	font-size: 15px;
+	font-weight: 700;
+}
+
+
+
+/* De layout */
+#container{
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+
+/* remover icon red */
+a.remove,a.eliminar{color: #FF0000;}
+a.editar{color: #FF6600;}
+a.info{color: #6699FF}
+
+/*
+Lato Bold
+14/01/14
+*/
+.lato-bold{
+	font-family: "Lato";
+	font-weight: 700;
+}
+
+
+/*
+	Estilos de form
+	23/01/2014
+*/
+input[readonly]{
+	border-color:#EEE !important;
+}

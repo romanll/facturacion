@@ -31,7 +31,7 @@ class Series extends CI_Model {
     /* Obtener los datos de serie */
     function read($condicion=FALSE){
         if($condicion){$this->db->where($condicion);}
-        $this->db->order_by('nombre','ASC');
+        $this->db->order_by('idserie','ASC');
         return $this->db->get($this->tabla);
     }
 

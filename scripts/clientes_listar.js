@@ -4,7 +4,7 @@ COPY & PASTE de clientes.js
 19/12/2013
 */
 
-var base="http://localhost:81/facturacion/";
+//var base="http://localhost:81/facturacion/";
 //base="http://162.243.127.174/facturacion/";
 
 /*
@@ -36,42 +36,44 @@ $("#buscarform").submit(function(event){
 $(document).on('click','a.eliminar',function(event){
     event.preventDefault();
     var trparent=$(this).parent().parent();
-    
     var href=$(this).attr('href');
+    var cliente=href.indexOf('clientes');               //validar si mostrar alertify de cliente, usado en 'home'
     alertify.set({ labels: {
         ok     : "Aceptar",
         cancel : "Cancelar"
     } });
-    alertify.confirm("&iquest;Eliminar cliente de la lista?", function (e) {
-        if (e) {
-            // user clicked "ok"
-            console.log('ok');
-            var request=$.ajax({
-                type:"POST",
-                url:href,
-                dataType:'json'
-            });
-            request.done(function(result){
-                console.log(result);
-                alertify.set({ delay: 15000 });             //tiempo antes de esconder notificacion
-                if(result.success){
-                    alertify.success(result.success);       //mostrar mensaje
-                    trparent.remove();                      //Borrar actual elemento
-                }
-                else{alertify.error(result.error);}         //mostrar error
-            });
-            request.fail(function(jqXHR,textStatus){
-                console.log(textStatus);
-            });
-        } else {
-            // user clicked "cancel"
-            console.log('cancel');
-        }
-    });
-    
+    if(cliente!=-1){
+        alertify.confirm("&iquest;Eliminar cliente de la lista?", function (e) {
+            if (e) {
+                // user clicked "ok"
+                console.log('ok');
+                var request=$.ajax({
+                    type:"POST",
+                    url:href,
+                    dataType:'json'
+                });
+                request.done(function(result){
+                    console.log(result);
+                    alertify.set({ delay: 15000 });             //tiempo antes de esconder notificacion
+                    if(result.success){
+                        alertify.success(result.success);       //mostrar mensaje
+                        trparent.remove();                      //Borrar actual elemento
+                    }
+                    else{alertify.error(result.error);}         //mostrar error
+                });
+                request.fail(function(jqXHR,textStatus){
+                    console.log(textStatus);
+                });
+            } else {
+                // user clicked "cancel"
+                console.log('cancel');
+            }
+        });
+    }
 });
 
 /* Al ver info del cliente */
+
 $(document).on('click','a.info',function(event){
     event.preventDefault();
     var href=$(this).attr('href');

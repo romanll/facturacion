@@ -23,6 +23,14 @@ class Items extends CI_Model {
         }
 	}
 
+    /* Obtener los ultimos 'n' registrados */
+    function read_nreg($condicion=FALSE,$n=10){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->order_by('idconcepto','DESC');
+        $this->db->limit($n);
+        return $this->db->get($this->tabla);
+    }
+
 	/* Obtener los datos de servicio/producto $condicion es array(); */
     function read($condicion=FALSE,$orden=FALSE){
         if($condicion){$this->db->where($condicion);}

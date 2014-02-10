@@ -6,7 +6,6 @@
 	<title>Acceso al sistema</title>
 	<!-- Scripts -->
 	<?php $this->load->view('template/jquery'); ?>
-	<?php $this->load->view('template/alertify'); ?>
 	<!-- Uikit -->
 	<?php $this->load->view('template/uikit'); ?>
 	<link rel="stylesheet" href='<?php echo base_url("css/base.css"); ?>'>

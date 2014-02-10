@@ -13,9 +13,9 @@ if(isset($series)):
 <?php foreach ($series as $serie): ?>
 		<tr>
 			<td><?php echo $serie->nombre; ?></td>
-			<td class="uk-text-center"><?php echo $serie->folio_actual; ?></td>
-			<td class="uk-text-center">
-				<a href='<?php echo base_url("configuracion/eliminarserie/$serie->idserie"); ?>' class="eliminar"><i class="uk-icon-trash"></i></a>
+			<td class="uk-text-right uk-width-1-10"><?php echo $serie->folio_actual; ?></td>
+			<td class="uk-text-center uk-width-1-10">
+				<a href='<?php echo base_url("configuracion/eliminarserie/$serie->idserie"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
 			</td>
 		</tr>
 <?php endforeach; ?>

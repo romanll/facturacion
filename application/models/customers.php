@@ -39,6 +39,14 @@ class Customers extends CI_Model {
         }
         return $this->db->get($this->tabla);
     }
+
+    /* Obtener los ultimos 'n' registrados */
+    function read_nreg($condicion=FALSE,$n=10){
+        if($condicion){$this->db->where($condicion);}
+        $this->db->order_by('idcliente','DESC');
+        $this->db->limit($n);
+        return $this->db->get($this->tabla);
+    }
     
     /* Obtener el numero de registros que cumplen con la condicion => 04/02/2014 */
     function read_num($condicion=FALSE){

@@ -55,12 +55,8 @@ class Clientes extends CI_Controller {
             //insertar datos
             else{
                 $insertar=$this->customers->create($datos);             //insertar en DB
-                if($insertar){
-                    $response['success']="Cliente insertado correctamente : ".$datos['identificador'];
-                }
-                else{
-                    $response['error']="No se inserto :(";
-                }
+                if($insertar){$response['success']="Cliente insertado correctamente : ".$datos['identificador'];}
+                else{$response['error']="No se inserto :(";}
             }
             echo json_encode($response);
     	}
@@ -85,51 +81,73 @@ class Clientes extends CI_Controller {
         }
     }
 
+    /*
+        Ultimos clientes registrados
+        Requiere identificador de emisor para mostrar sus clientes
+        Retorna vista (tabla) con unos 'n' clientes
+    */
+    function ultimos(){
+        $where=array("emisor"=>$this->emisor['idemisor']);
+        $query=$this->customers->read_nreg($where,5);
+        if($query->num_rows()>0){$data['customers']=$query->result();}
+        else{$data['error']="No existen registros";}
+        $this->load->view('clientes/tabla', $data, FALSE);
+    }
+
     /* Listar clientes del contribuyente */
     function listar(){
+        $type=$this->uri->segment(3);                                               //Retornar JSON? o solo paginacion
         //Obtener el total de registros a mostrar
         $where=array("emisor"=>$this->emisor['idemisor']);
-        $numreg=$this->customers->read_num($where);
-        if($numreg>0){
-            $this->load->library('pagination');      
-            $config['base_url'] = base_url("clientes/listar/");                     //Url de paginacion
-            $config['total_rows'] = $numreg;                                        //Num total de registros a listar
-            $config['per_page'] = 25;                                                //Registros por pagina
-            $config['uri_segment'] = 3;                                             //Numero de links en paginacion
-            $config['num_links'] = 2;
-            $config['full_tag_open'] = '<ul class="uk-pagination">';
-            $config['full_tag_close'] = '</ul>';
-            $config['first_link'] = '<i class="uk-icon-angle-double-left" title="Primer página"></i>';
-            $config['first_tag_open'] = '<li>';
-            $config['first_tag_close'] = '</li>';
-            $config['last_link'] = '<i class="uk-icon-angle-double-right" title="Ultima página"></i>';
-            $config['last_tag_open'] = '<li>';
-            $config['last_tag_close'] = '</li>';
-            $config['next_link'] = '<i class="uk-icon-angle-right" title="Siguiente"></i>';
-            $config['next_tag_open'] = '<li class="uk-pagination-next">';
-            $config['next_tag_close'] = '</li>';
-            $config['prev_link'] = '<i class="uk-icon-angle-left" title="Anterior"></i>';
-            $config['prev_tag_open'] = '<li class="uk-pagination-previous">';
-            $config['prev_tag_close'] = '</li>';
-            $config['cur_tag_open'] = '<li class="uk-active"><span>';
-            $config['cur_tag_close'] = '</span></li>';
-            $config['num_tag_open'] = '<li>';
-            $config['num_tag_close'] = '</li>';
-            $this->pagination->initialize($config);
-            $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-            $query=$this->customers->read_pag($where,$config['per_page'],$page);
-            if($query->num_rows()>0){
-                $data['customers']=$query->result();
-                $data['links']=$this->pagination->create_links();
+        if($type=='json'){
+            $query=$this->customers->read($where);
+            if($query->num_rows()>0){$data['customers']=$query->result();}
+            else{$data['error']="No existen registros";}
+            $this->load->view('clientes/clientes_json', $data, FALSE);
+        }
+        else{
+            $numreg=$this->customers->read_num($where);
+            if($numreg>0){
+                $this->load->library('pagination');      
+                $config['base_url'] = base_url("clientes/listar/");                     //Url de paginacion
+                $config['total_rows'] = $numreg;                                        //Num total de registros a listar
+                $config['per_page'] = 25;                                                //Registros por pagina
+                $config['uri_segment'] = 3;                                             //Numero de links en paginacion
+                $config['num_links'] = 2;
+                $config['full_tag_open'] = '<ul class="uk-pagination">';
+                $config['full_tag_close'] = '</ul>';
+                $config['first_link'] = '<i class="uk-icon-angle-double-left" title="Primer página"></i>';
+                $config['first_tag_open'] = '<li>';
+                $config['first_tag_close'] = '</li>';
+                $config['last_link'] = '<i class="uk-icon-angle-double-right" title="Ultima página"></i>';
+                $config['last_tag_open'] = '<li>';
+                $config['last_tag_close'] = '</li>';
+                $config['next_link'] = '<i class="uk-icon-angle-right" title="Siguiente"></i>';
+                $config['next_tag_open'] = '<li class="uk-pagination-next">';
+                $config['next_tag_close'] = '</li>';
+                $config['prev_link'] = '<i class="uk-icon-angle-left" title="Anterior"></i>';
+                $config['prev_tag_open'] = '<li class="uk-pagination-previous">';
+                $config['prev_tag_close'] = '</li>';
+                $config['cur_tag_open'] = '<li class="uk-active"><span>';
+                $config['cur_tag_close'] = '</span></li>';
+                $config['num_tag_open'] = '<li>';
+                $config['num_tag_close'] = '</li>';
+                $this->pagination->initialize($config);
+                $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+                $query=$this->customers->read_pag($where,$config['per_page'],$page);
+                if($query->num_rows()>0){
+                    $data['customers']=$query->result();
+                    $data['links']=$this->pagination->create_links();
+                }
+                else{
+                    $data['error']="No existen registros";
+                }
             }
             else{
                 $data['error']="No existen registros";
             }
+            $this->load->view('clientes/lista',$data);
         }
-        else{
-            $data['error']="No existen registros";
-        }
-        $this->load->view('clientes/lista',$data);
     }
 
     /* 

@@ -3,7 +3,7 @@
 	31/01/2014
 */
 
-var base="http://localhost:81/facturacion/";
+//var base="http://localhost:81/facturacion/";
 //base="http://162.243.127.174/facturacion/";
 
 /* Busqueda 01/02/2014 */
@@ -50,8 +50,7 @@ $(document).on('click','a.cancelar',function(event){
                 var msg="";
                 if(result.success){
                     //crear url archivo
-                    var url=result.xmlc.replace("./","");
-                    url=base+url;
+                    var url=result.xmlc.replace("./","../");
                     msg+='<div class="uk-alert uk-alert-success"><i class="uk-icon-check"></i> '+result.success+'</div>';
                     msg+='<a href="'+url+'" target="_blank" download="acuse cancelacion"><i class="uk-icon-cloud-download"></i> Descargar acuse de cancelación XML</a>';
                 }
@@ -66,7 +65,8 @@ $(document).on('click','a.cancelar',function(event){
                 tdestado.text("Cancelado");
                 //Quitar enlace e insertar solo imagen
                 enlace.remove();
-                var new_element="<img src='"+base+"images/cancel_disabled.png' alt='Cancel disabled'>";
+                //var new_element="<img src='"+base+"images/cancel_disabled.png' alt='Cancel disabled'>";
+                var new_element="<img src='../images/cancel_disabled.png' alt='Cancel disabled'>";
                 tdopciones.append(new_element);
             });
             request.fail(function(jqXHR,textStatus){

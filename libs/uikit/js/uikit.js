@@ -1069,7 +1069,9 @@
     Modal.defaults = {
         keyboard: true,
         show: false,
-        bgclose: true
+		bgclose: false
+		//bgclose:!1  <= column 15394 era !0(true)
+        //bgclose: true
     };
 
 

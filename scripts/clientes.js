@@ -4,7 +4,7 @@ clientes.js => Registrar clientes, administrarlos, etc...
 */
 
 
-var base="http://localhost:81/facturacion/";
+//var base="http://localhost:81/facturacion/";
 //base="http://162.243.127.174/facturacion/";
 $("#pais").val('México');						//al inicio asignar valor de "México"
 
@@ -53,7 +53,6 @@ function enviar(formulario){
         alertify.set({ delay: 15000 });
         if(result.success){
             alertify.success(result.success);   //mostrar mensaje exito
-            listar();                           //listar conceptos
             $(formulario)[0].reset();           //Resetear form
             municipios(1);                      //reiniciar valores en municipio
         }
@@ -71,7 +70,7 @@ function enviar(formulario){
 (function(){
 	var request = $.ajax({
         type: "POST",
-        url: base+"estados/listar",
+        url: "estados/listar",
         dataType:'json'                         //o html
     });
     request.done(function(result){
@@ -99,7 +98,7 @@ $("#estado_label").change(function(event){
 /* municipios: llenar input en base al estado seleccionado en <select> */
 function municipios(estado){
 	$.ajax({
-		url: base+"municipios/listar/"+estado,
+		url: "municipios/listar/"+estado,
 		type: 'POST',
 		dataType: 'json'
 	})

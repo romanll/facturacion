@@ -6,7 +6,7 @@ Tabla de conceptos del contribuyente
 if(isset($items)):
 ?>
 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-	<caption>Productos/Servicios en lista</caption>
+	<caption>Ultimos Productos/Servicios agregados</caption>
 	<thead>
 		<tr>
 			<th class="uk-text-center">No Identificaci&oacute;n</th>
@@ -21,11 +21,12 @@ if(isset($items)):
 	foreach($items as $item):
 ?>
 		<tr>
-			<td class="uk-text-center uk-width-2-10"><?php echo $item->noidentificacion; ?></td>
-			<td class="uk-width-5-10"><?php echo $item->descripcion; ?></td>
+			<td class="uk-text-center uk-width-1-10"><?php echo $item->noidentificacion; ?></td>
+			<td class="uk-width-6-10"><?php echo $item->descripcion; ?></td>
 			<td class="uk-text-center uk-width-1-10"><?php echo $item->valor; ?></td>
 			<td class="uk-text-center uk-width-1-10"><?php echo $item->unidad; ?></td>
 			<td class="uk-text-center uk-width-1-10">
+				<a href='<?php echo base_url("conceptos/info/$item->idconcepto"); ?>' class="info" title="Ver información del concepto"><i class="uk-icon-info-circle"></i></a>
 				<a href='<?php echo base_url("conceptos/editar/$item->idconcepto"); ?>' class="editar"><i class="uk-icon-edit"></i></a>
 				<a href='<?php echo base_url("conceptos/eliminar/$item->idconcepto"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
 			</td>

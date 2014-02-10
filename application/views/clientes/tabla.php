@@ -2,13 +2,13 @@
 if(isset($customers)):
 ?>
 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
-	<caption>Lista de clientes</caption>
+	<caption>&Uacute;ltimos clientes registrados</caption>
 	<thead>
 		<tr>
 			<th class="uk-text-center">Identificador</th>
 			<th>Nombre</th>
 			<th class="uk-text-center">RFC</th>
-			<th class="uk-text-center">Opiones</th>
+			<th class="uk-text-center">Opciones</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -20,8 +20,9 @@ if(isset($customers)):
 			<td class="uk-width-6-10"><?php echo $c->nombre; ?></td>
 			<td class="uk-text-center uk-width-1-10"><?php echo $c->rfc; ?></td>
 			<td class="uk-text-center uk-width-1-10">
-				<a href='<?php echo base_url("clientes/editar/$c->idcliente"); ?>' class="editar"><i class="uk-icon-edit"></i></a>
-				<a href='<?php echo base_url("clientes/eliminar/$c->idcliente"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
+				<a href='<?php echo base_url("clientes/info/$c->idcliente"); ?>' class="info" title="Ver información del cliente"><i class="uk-icon-info-circle"></i></a>
+				<a href='<?php echo base_url("clientes/editar/$c->idcliente"); ?>' class="editar" title="Editar datos del cliente"><i class="uk-icon-edit"></i></a>
+				<a href='<?php echo base_url("clientes/eliminar/$c->idcliente"); ?>' class="eliminar" title="Eliminar cliente"><i class="uk-icon-trash-o"></i></a>
 			</td>
 		</tr>
 <?php

@@ -4,9 +4,6 @@ Es un copy & paste de conceptos.js
 19-12-2013
 */
 
-var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
-
 /*
     Realizar busquda
     06/02/2014
@@ -42,38 +39,41 @@ $(document).on('click','a.eliminar',function(event){
     event.preventDefault();
     var href=$(this).attr('href');
     var trparent=$(this).parent().parent();
+    var concepto=href.indexOf('conceptos');             //Validar para mostar alertify eliminar conceptos, usado en 'home'
     alertify.set({ labels: {
         ok     : "Aceptar",
         cancel : "Cancelar"
     } });
-    alertify.confirm("&iquest;Eliminar concepto?", function (e) {
-        if (e) {
-            // user clicked "ok"
-            console.log('ok');
-            var request=$.ajax({
-                type:"POST",
-                url:href,
-                dataType:'json'
-            });
-            request.done(function(result){
-                console.log(result);
-                alertify.set({ delay: 15000 });             //tiempo antes de esconder notificacion
-                if(result.success){
-                    alertify.success(result.success);       //mostrar mensaje
-                    trparent.remove();                      //Borrar actual elemento
-                }
-                else{
-                    alertify.error(result.error);           //mostrar error
-                }
-            });
-            request.fail(function(jqXHR,textStatus){
-                console.log(textStatus);
-            });
-        } else {
-            // user clicked "cancel"
-            console.log('cancel');
-        }
-    });
+    if(concepto!=-1){
+        alertify.confirm("&iquest;Eliminar concepto?", function (e) {
+            if (e) {
+                // user clicked "ok"
+                console.log('ok');
+                var request=$.ajax({
+                    type:"POST",
+                    url:href,
+                    dataType:'json'
+                });
+                request.done(function(result){
+                    console.log(result);
+                    alertify.set({ delay: 15000 });             //tiempo antes de esconder notificacion
+                    if(result.success){
+                        alertify.success(result.success);       //mostrar mensaje
+                        trparent.remove();                      //Borrar actual elemento
+                    }
+                    else{
+                        alertify.error(result.error);           //mostrar error
+                    }
+                });
+                request.fail(function(jqXHR,textStatus){
+                    console.log(textStatus);
+                });
+            } else {
+                // user clicked "cancel"
+                console.log('cancel');
+            }
+        });
+    }
 });
 
 /* Al ver info del cliente */

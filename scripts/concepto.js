@@ -3,10 +3,6 @@ concepto.js => Nuevo concepto, insertar via AJAX cuando sea posible
 16-12-2013
 */
 
-var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
-listar();
-
 /* Validar form */
 $("#nuevo_concepto").validate({
 	rules:{
@@ -38,7 +34,6 @@ function enviar(formulario){
         alertify.set({ delay: 15000 });
         if(result.success){
             alertify.success(result.success);   //mostrar mensaje exito
-            listar();                           //listar conceptos
             $(formulario)[0].reset();
         }
         else{
@@ -48,11 +43,6 @@ function enviar(formulario){
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
     });
-}
-
-/* Mostrar tabla de conceptos */
-function listar(){
-    $("#conceptos").load(base+'conceptos/listar');
 }
 
 /* editar */
