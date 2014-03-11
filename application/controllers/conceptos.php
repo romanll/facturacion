@@ -226,6 +226,84 @@ class Conceptos extends CI_Controller {
         }
     }
 
+    /*
+        Editar datos de concepto
+        11/03/2014
+     */
+    function editar(){
+        $item=$this->uri->segment(3);
+        if($item){
+            $this->load->library('form_validation');
+            $where=array('idconcepto'=>$item);                                  //obtener info del item
+            $query=$this->items->read($where);
+            if($query->num_rows()>0){
+                $row=$query->row();
+                $propietario=$row->emisor;
+            }
+            //soy el propietario del item?: comparar con 'session'
+            if($propietario==$this->emisor['idemisor']){                       //si:mostrar datos para editar
+                $query=$this->items->read($where);
+                $data['concepto']=$query->result();
+            }
+            else{$data['error']="Error: item no existe.";}                      //no:error de privilegios
+            
+        }
+        else{$data['error']="Error: no se especifico item.";}
+        $this->load->view('conceptos/editar', $data, FALSE);
+    }
+
+    /*
+        Actualizar datos de concepto
+        11/03/2014
+     */
+    function actualizar(){
+        $item=$this->uri->segment(3);
+        if($item){
+            $this->load->library('form_validation');
+            $this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
+            $this->form_validation->set_rules('noidentificacion', 'No. Identificacion', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('descripcion', 'Descripci&oacute;n', 'trim|xss_clean');
+            $this->form_validation->set_rules('valor', 'Valor', 'trim|required|numeric|xss_clean');
+            $this->form_validation->set_rules('unidad', 'Unidad', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('observaciones', 'Observaciones', 'trim|xss_clean');
+            //validar los datos de entrada
+            if($this->form_validation->run() == FALSE){
+                $this->load->view('conceptos/editar');
+            }
+            else{
+                $propietario=FALSE;
+                //Paso validacion, guardar datos del $_POST
+                $datos=$this->input->post();
+                //ver que item sea mio
+                $where=array('idconcepto'=>$item,"emisor"=>$this->emisor['idemisor']);  //obtener info del item
+                $query=$this->items->read($where);
+                if($query->num_rows()>0){$propietario=TRUE;}
+                //soy el propietario del item?: comparar con 'session'
+                if($propietario){                       //TRUE:actualizar datos
+                    //Revisar que el numero de identificacion no exista y que sea de diferente
+                    //item, y de mi propiedad
+                    $where_exist=array(
+                        'noidentificacion'=>$datos['noidentificacion'],
+                        'idconcepto !='=>$item,
+                        'emisor'=>$this->emisor['idemisor']
+                    );
+                    $numitems=$this->items->exist($where_exist);
+                    if($numitems>0){
+                        $response['error']="No Identificación ya existe, prueba con otro.";           //mensaje error : noIdentificacion ya existe
+                    }
+                    else{
+                        //Actualizar los datos :)
+                        $actualizar=$this->items->update($datos,$where);
+                        if($actualizar){$response['success']="Datos actualizados correctamente.";}
+                        else{$response['error']="No se actualizaron datos :(, posiblemente no hiciste algun cambio.";}
+                    }
+                }
+                else{$data['error']="Error: item no existe.";}                      //no:error de privilegios
+            }
+        }
+        echo json_encode($response);
+    }
+
 }
         
 

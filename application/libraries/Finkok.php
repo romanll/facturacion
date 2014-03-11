@@ -15,7 +15,7 @@ class Finkok{
 	{
         $this->ci =& get_instance();
         $this->username="lopez.l.roman@gmail.com";
-        $this->password="Prueba@123";
+        $this->password="Prueba@123";//Prueba@123//Prueba@456
 	}
 
 

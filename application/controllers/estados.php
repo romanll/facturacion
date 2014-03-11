@@ -1,7 +1,7 @@
 <?php 
 /*
-Leer estados de DB
-18/12/2013
+    Leer estados de DB
+    18/12/2013
 */
 
 if (!defined('BASEPATH')) exit('No direct script access allowed');

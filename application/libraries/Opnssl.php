@@ -47,11 +47,13 @@ class Opnssl
 	*/
 	function keytopem($pathkey,$pwd,$pathfile){
 		exec(".\openssl\openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");					//Local
+		//exec(".\openssl\openssl pkcs8 -inform DER -passin pass:$pwd -in $pathkey | .\openssl\openssl pkcs8 -topk8 -passout pass:$pwd -outform PEM -out $pathfile");
 		//exec("openssl pkcs8 -inform DER -in $pathkey -passin pass:$pwd > $pathfile");							//VPS
 		//Se genero archivo?
 		if(file_exists($pathfile)){return TRUE;}
 		else{return FALSE;}
 	}
+	//openssl pkcs8 -inform DER -passin pass:LaContraseniaDeTuKey -in llavePrivada.key | openssl pkcs8 -topk8 -passout pass:LaMismaUOtraContrasenia -outform PEM -out llavePrivada.pem
 
 	/*
 		cettopem => Generar certificado en PEM(archivo)

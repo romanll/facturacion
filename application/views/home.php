@@ -22,22 +22,22 @@
                         <!-- Botones + :panel -->
                         <div class="uk-grid">
                             <div class="uk-width-1-4">
-                                <a href="#" class="link-box">
+                                <a href="<?php echo base_url('factura'); ?>" class="link-box">
                                     <img src="<?php echo base_url("images/1391765048_layout_add.png") ?>" alt="Invoice"> CREAR FACTURA
                                 </a>
                             </div>
                             <div class="uk-width-1-4">
-                                <a href="#" class="link-box">
+                                <a href="<?php echo base_url('clientes'); ?>" class="link-box">
                                     <img src="<?php echo base_url("images/1391765019_group_add.png") ?>" alt="Customer"> AGREGAR CLIENTE
                                 </a>
                             </div>
                             <div class="uk-width-1-4">
-                                <a href="#" class="link-box">
+                                <a href="<?php echo base_url('conceptos'); ?>" class="link-box">
                                     <img src="<?php echo base_url("images/1391767149_package_add.png") ?>" alt="Item"> AGREGAR CONCEPTO
                                 </a>
                             </div>
                             <div class="uk-width-1-4">
-                                <a href="#" class="link-box">
+                                <a href="<?php echo base_url('configuracion'); ?>" class="link-box">
                                     <img src="<?php echo base_url("images/1391765533_cog.png") ?>" alt="Configuration"> CONFIGURACI&Oacute;N
                                 </a>
                             </div>

@@ -142,9 +142,29 @@ class Factura extends CI_Controller {
         /* ---- Cadena Original y sello ---- */
         $cadenafile="./ufiles/{$this->emisor['rfc']}/cadena.txt";           //Ruta archivo cadena que genero(solo para leer su contenido)
         $pem="./ufiles/{$this->emisor['rfc']}/{$this->emisor['pem']}";      //Ruta de archivo PEM de emisor
+        //Si no existe PEM, crearlo
+        if(!file_exists($pem)){
+            //keytopem($pathkey,$pwd,$pathfile)
+            //Obtenr los datos de emisor: key,keypwd
+            $query=$this->contributors->read(array('idemisor'=>$this->emisor['idemisor']));
+            if($query->num_rows()>0){
+                foreach ($query->result() as $row) {
+                    $keyfile="./ufiles/{$this->emisor['rfc']}/$row->key";
+                    $keypwd=$row->keypwd;
+                }
+                $generado=$this->opnssl->keytopem($keyfile,$keypwd,"./ufiles/{$this->emisor['rfc']}/{$this->emisor['rfc']}.pem");
+                //var_dump($generado);die();
+            }
+            else{
+                $response['error']="Error al obtener datos de usuario:key y key_pwd";
+                echo json_encode($response);
+                die();
+            }
+        }
 
         $cadena=$this->opnssl->stringcadena($xmlpath,$cadenafile);          //Obtener la cadena o FALSE
         if($cadena){                                                        //Proceder a obtener el sello
+            //echo $pem;die();
             $sello=$this->opnssl->sello($pem,$cadena);
             $this->crearxml->agregarsello($sello);                          //Agregar atributo sello a xml
             $comp_node['sello']=$sello;                                     //y a datos del comprobante

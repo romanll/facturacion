@@ -4,8 +4,6 @@ clientes.js => Registrar clientes, administrarlos, etc...
 */
 
 
-//var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
 $("#pais").val('México');						//al inicio asignar valor de "México"
 
 /* Validar form */
@@ -49,7 +47,7 @@ function enviar(formulario){
         dataType:'json'                         //o html
     });
     request.done(function(result){
-        console.log(result);
+        //console.log(result);
         alertify.set({ delay: 15000 });
         if(result.success){
             alertify.success(result.success);   //mostrar mensaje exito

@@ -28,12 +28,6 @@ $("#buscarform").submit(function(event){
     });
 });
 
-/* editar */
-$(document).on('click','a.editar',function(event){
-    event.preventDefault();
-    console.log('editar '+$(this).attr('href'));
-});
-
 /* eliminar */
 $(document).on('click','a.eliminar',function(event){
     event.preventDefault();

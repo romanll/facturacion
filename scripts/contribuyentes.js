@@ -4,9 +4,6 @@ contribuyentes.js => validacion de form
 */
 
 
-var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
-
 /* Validar form */
 $("#regemisor").validate({
 	rules:{
@@ -88,7 +85,7 @@ function enviar(formulario){
 (function(){
 	var request = $.ajax({
         type: "POST",
-        url: base+"estados/listar",
+        url: "estados/listar",
         dataType:'json'                         //o html
     });
     request.done(function(result){
@@ -111,7 +108,7 @@ function enviar(formulario){
 /* municipios: llenar input en base al estado seleccionado en <select> */
 function municipios(estado){
 	$.ajax({
-		url: base+"municipios/listar/"+estado,
+		url: "municipios/listar/"+estado,
 		type: 'POST',
 		dataType: 'json'
 	})

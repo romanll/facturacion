@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <CancelaCFDResponse xmlns="http://cancelacfd.sat.gob.mx">
+      <CancelaCFDResult Fecha="2014-02-09 23:17:49.978825" RfcEmisor="AAD990814BP7">
+        <Folios>
+          <UUID>67E8AFE7-E2EA-4178-B785-FDAD3712A86B</UUID>
+          <EstatusUUID>201</EstatusUUID>
+        </Folios>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#" Id="SelloSAT">
+          <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"/>
+            <Reference URI="">
+              <Transforms>
+                <Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+                  <XPath>not(ancestor-or-self::*[local-name()=Signature])</XPath>
+                </Transform>
+              </Transforms>
+              <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+              <DigestValue>xzU3TROoFgIKSUNLEmU0Yw3qQ7HpoZzzHI7xscoU5PMvsZLmNwb7k9Hu+sa0+rPYxmVZl8qKFoLR3Pfu/0fvkg==</DigestValue>
+            </Reference>
+          </SignedInfo>
+          <SignatureValue>r4bILaLlTMReWILncMHhZDdWHuy8wvnVSyDKmwLnFYOulvUn9Lr3ThAGzg7ZQzss2MsAOEQMXJBPuwo2qekVsA==</SignatureValue>
+          <KeyInfo>
+            <KeyName>00001088888800000093</KeyName>
+            <KeyValue>
+              <RSAKeyValue>
+                <Modulus>yxMvUucuS+s3aeWTFZvJrrFWIdes7kIDJmO7DA5DP+ZTapofNt37fgeIHlTUdAVvd/fDKhfiwNSh+vbrNbD58X3UEdQor3ngb6zpjrDjgYsedckPLv6fro4DO0NXLCdALFqhN8ARyX77kYBnvIj1fOSVp401Vc3urLUtiEm16Kle3tOyWhfjgFzdK3oAIXF8oeei/GburWbJnpP+NeGaHVE5bkxLCBp5757nKVonXwzpfpEGuBp204NGkI2/jyA2EH8wyRN4yUvzjT7IJYrHng23klRDlJoRYwa98QQPdQSTpcrlNu8nLhpQdI/zMTLoNF2NiBCkQNuAMacKhnvlVw==</Modulus>
+                <Exponent>AQAB</Exponent>
+              </RSAKeyValue>
+            </KeyValue>
+          </KeyInfo>
+        </Signature>
+      </CancelaCFDResult>
+    </CancelaCFDResponse>
+  </s:Body>
+</s:Envelope>

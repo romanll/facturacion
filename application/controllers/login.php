@@ -67,19 +67,16 @@ class Login extends CI_Controller {
             unset($datos['password'],$datos['timbres'],$datos['telefono']);
             $datos['tipo']=2;
         }
-        else{                                                               //crear sesion de usuario
-            unset($datos['password']);                                      //No interesa password
+        else{                                           //crear sesion de usuario
+            unset($datos['password']);                  //No interesa password
             $datos['tipo']=1;
         }
-        $this->session->set_userdata($datos);                               //crear la session
-        if($session_data['tipo']==1){
-            redirect('usuarios');                                           //redireccionar al area de gestion de usuarios (es admin)
-            //echo 'redireccionar al area de gestion de usuarios (es admin)';
+        $this->session->set_userdata($datos);           //crear la session
+        if($datos['tipo']==1){
+            redirect('usuarios');                       //redireccionar al area de gestion de usuarios (es admin)
         }
-        else{
-            redirect('clientes');                                     //redireccionar al area de gestion de datos del contribuyente o clientes
-            //echo 'redireccionar al area de gestion de datos del contribuyente logeado';
-        }
+        else{redirect('facturacion');}                  //redireccionar al area de incio:ultimos movimientos
+        
     }
 
     /* Estoy logeado? */

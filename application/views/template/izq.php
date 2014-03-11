@@ -1,25 +1,35 @@
 <div class="uk-width-2-10" id="izq">
 	<ul class="uk-nav uk-nav-parent-icon uk-nav-side" data-uk-nav>
 	<?php $active=$this->uri->segment(1);?>
-		<li class="uk-parent">
-        	<a href="#"><i class="uk-icon-user"></i> Emisor</a>
-            <ul class="uk-nav-sub">
-            	<li><a href="<?php echo base_url(); ?>">Datos de Cuenta</a></li>
-                <li><a href="<?php echo base_url(); ?>">Datos Fiscales</a></li>
-                <li><a href="#">Salir</a></li>
-			</ul>
+		<?php if($this->session->userdata('tipo')==1): //cuando es 'usuario' mostrar solo su nonmbre ?>
+		<li>
+        	<a href="#"><i class="uk-icon-user"></i> <?php $user=explode("@", $this->session->userdata('email')); echo $user[0]; ?></a>
 		</li>
-        <li class="uk-nav-divider"></li>
-		<?php if($this->session->userdata('tipo')==1): ?>
+		<li class="uk-nav-divider"></li>
 		<li class="uk-parent <?php if($active=='usuarios'){echo 'uk-active';} ?>">
 			<a href="#"><i class="uk-icon-group"></i> Usuarios</a>
 			<ul class="uk-nav-sub">
 				<li><a href="<?php echo base_url('usuarios'); ?>">Nuevo</a></li>
 				<li><a href="<?php echo base_url('usuarios/listar'); ?>">Listar</a></li>
-				<li><a href="#">Busqueda</a></li>
 			</ul>
 		</li>
-		<?php else: ?>
+		<li class="uk-parent <?php if($active=='contribuyentes'){echo 'uk-active';} ?>">
+			<a href="#"><i class="uk-icon-group"></i> Emisores</a>
+			<ul class="uk-nav-sub">
+				<li><a href="<?php echo base_url('contribuyentes'); ?>">Nuevo</a></li>
+				<li><a href="<?php echo base_url('contribuyentes/listar'); ?>">Listar</a></li>
+			</ul>
+		</li>
+		<?php else: //si es 'emisor' mostrar enlaces a asus datos fiscales?>
+		<li class="uk-parent">
+        	<a href="#"><i class="uk-icon-user"></i> <?php $user=explode("@", $this->session->userdata('email')); echo $user[0]; ?></a>
+            <ul class="uk-nav-sub">
+            	<li><a href="<?php echo base_url(); ?>">Datos de Cuenta</a></li>
+                <li><a href="<?php echo base_url(); ?>">Datos Fiscales</a></li>
+                <li><a href="<?php echo base_url('logout'); ?>">Salir</a></li>
+			</ul>
+		</li>
+        <li class="uk-nav-divider"></li>
 		<li <?php if($active=='facturacion'){echo 'class="uk-active"';} ?>>
 			<a href="<?php echo base_url('facturacion'); ?>"><i class="uk-icon-home"></i> Inicio</a>
 		</li>

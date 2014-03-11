@@ -243,6 +243,70 @@ class Clientes extends CI_Controller {
         }
     }
 
+    /*
+        Editar datos del cliente
+        Recibe identificador de URI
+        11/03/2014
+    */
+    function editar(){
+        $idc=$this->uri->segment(3);
+        if($idc){
+            $this->load->library('form_validation');
+            //Obtener los datos del cliente
+            $q=$this->customers->read(array('idcliente'=>$idc));
+            if($q->num_rows()>0){$data['cliente']=$q->result();}
+            else{$data['error']="Cliente no existe.";}
+        }
+        else{$data['error']="Especifique identificador de cliente.";}       //Retornar mensaje de error
+        $this->load->view('clientes/editar', $data, FALSE);
+    }
+
+    /*
+        Actualizar datos de cliente
+        11/03/2014
+     */
+    function actualizar(){
+        $idc=$this->uri->segment(3);
+        if($idc){
+            $this->load->library('form_validation');
+            $this->form_validation->set_error_delimiters('<div class="uk-alert uk-alert-danger">', '</div>');
+            $this->form_validation->set_rules('identificador', 'Identificador de cliente', 'trim|required|alpha_numeric|xss_clean');
+            $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('rfc', 'RFC', 'trim|required|alpha_numeric|xss_clean');
+            $this->form_validation->set_rules('pais', 'Pa&iacute;s', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('cp', 'Codigo Postal', 'trim|required|integer|xss_clean');
+            //validar los datos de entrada
+            if($this->form_validation->run() == FALSE){
+                $this->load->view('clientes/editar');
+            }
+            else{
+                //Paso validación, guardar datos del $_POST
+                $datos=$this->input->post();
+                unset($datos['estado_label']);                              //eliminar ya que no nos interesa guardarlo en DB
+                $where=array('emisor'=>$this->emisor['idemisor'],'idcliente'=>$idc);
+                //ver si existe identificador que no sea el mio y del mismo emisor
+                //ya que puede existir mismo identificador pero de diferente emisor y no afectaria
+                $existe_where=array(
+                    "identificador"=>$datos['identificador'],
+                    "idcliente !="=>$idc,
+                    "emisor"=>$this->emisor['idemisor']
+                );
+                $num_matches=$this->customers->exist($existe_where);
+                if($num_matches>0){
+                    $response['error']="Identificador ya existe, prueba con otro.";           //error mensaje : Identificador ya existe
+                }
+                //Actualizar datos
+                else{
+                    $actualizar=$this->customers->update($datos,$where);             //actualizar en DB
+                    if($actualizar){$response['success']="Datos de {$datos['identificador']} actualizados correctamente.";}
+                    else{$response['error']="No se actualizaron datos :(, posiblemente no hiciste cambios.";}
+                }
+            }
+        }
+        else{$response['error']="Especifique identificador de cliente.";}
+        echo json_encode($response);
+    }
+
 
 
 }

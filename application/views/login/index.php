@@ -34,21 +34,20 @@
             			<div class="uk-width-1-1 uk-text-left"><label for="correo" class="uk-form-label">Correo</label></div>
         			</div>
         			<div class="uk-grid">
-        				<div class="uk-width-1-1">
+        				<div class="uk-width-1-1 uk-form-icon">
+                            <i class="uk-icon-envelope-o"></i>
             				<input type="email" id="correo" name="correo" class="uk-width-1-1" value="<?php echo set_value('correo'); ?>" required>
-            				<span><i class="uk-icon-envelope-o"></i></span>
             			</div>
             		</div>
             		<div class="uk-grid">
         				<div class="uk-width-1-1 uk-text-left"><label for="contrasena" class="uk-form-label">Contrase&ntilde;a</label></div>
         			</div>
             		<div class="uk-grid">
-            			<div class="uk-width-1-1 uk-form-password">
+            			<div class="uk-width-1-1 uk-form-password uk-form-icon">
+                            <i class="uk-icon-magic"></i>
             				<input type="password" id="contrasena" name="contrasena" class="uk-width-1-1" value="<?php echo set_value('contrasena'); ?>" required>
                             <a href="" class="uk-form-password-toggle" data-uk-form-password>Mostrar</a>
-        					<span><i class="uk-icon-magic"></i></span>
         				</div>
-
         			</div>
             		<div class="uk-grid">
             			<div class="uk-width-1-1">

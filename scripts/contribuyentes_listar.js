@@ -3,9 +3,6 @@
 	14/01/2014
 */
 
-var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
-
 /*
     Realizar busquda
     04/02/2014
