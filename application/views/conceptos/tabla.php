@@ -1,3 +1,4 @@
+<h5 class="uk-h5">Conceptos</h5>
 <?php 
 /* 
 Tabla de conceptos del contribuyente
@@ -39,7 +40,7 @@ if(isset($items)):
 <?php
 else:
 ?>
-	<div class="uk-alert uk-alert-danger"><?php echo $error; ?></div>
+	<div class="uk-alert uk-alert-warning"><i class="uk-icon-info-circle"></i> <?php echo $error; ?></div>
 <?php
 endif;
 ?>

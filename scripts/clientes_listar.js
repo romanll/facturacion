@@ -4,9 +4,6 @@ COPY & PASTE de clientes.js
 19/12/2013
 */
 
-//var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
-
 /*
     Realizar busquda
     06/02/2014

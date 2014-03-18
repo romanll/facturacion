@@ -398,11 +398,11 @@ class Factura extends CI_Controller {
                 $data['links']=$this->pagination->create_links();
             }
             else{
-                $data['error']="No existen registros";
+                $data['error']="Todav&iacute;a no has emitido facturas.";
             }
         }
         else{
-            $data['error']="No existen registros";
+            $data['error']="Todav&iacute;a no has emitido facturas.";
         }
         $this->load->view('facturas/lista',$data);
     }
@@ -594,6 +594,11 @@ class Factura extends CI_Controller {
         </table>';
         $descuento=(isset($comprobante['descuento']))?$comprobante['descuento']:"0";
 
+        /* Serie - Folio */
+        $seriefolio="Factura";
+        if(isset($comprobante['serie'])){$seriefolio.=" {$comprobante['serie']}";}
+        if(isset($comprobante['folio'])){$seriefolio.="-{$comprobante['folio']}";}
+
         /* ---- HTML PDF ---- */
         $html='
         <html><head></head><body>
@@ -611,7 +616,7 @@ class Factura extends CI_Controller {
                         <td id="dfactura" align="right">
                             <table class="zebra">
                                 <tr class="seriefolio">
-                                    <td><h4>Factura Serie #Folio</h4></td>
+                                    <td><h4>'.$seriefolio.'</h4></td>
                                 </tr>
                                 <tr class="z">
                                     <td><i>Folio Fiscal</i></td>

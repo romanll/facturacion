@@ -80,7 +80,7 @@
 	                        <div id="pagination"><?php echo $links;?></div>
 						</div>
 						<?php else: ?>
-						<div class="uk-alert uk-alert-warning"><?php echo $error; ?></div>
+						<div class="uk-alert uk-alert-warning"><i class="uk-icon-info-circle"></i> <?php echo $error; ?></div>
 						<?php endif; ?>
                     </div>
                 </div>

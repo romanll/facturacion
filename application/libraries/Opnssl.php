@@ -31,9 +31,7 @@ class Opnssl
 	    // si funciona retorna un array como: Array ( [0] => "serial=323030303130303030303032303030303032393"
 	    $serialnumbers=str_split(str_replace("serial=","",$datacer[0]));
 	    for($i=0;$i<count($serialnumbers);$i++){
-	        if($i%2!=0){
-	            $numero.=$serialnumbers[$i];
-	        }
+	        if($i%2!=0){$numero.=$serialnumbers[$i];}
 	    }
 	    return $numero;
 	}
@@ -53,7 +51,7 @@ class Opnssl
 		if(file_exists($pathfile)){return TRUE;}
 		else{return FALSE;}
 	}
-	//openssl pkcs8 -inform DER -passin pass:LaContraseniaDeTuKey -in llavePrivada.key | openssl pkcs8 -topk8 -passout pass:LaMismaUOtraContrasenia -outform PEM -out llavePrivada.pem
+
 
 	/*
 		cettopem => Generar certificado en PEM(archivo)

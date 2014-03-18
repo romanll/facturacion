@@ -16,6 +16,7 @@ class Contribuyentes extends CI_Controller {
         $this->load->model('users');
         $this->load->model('series');
         $this->permiso=$this->privilegios();
+        date_default_timezone_set('America/Tijuana');
     }
 
     function index() {
@@ -238,21 +239,9 @@ class Contribuyentes extends CI_Controller {
     /* Mostrar perfil del usuario : datos de usuario y de contribuyente, lo puede ver el usuario emisor */
     function perfil(){
         $session=$this->session->all_userdata();
-        //obtener sus datos de usuario
-        $qu=$this->users->read(array('idusuario'=>$session['iduser']));
-        if($qu->num_rows()>0){
-            $data['usuario']=$qu->result();
-            //datos de contribuyente
-            if(isset($session['idemisor'])){
-                //obtener estos datos
-                $qe=$this->contributors->read(array('idemisor'=>$session['idemisor']));
-                if($qe->num_rows()>0){
-                    $data['emisor']=$qe->result();
-                }
-            }
-        }else{
-            $data['error']="Error:No se encontor usuario.";
-        }
+        $query=$this->contributors->read(array("idemisor"=>$session['idemisor']));
+        if($query->num_rows()>0){$data['emisor']=$query->result();}
+        else{$data['error']="NO existen datos de emisor.";}
         $this->load->view('contribuyentes/perfil', $data, FALSE);
     }
 

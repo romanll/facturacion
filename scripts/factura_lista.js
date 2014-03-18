@@ -3,8 +3,6 @@
 	31/01/2014
 */
 
-//var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
 
 /* Busqueda 01/02/2014 */
 $("#buscarform").submit(function(event){
@@ -53,6 +51,13 @@ $(document).on('click','a.cancelar',function(event){
                     var url=result.xmlc.replace("./","../");
                     msg+='<div class="uk-alert uk-alert-success"><i class="uk-icon-check"></i> '+result.success+'</div>';
                     msg+='<a href="'+url+'" target="_blank" download="acuse cancelacion"><i class="uk-icon-cloud-download"></i> Descargar acuse de cancelación XML</a>';
+                    //Mostrar texto de 'cancelado'
+                    tdestado.text("Cancelado");
+                    //Quitar enlace e insertar solo imagen
+                    enlace.remove();
+                    //var new_element="<img src='"+base+"images/cancel_disabled.png' alt='Cancel disabled'>";
+                    var new_element="<img src='../images/cancel_disabled.png' alt='Cancel disabled'>";
+                    tdopciones.append(new_element);
                 }
                 else{
                     //error to modal
@@ -61,13 +66,6 @@ $(document).on('click','a.cancelar',function(event){
                 $(".modal_content").html(msg);
                 //mostrar modal con resultado de operacion
                 shmodal();
-                //Mostrar texto de 'cancelado'
-                tdestado.text("Cancelado");
-                //Quitar enlace e insertar solo imagen
-                enlace.remove();
-                //var new_element="<img src='"+base+"images/cancel_disabled.png' alt='Cancel disabled'>";
-                var new_element="<img src='../images/cancel_disabled.png' alt='Cancel disabled'>";
-                tdopciones.append(new_element);
             });
             request.fail(function(jqXHR,textStatus){
                 console.log(textStatus);

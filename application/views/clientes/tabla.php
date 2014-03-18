@@ -1,3 +1,4 @@
+<h5 class="uk-h5">Clientes</h5>
 <?php 
 if(isset($customers)):
 ?>
@@ -33,7 +34,7 @@ if(isset($customers)):
 <?php
 else:
 ?>
-	<div class="uk-alert uk-alert-danger"><?php echo $error; ?></div>
+	<div class="uk-alert uk-alert-warning"><i class="uk-icon-info-circle"></i> <?php echo $error; ?></div>
 <?php
 endif;
 ?>

@@ -3,13 +3,10 @@ copy paste de usuarios.js
 23/12/2013
 */
 
-var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
-//listar();
 
 /* Mostrar tabla de usuarios */
 function listar(){
-    $("#usuarios").load(base+'usuarios/listar');
+    $("#usuarios").load('usuarios/listar');
 }
 
 /* Al eliminar usuario */

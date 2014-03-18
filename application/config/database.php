@@ -54,8 +54,8 @@ $db['default']['username'] = 'root';
 $db['default']['password'] = 'mysql';
 $db['default']['database'] = 'facturacion';
 /*
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'tester';
+$db['default']['username'] = 'pruebas';
+$db['default']['password'] = 'KcEc5WdwE84Pq72L';
 $db['default']['database'] = 'facturacion';
 */
 $db['default']['dbdriver'] = 'mysql';

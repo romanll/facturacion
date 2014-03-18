@@ -75,8 +75,11 @@ html,body{height: 100%;position: relative;}
 					font-weight: 700;
 				}
 			/* /Nueva Factura */
+			/* grid */
+			#contenido .uk-grid {margin-top: 7px !important;}
 /* Extras */
 		.uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
+		.uk-h5{color: #444;border-bottom: 1px solid #aaa;padding-bottom: 5px;}
 		.lato-bold{
 			font-family: "Lato";
 			font-weight: 700;

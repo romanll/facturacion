@@ -154,7 +154,7 @@ class St
 
 
 # PRUEBAS
-
+/*
 	//Generar digestion md5 (para pruebas)
 	function getmd5($cadena){
 		exec(".\openssl\openssl dgst -md5 $cadena > ./ufiles/digestmd5.txt");
@@ -172,7 +172,7 @@ class St
 		var_dump(exec(".\openssl\openssl x509 -inform DER -in ./ufiles/TEST00000AB/CSD01_AAA010101AAA.cer",$a));
 		print_r($a);
 	}
-
+*/
 
 	
 

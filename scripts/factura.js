@@ -3,8 +3,6 @@ factura.js : creacion de factura, validacion de campos
 24/12/2013
 */
 
-//var base = "http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
 
 var item={};                                        //datos del item a agregar
 var items={};                                       //lista de items agregados

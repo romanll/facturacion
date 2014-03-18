@@ -86,7 +86,7 @@ class Conceptos extends CI_Controller {
         $where=array("emisor"=>$this->emisor['idemisor']);
         $query=$this->items->read_nreg($where,5);
         if($query->num_rows()>0){$data['items']=$query->result();}
-        else{$data['error']="No existen registros";}
+        else{$data['error']="Todav&iacute;a no tienes conceptos registrados.";}
         $this->load->view('conceptos/tabla', $data, FALSE);
     }
 
@@ -141,11 +141,11 @@ class Conceptos extends CI_Controller {
                     $data['links']=$this->pagination->create_links();
                 }
                 else{
-                    $data['error']="No existen registros.";
+                    $data['error']="Todav&iacute;a no tienes conceptos registrados.";
                 }
             }
             else{
-                $data['error']="No existen registros.";
+                $data['error']="Todav&iacute;a no tienes conceptos registrados.";
             }
             $this->load->view('conceptos/lista',$data);
         }
