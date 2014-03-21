@@ -14,6 +14,7 @@ class Factura extends CI_Controller {
         $this->load->model('contributors');				//Emisor:Contribuyentes
         $this->load->model('customers');				//Clientes
         $this->load->model('invoice');					//Factura
+        $this->load->model('series');                   //Actualizar numero de folio
         $this->load->library('opnssl');                 //Sellar, crear cadena XML
         $this->load->library('crearxml');				//Libreria para generar archivo XML
         date_default_timezone_set('America/Tijuana');
@@ -22,7 +23,14 @@ class Factura extends CI_Controller {
 
     /* Mostrar vista de facturación */
     function index() {
-        $this->load->view('facturas/nuevo');
+        //ver que tenga timbres disponibles
+        $timbres=$this->ntimbres();
+        if($timbres==0){
+            $data=array("tipo"=>"error","mensaje"=>"No tiene timbres disponibles.");
+            $this->load->view('facturas/mensaje',$data);
+        }
+        else{$this->load->view('facturas/nuevo');}
+        //echo "<pre>";print_r($this->emisor);echo "</pre>";
     }
     
     /* 
@@ -79,9 +87,7 @@ class Factura extends CI_Controller {
     */
     function additems(){
         $items=$this->input->post('items');
-        if($items){
-            $data['items']=$items;
-        }
+        if($items){$data['items']=$items;}
         else{$data['error']="Aun no hay elementos en lista.";}
         $this->load->view('facturas/items', $data, FALSE);
     }
@@ -93,11 +99,27 @@ class Factura extends CI_Controller {
     */
     function doinvoice(){
     	//Validar campos de factura
+
+        /* Ver si aun tiene timbres disponibles; */
+        $timbres=$this->ntimbres();
+        if($timbres==0){
+            echo json_encode(array('error'=>'No tienes timbres disponibles'));
+            die();
+        }
     	
         //Obtener de _POST
     	$comprobante=$this->input->post('comprobante');
         $receptor=$this->input->post('cliente');
         $items=$this->input->post('items');
+
+        /* Ver si se utilizo alguna serie, por defecto FALSE */
+        $serie=FALSE;
+        if(isset($comprobante['serieid'])){
+            //obtener el identificador de serie y eliminarlo del $comprobante
+            $serie=$comprobante['serieid'];
+            unset($comprobante['serieid']);
+        }
+        //echo "<pre>";print_r($comprobante);echo "<pre>";die();
 
         /* ---- Emisor ---- */
         $emisor_node=$this->setemisor();
@@ -225,7 +247,16 @@ class Factura extends CI_Controller {
                     //Agregar Serie?folio
                 );
                 $insertar=$this->invoice->create($factura);
-                if($insertar){$response['success']="Factura creada";}
+                if($insertar){
+                    $response['success']="Factura creada";
+                    //Restar 1 la cantidad de timbres restantes
+                    $timb_restantes=$timbres-1;
+                    if($timb_restantes==0){$response['info']="No tienes timbres disponibles.";}
+                    else{$response['info']="Te restan $timb_restantes timbres.";}
+                    $actualizar=$this->contributors->update_stamps($this->emisor['idemisor']);
+                    //si utilizo alguna serie, aumentar +1 el numero de folio actual
+                    if($serie){$this->series->update_folio($serie);}
+                }
                 else{
                     $response['error']="Error al guardar factura en DB";
                     //Borrar datos y archivos
@@ -984,6 +1015,20 @@ class Factura extends CI_Controller {
         else{
             redirect('login');                                  //Redirigir a login
         }
+    }
+
+    /*
+        Obtener el numero de timbres
+        20/03/2014
+     */
+    function ntimbres(){
+        $timbres=0;
+        $query=$this->contributors->num_stamps($this->emisor['idemisor']);
+        if($query->num_rows()>0){
+            foreach ($query->result() as $row) {$timbres=$row->timbres;}
+        }
+        $query->free_result();
+        return $timbres;
     }
 }
 

@@ -57,6 +57,45 @@ class Contributors extends CI_Model {
         return $this->db->count_all_results();
     }
 
+    /*
+        Obtener la cantidad de timbres disponibles
+        Recibe indetificador de emisor
+        Retorna el valor del campo 'timbres'
+        20/03/2014
+    */
+    function num_stamps($emisor){
+        $this->db->select('timbres');
+        $this->db->where('idemisor',$emisor);
+        return $this->db->get($this->tabla);
+    }
+
+    /*
+        Actualizar la cantidad de timbres (sumar -1)
+        Recibe identificador de emisor
+        20/03/2014
+    */
+    function update_stamps($emisor){
+        $this->db->set('timbres', 'timbres-1', FALSE);
+        $this->db->where('idemisor', $emisor);
+        $this->db->update($this->tabla);
+        if($this->db->affected_rows()==1){return TRUE;}
+        else{return FALSE;}
+    }
+
+    /*
+        Actualizar cantidad de timbres (sumar +n)
+        Recibe identificador de emsior y cantidad de timbres
+        21/03/2014
+     */
+    function add_stamps($emisor,$n){
+        $this->db->set('timbres',"timbres+$n",FALSE);
+        $this->db->where('idemisor', $emisor);
+        $this->db->update($this->tabla);
+        if($this->db->affected_rows()==1){return TRUE;}
+        else{return FALSE;}
+        //UPDATE emisor SET timbres=timbres+10 WHERE idemisor=21;
+    }
+
     /* Actualizar Registro */
     function update($data,$where){
         $this->db->where($where);

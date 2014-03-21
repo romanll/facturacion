@@ -55,11 +55,12 @@
 	                            <tr>
 	                                <td class="uk-width-4-10"><?php echo $e->razonsocial; ?></td>
 	                                <td class="uk-text-center uk-width-1-10"><?php echo $e->rfc; ?></td>
-	                                <td class="uk-text-center uk-width-1-10"><?php echo $e->timbres; ?></td>
+	                                <td class="uk-text-center uk-width-1-10" id="<?php echo "nt-$e->idemisor"; ?>"><?php echo $e->timbres; ?></td>
 	                                <td class="uk-text-center uk-width-2-10"><?php echo $e->email; ?></td>
 	                                <td class="uk-text-center uk-width-1-10"><?php echo $e->telefono; ?></td>
 	                                <td class="uk-text-center uk-width-1-10">
 	                                    <a href='<?php echo base_url("contribuyentes/info/$e->idemisor"); ?>' class="info" data-uk-modal="{target:'#modal',bgclose:false}"><i class="uk-icon-info-circle"></i></a>
+	                                    <a href='<?php echo base_url("contribuyentes/agregartimbres/$e->idemisor"); ?>' data-emisor="<?php echo $e->idemisor; ?>" class="agregar" data-uk-modal="{target:'#modaltimbres',bgclose:false}"><i class="uk-icon-plus-circle"></i></a>
 	                                    <a href='<?php echo base_url("contribuyentes/editar/$e->idemisor"); ?>' class="editar"><i class="uk-icon-edit"></i></a>
 	                                    <a href='<?php echo base_url("contribuyentes/eliminar/$e->idemisor"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
 	                                </td>
@@ -79,12 +80,41 @@
 				<div class="uk-modal-dialog">
 					<a href="#" class="uk-modal-close uk-close"></a>
 					<div id="modal_content">
-					Contenido de modal
+						<div class="uk-grid">
+							<div class="uk-width-1-1 uk-text-center uk-text-large">
+								<i class="uk-icon-spinner uk-icon-spin"></i>
+							</div>
+						</div>
 					</div>
 					<div class="uk-grid">
 						<div class="uk-width-1-1">
 							<button class="uk-button uk-button-primary uk-float-right uk-modal-close">Aceptar</button>
 						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Agregar 'n' timbres a usuario -->
+			<div id="modaltimbres" class="uk-modal">
+				<div class="uk-modal-dialog">
+					<a href="#" class="uk-modal-close uk-close"></a>
+					<div>
+						<form action="<?php echo base_url("contribuyentes/agregartimbres"); ?>" class="uk-form" method="post" id="addstamp">
+							<fieldset>
+								<legend>Agregar timbres</legend>
+								<div class="uk-grid">
+									<div class="uk-width-1-3"><label for="timbres" class="uk-form-label">N&uacute;mero de Timbres</label></div>
+									<div class="uk-width-1-5">
+										<input type="number" class="uk-width-1-1" required id="timbres" name="timbres" min="1" value="1">
+									</div>
+									<input type="hidden" id="emisorid" name="emisorid">
+								</div>
+								<div class="uk-grid">
+									<div class="uk-width-1-1">
+										<button class="uk-button uk-button-primary uk-modal-close uk-float-right" onclick="addstamp()">Aceptar</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
 					</div>
 				</div>
 			</div>

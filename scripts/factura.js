@@ -74,6 +74,7 @@ $("#generar").click(function(event){
         var texto="";
         if(result.mensaje){
             texto='<div class="uk-alert uk-alert-success"><i class="uk-icon-check"></i> '+result.mensaje+'</div>';
+            texto+="<div class='uk-alert'><i class='uk-icon-info-circle'></i> "+result.info+"</div>";
             texto+="<a href='"+result.xml+"'><i class='uk-icon-cloud-download'></i> Descargar XML</a>";
             texto+="<br><a href='"+result.pdf+"' target='_blank'><i class='uk-icon-external-link-square'></i> Descargar/Ver PDF</a>";
             //Resetear formularios, tabla de items y totales
@@ -204,14 +205,16 @@ $("#serie").change(function(event){
         //Y mostrar campo Folio
         $("#folioarea").slideDown('fast');
         comprobante.serie=valortxt;                    //asignar serie en comprobante
+        comprobante.serieid=valor;                      //Agregar identificador de serie
     }
     else{
         $("#folio").val("");
         //Y esconder campo Folio
         $("#folioarea").slideUp('fast');
         //y borrar de datos de comprobante
-        delete comprobante.serie;                   //eliminar serie y folio en comprobante
+        delete comprobante.serie;                   //eliminar serie,serieid y folio en comprobante
         delete comprobante.folio;
+        delete comprobante.serieid;
     }
 });
 

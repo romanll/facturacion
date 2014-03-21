@@ -42,6 +42,19 @@ class Series extends CI_Model {
         $this->db->delete($this->tabla);
         return;
     }
+
+    /*
+        Actualizar la cantidad de folio (sumar 1)
+        Recibe identificador de serie
+        20/03/2014
+    */
+    function update_folio($serie){
+        $this->db->set('folio_actual', 'folio_actual+1', FALSE);
+        $this->db->where('idserie', $serie);
+        $this->db->update($this->tabla);
+        if($this->db->affected_rows()==1){return TRUE;}
+        else{return FALSE;}
+    }
     
 
 

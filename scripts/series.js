@@ -3,9 +3,6 @@ series.js => admin de series
 27/12/2013
 */
 
-
-var base="http://localhost:81/facturacion/";
-//base="http://162.243.127.174/facturacion/";
 listar();
 
 /* Validar form */
@@ -66,7 +63,7 @@ function enviar(formulario){
 
 /* listrar series */
 function listar(){
-	$("#series").load(base+"configuracion/listarseries");
+	$("#series").load("listarseries");
 }
 
 /* al tratar de eliminar */

@@ -21,7 +21,7 @@ if(isset($series)):
 <?php endforeach; ?>
 	</tbody>
 </table>
-<?
+<?php
 else:
 ?>
 	<div class="uk-alert uk-alert-warning"><?php echo $error; ?></div>

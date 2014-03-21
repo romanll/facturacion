@@ -356,6 +356,35 @@ class Contribuyentes extends CI_Controller {
         
     }
 
+    /*
+        Agregar 'n' timbres
+        20/03/2014
+     */
+    function agregartimbres(){
+        $datos=$this->input->post();
+        if($datos){
+            //agregar timbres a emisor
+            if(!empty($datos['timbres'])){
+                $actualizar=$this->contributors->add_stamps($datos['emisorid'],$datos['timbres']);
+                if($actualizar){
+                    $response['success']="Asignaci&oacute;n de timbres correctamente.";
+                    //obtener le numero de timbres actual
+                    $timbres=0;
+                    $query=$this->contributors->num_stamps($datos['emisorid']);
+                    if($query->num_rows()>0){
+                        foreach ($query->result() as $row) {$timbres=$row->timbres;}
+                    }
+                    $query->free_result();
+                    $response['ntimbres']=$timbres;
+                }
+                else{$response['error']="Error al asignar timbres, intenta despues.";}
+            }
+            else{$response['error']="No se permiten campos vacios, ni ceros.";}
+        }
+        else{$response['error']="Especifica datos a actualizar.";}
+        echo json_encode($response);
+    }
+
 
     /* 
     Los emisores pueden:

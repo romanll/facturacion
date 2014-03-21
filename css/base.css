@@ -74,6 +74,7 @@ html,body{height: 100%;position: relative;}
 					font-size: 15px;
 					font-weight: 700;
 				}
+				.modal_content{margin-top: 10px !important;}
 			/* /Nueva Factura */
 			/* grid */
 			#contenido .uk-grid {margin-top: 7px !important;}
@@ -122,3 +123,4 @@ html,body{height: 100%;position: relative;}
 		a.remove,a.eliminar{color: #FF0000;}
 		a.editar{color: #FF6600;}
 		a.info{color: #3399FF;}
+		a.agregar{color: #009900;}

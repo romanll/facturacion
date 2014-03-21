@@ -44,7 +44,7 @@ class Invoice extends CI_Model {
     function read_pag($condicion, $per_page, $offset){
         $this->db->select('idfactura,receptor,fecha,emisor,nodo_comprobante,nodo_receptor,estado,filename');
         $this->db->where($condicion);
-        //$this->db->order_by('idfactura', 'desc');
+        $this->db->order_by('idfactura', 'DESC');
         return $this->db->get($this->tabla, $per_page, $offset);
     }
 

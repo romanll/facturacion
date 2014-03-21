@@ -87,6 +87,6 @@
             <!-- END Contenido (DER) -->
         </div>
 		<!-- Scripts & CSS -->
-		<script src='<?php echo base_url("scripts/contribuyentes.js"); ?>'></script>
+
 	</body>
 </html>
