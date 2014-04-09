@@ -88,6 +88,17 @@ class Configuracion extends CI_Controller {
     	}
     }
 
+    /*
+        Solicitar timbres
+        01/04/2014
+     */
+    function solicitart(){
+        //Obtener el numero de emisor con SESSION
+        //Cantidad de timbres solicitados
+        //Mensaje Opcional
+        //Enviar por correo
+    }
+
 }
         
 

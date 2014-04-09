@@ -6,6 +6,15 @@
 var idtd;
 
 /*
+    Click en editar:mostrar opciones
+    27/03/2014
+ */
+$(document).on('click','a.editar',function(event){
+    event.preventDefault();
+    console.log("mostrar opciones");
+})
+
+/*
     Al dar click en 'agregar' timbres
     20/03/2014
  */
@@ -99,5 +108,40 @@ $(document).on("click","a.info",function(event){
 */
 $(document).on("click","a.eliminar",function(event){
 	event.preventDefault();
-	console.log("Eliminar emisor, preguntar primero");
+    var href=$(this).attr("href");
+    var trparent=$(this).parent().parent();
+	alertify.set({ labels: {
+        ok     : "Aceptar",
+        cancel : "Cancelar"
+    } });
+    alertify.confirm("&iquest;Realmente desea eliminar registro de emisor?", function (e) {
+        if (e) {
+            //proceder a cancelar
+            var request=$.ajax({
+                type:"POST",
+                url:href,
+                dataType:'json'
+            });
+            request.done(function(result){
+                console.log(result.success);
+                if(result.success){
+                    alertify.set({ delay: 15000 });             //tiempo antes de esconder notificacion
+                    if(result.success){
+                        alertify.success(result.success);       //mostrar mensaje
+                        trparent.remove();                      //Borrar actual elemento
+                    }
+                    else{alertify.error(result.error);}         //mostrar error
+                }
+                else{
+                    console.log(result.success);
+                }
+            });
+            request.fail(function(jqXHR,textStatus){
+                console.log(textStatus);
+            });
+        } else {
+            // user clicked "cancel"
+            console.log('cancel');
+        }
+    });
 });

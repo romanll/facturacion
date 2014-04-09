@@ -34,8 +34,9 @@ class Contributors extends CI_Model {
         return $this->db->get($this->tabla);
     }
 
-    /* Obtener los datos de emisor, $condicion es array(); */
-    function read($condicion=FALSE){
+    /* Obtener los datos de emisor, $condicion es array() & $select es string */
+    function read($condicion=FALSE,$select=FALSE){
+        if($select){$this->db->select($select);}
         if($condicion){$this->db->where($condicion);}
         $this->db->order_by('idemisor','DESC');
         return $this->db->get($this->tabla);

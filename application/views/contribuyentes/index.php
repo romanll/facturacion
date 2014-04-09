@@ -54,7 +54,7 @@
 									</div>
 								</div>
 
-								<h3 class="uk-h3">Datos de Contribuyente</h3>
+								<h3 class="uk-h3">Datos Fiscales</h3>
 								<!-- nombre|razon social -->
 								<div class="uk-grid">
 									<div class="uk-width-1-6"><label class="uk-form-label" for="razonsoc">Raz&oacute;n Social</label></div>

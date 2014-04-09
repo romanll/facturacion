@@ -15,7 +15,7 @@ class Opnssl
 	public function __construct()
 	{
         $this->ci =& get_instance();
-        $this->passfinkok="Prueba@123";
+        $this->passfinkok="Prueba@123";//Prueba@456";
 	}
 	
 	/*
@@ -54,8 +54,8 @@ class Opnssl
 
 
 	/*
-		cettopem => Generar certificado en PEM(archivo)
-		Recibe path de archivo CER y la ruta del archvio a generar
+		certopem => Generar certificado en PEM(archivo)
+		Recibe path de archivo CER y la ruta del archivo a generar
 		Retorna TRUE|FALSE si existe o no archivo
 		31/01/2014
 	*/

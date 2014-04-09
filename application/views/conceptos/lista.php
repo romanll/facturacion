@@ -23,26 +23,24 @@
 						<h3 class="uk-h3">Lista de Conceptos</h3>
 						<div id="conceptos">
 							<?php if(isset($items)): ?>
-							<div class="uk-grid">
-	                            <form action="<?php echo base_url("conceptos/buscar"); ?>" class="uk-form" method="post" id="buscarform">
-	                                <div class="uk-grid">
-	                                    <div class="uk-width-2-10 uk-push-5-10">
-	                                        <input type="search" name="busqueda" id="busqueda" class="uk-width-1-1" placeholder="Buscar...." required>
-	                                    </div>
-	                                    <div class="uk-width-2-10 uk-push-5-10">
-	                                        <select name="optionsearch" id="optionsearch" class="uk-width-1-1">
-	                                            <option value="descripcion">Descripci&oacute;n</option>
-	                                            <option value="noidentificacion">Identificador</option>
-	                                            <option value="valor">Valor</option>
-	                                            <option value="observaciones">Observaciones</option>
-	                                        </select>
-	                                    </div>
-	                                    <div class="uk-width-1-10 uk-push-5-10">
-	                                        <button class="uk-button uk-button-primary uk-width-1-1"><i class="uk-icon-search"></i></button>
-	                                    </div>
+	                        <form action="<?php echo base_url("conceptos/buscar"); ?>" class="uk-form" method="post" id="buscarform">
+	                        	<div class="uk-grid">
+	                            	<div class="uk-width-2-10 uk-push-5-10">
+	                                	<input type="search" name="busqueda" id="busqueda" class="uk-width-1-1" placeholder="Buscar...." required>
+									</div>
+	                                <div class="uk-width-2-10 uk-push-5-10">
+	                                	<select name="optionsearch" id="optionsearch" class="uk-width-1-1">
+	                                    	<option value="descripcion">Descripci&oacute;n</option>
+	                                        <option value="noidentificacion">Identificador</option>
+	                                        <option value="valor">Valor</option>
+	                                        <option value="observaciones">Observaciones</option>
+	                                    </select>
 	                                </div>
-	                            </form>
-	                        </div>
+	                                <div class="uk-width-1-10 uk-push-5-10">
+	                                	<button class="uk-button uk-button-primary uk-width-1-1"><i class="uk-icon-search"></i></button>
+	                                </div>
+	                            </div>
+	                        </form>
 	                        <br>
 	                        <div id="resultados">
 	                            <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
@@ -60,7 +58,7 @@
 	                            <?php foreach($items as $item): ?>
 	                                    <tr>
 	                                        <td class="uk-text-center uk-width-1-10"><?php echo $item->noidentificacion; ?></td>
-	                                        <td class="uk-width-6-10"><?php echo $item->descripcion; ?></td>
+	                                        <td class="uk-width-6-10"><?php echo word_limiter($item->descripcion,15); ?></td>
 	                                        <td class="uk-text-right uk-width-1-10"><?php echo number_format($item->valor,2,'.',',') ; ?></td>
 	                                        <td class="uk-text-center uk-width-1-10"><?php echo $item->unidad; ?></td>
 	                                        <td class="uk-text-center uk-width-1-10">

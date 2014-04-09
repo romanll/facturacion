@@ -107,8 +107,7 @@
 		<script src='<?php echo base_url("libs/jquery_validation/jquery.validate.min.js"); ?>'></script>
 		<script src='<?php echo base_url("libs/jquery_validation/additional-methods.min.js"); ?>'></script>
 		<script src='<?php echo base_url("libs/jquery_validation/localization/messages_es.js"); ?>'></script>
-		<link rel="stylesheet" href='<?php echo base_url("libs/nprogress/nprogress.css"); ?>'></link>
-		<script src='<?php echo base_url("libs/nprogress/nprogress.js"); ?>'></script>
+		<?php $this->load->view('template/nprogress'); ?>
 		<script src='<?php echo base_url("scripts/factura_lista.js"); ?>'></script>
 	</body>
 </html>

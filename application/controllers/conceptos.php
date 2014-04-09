@@ -12,13 +12,18 @@ class Conceptos extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('items');
+        $this->load->model('taxes');
         $this->emisor=$this->getEmisor();
     }
 
     /* Por defecto mostrar registro de connceptos */
     function index() {
     	$this->load->library('form_validation');
-        $this->load->view('conceptos/index');
+        //Obtener los impuestos posibles
+        $query=$this->taxes->read();
+        if($query->num_rows()>0){$data['impuestos']=$query->result();}
+        else{$data['error']="No existen imputestos aun.";}
+        $this->load->view('conceptos/index',$data);
     }
 
     /* Hacer registro de concepto */
@@ -38,43 +43,76 @@ class Conceptos extends CI_Controller {
     		//Paso validacion, guardar datos del $_POST
     		$datos=$this->input->post();
             $datos['emisor']=$this->emisor['idemisor'];                         //Se agregara con session
+            if(isset($datos['impuesto'])){
+                $datos['impuestos']=json_encode($datos['impuesto']);
+                unset($datos['impuesto']);
+            }
+            //echo "<pre>";print_r($datos);echo "</pre>";die();
             //Revisar que el numero de identificacion no exista
             //emisor es el dueño del item y el noIdentificacion es el recibido en $_POST
             $where=array('emisor'=>$this->emisor['idemisor'],'noidentificacion'=>$datos['noidentificacion']);
             $numitems=$this->items->exist($where);
-            if($numitems>0){
-                $response['error']="No Identificación ya existe";               //mensaje error : noIdentificacion ya existe
-            }
-            //insertar datos   
+            if($numitems>0){$response['error']="No Identificación ya existe";}  //mensaje error : noIdentificacion ya existe
+            //insertar datos
             else{
                 $insertar=$this->items->create($datos);                         //insertar en DB
-                if($insertar){
-                    $response['success']="Item insertado correctamente : {$datos['noidentificacion']}";
-                }
-                else{
-                    $response['error']="No se inserto :(";
-                }
+                if($insertar){$response['success']="Item insertado correctamente : {$datos['noidentificacion']}";}
+                else{$response['error']="No se inserto :(";}
             }
             echo json_encode($response);
     	}
     }
 
-    /* Mostrar datos del concepto */                // <= comprobar que yo sea propietario
+    /* Mostrar datos del concepto */
     function ver(){
         $iditem=$this->input->post('item');
         if($iditem){
-            $q=$this->items->read(array('idconcepto'=>$iditem));
+            $q=$this->items->read(array('idconcepto'=>$iditem,"emisor"=>$this->emisor['idemisor']),FALSE,FALSE);
             if($q->num_rows()>0){
-                $data['item']=$q->result();
+                //$data['item']=$q->result();
+                //obtener el valor de los impuestos
+                foreach ($q->result() as $row) {
+                    //por defecto tendra algun valor en 'impuestos'
+                    if(!empty($row->impuestos)){
+                        //Obtener estos valores y retornar en array
+                        if($row->impuestos != "Cero" && $row->impuestos != "Excento"){
+                            $data['item']=array(
+                                'idconcepto'=>$row->idconcepto,
+                                'noidentificacion'=>$row->noidentificacion,
+                                'descripcion'=>$row->descripcion,
+                                'valor'=>$row->valor,
+                                'unidad'=>$row->unidad,
+                                'observaciones'=>$row->observaciones,
+                                'emisor'=>$row->emisor
+                                );
+                            $impuestos=json_decode($row->impuestos,TRUE);
+                            $imp=false;
+                            foreach ($impuestos as $key => $value) {
+                                $q2=$this->taxes->read(array("nombre"=>$value),"nombre, descripcion,tasa,tipo");
+                                if($q2->num_rows()>0){
+                                    $imp[]=$q2->result();
+                                }
+                            }
+                            if($imp){$data['item']['impuestos']=json_encode($imp);}
+
+                        }
+                        //si es cero o excento imprimir asi como esta
+                        else{
+                            $resultado=$q->result();
+                            $data['item']=$resultado[0];
+                        }
+                    }
+                    else{
+                        $resultado=$q->result();
+                        $data['item']=$resultado[0];
+                    }
+                }
             }
-            else{
-                $data['error']="No existe item";
-            }
-            $this->load->view('conceptos/item_json', $data, FALSE);
+            else{$data['error']="No existe item";}
+            //$this->load->view('conceptos/item_json', $data, FALSE);
         }
-        else{
-            echo 'Debe especificar item';
-        }
+        else{$data['error']='Debe especificar item';}
+        echo json_encode($data);
     }
 
     /*
@@ -93,16 +131,13 @@ class Conceptos extends CI_Controller {
 
     /* Listar conceptos de usuario */
     function listar(){
+        $this->load->helper('text');
         $type=$this->uri->segment(3);                       //Para saber si retorno JSON o NO
         $where=array("emisor"=>$this->emisor['idemisor']);
         if($type=='json'){
-            $query=$this->items->read($where);
-            if($query->num_rows()>0){
-                $data['items']=$query->result();
-            }
-            else{
-                $data['error']="No existen registros.";
-            }
+            $query=$this->items->read($where,FALSE,'idconcepto,descripcion,valor');
+            if($query->num_rows()>0){$data['items']=$query->result();}
+            else{$data['error']="No existen registros.";}
             $this->load->view('conceptos/items_json', $data, FALSE);
         }
         else{

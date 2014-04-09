@@ -10,7 +10,7 @@ class States extends CI_Model {
     private $tabla="estados";
 
     function read(){
-        //$this->db->order_by('idestado');
+        $this->db->order_by('estado');
         return $this->db->get($this->tabla);
     }
 

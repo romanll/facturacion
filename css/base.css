@@ -9,7 +9,7 @@
 @import url(http://fonts.googleapis.com/css?family=Noto+Sans);
 
 /* BODY */
-html,body{height: 100%;position: relative;}
+html,body{height: 100%;position: relative;color: #000;}
 /* LAYOUT */
 	/* IZQ */
 		#izq{
@@ -32,6 +32,7 @@ html,body{height: 100%;position: relative;}
 			}
 			.uk-nav-side > li{line-height:25px;}
 			.uk-nav a i{font-size:15px;width:18px;}
+			ul.uk-nav-sub {padding-left:35px;}
 		/* / Menu*/
 	/* DER */
 		#der{padding:7px;overflow-y:auto;height: 100%;  }
@@ -78,6 +79,24 @@ html,body{height: 100%;position: relative;}
 			/* /Nueva Factura */
 			/* grid */
 			#contenido .uk-grid {margin-top: 7px !important;}
+			/* form label */
+			.uk-form-label{float: left;margin-top: 4px;}
+			/*	form disabled */
+			input[type=text]:disabled{
+				border-color: #eee !important;
+				background-color: #FBFBFB !important;
+				color: #666 !important;
+			}
+			fieldset{font-size: 13px;font-family: Noto Sans;margin-bottom: 15px !important;}
+			fieldset label.uk-form-label{font-weight: 600;font-family: Open Sans}
+			.uk-relative{position: relative;}
+			.loader-input{
+				float: right;
+				position: absolute;
+				top: 33%;
+				right: 5px;
+				display: none;
+			}
 /* Extras */
 		.uk-h3{border-bottom: 1px solid #dddddd;padding-bottom: 5px;}
 		.uk-h5{color: #444;border-bottom: 1px solid #aaa;padding-bottom: 5px;}
@@ -89,6 +108,7 @@ html,body{height: 100%;position: relative;}
 		.uk-form .uk-grid,.mg7,.uk-modal .uk-grid {margin-top: 7px !important;}
 		table th,table td.uk-text-bold{font-family: 'Lato';}
 		.uk-table td{vertical-align: middle;}
+		.uk-form input,.uk-form select,.uk-button{border-radius: 0 !important;}
 	/* Alertify */
 		.alertify{
 			border-radius: 0 !important;
@@ -124,3 +144,37 @@ html,body{height: 100%;position: relative;}
 		a.editar{color: #FF6600;}
 		a.info{color: #3399FF;}
 		a.agregar{color: #009900;}
+	/*  Dropdown arrow  */
+		.droparrow{
+			margin-top: 4px !important;
+			border-color: #FF9900;
+			text-align: left;
+			color: #222;
+		}
+		.droparrow .uk-nav-dropdown > li > a:hover{
+			color: #FFFFFF !important;
+		}
+		.droparrow:before {
+			content: "";
+		    position: absolute;
+			width: 0;
+			height: 0;
+			border-width: 8px;
+			border-style: solid;
+			border-color: transparent transparent #FF9900 transparent;
+			top: -17px;
+			right: 1px;
+		}
+		.droparrow:after {
+			content: "";
+			position: absolute;
+			width: 0;
+			height: 0;
+			border-width: 8px;
+			border-style: solid;
+			border-color: transparent transparent #ffffff transparent;
+			top: -16px;
+			right: 1px;
+		}
+	
+

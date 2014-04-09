@@ -31,14 +31,15 @@ class Items extends CI_Model {
         return $this->db->get($this->tabla);
     }
 
-	/* Obtener los datos de servicio/producto $condicion es array(); */
-    function read($condicion=FALSE,$orden=FALSE){
+	/* Obtener los datos de servicio/producto $condicion es array(),$orden=array("campo"=>"direccion"),$select="campo1,campo2..."; */
+    function read($condicion=FALSE,$orden=FALSE,$select=FALSE){
+        if($select){$this->db->select($select);}
         if($condicion){$this->db->where($condicion);}
         if($orden){
             $this->db->order_by($orden['by'],$orden['direction']);
         }
         else{
-            $this->db->order_by('idconcepto','DESC');
+            $this->db->order_by('descripcion','ASC');
         }
         return $this->db->get($this->tabla);
     }

@@ -16,6 +16,14 @@ $("#nuevo_concepto").validate({
 	}
 });
 
+//select 'impuestos'
+$("#impuestos").change(function(event) {
+    //deshabilitar checkboxes
+    if($(this).val()!="Aplicar"){$.each($("#impuestos_area input"), function(index, val) {$(val).attr("disabled","disabled");});}
+    //habilitar checkboxes
+    else{$.each($("#impuestos_area input"), function(index, val) {$(val).removeAttr('disabled');});}
+});
+
 
 /* enviar(formulario) */
 function enviar(formulario){
@@ -34,13 +42,13 @@ function enviar(formulario){
         alertify.set({ delay: 15000 });
         if(result.success){
             alertify.success(result.success);   //mostrar mensaje exito
+            $.each($("#impuestos_area input"), function(index, val) {$(val).removeAttr('disabled');});
             $(formulario)[0].reset();
         }
-        else{
-            alertify.error(result.error);       //mostrar error
-        }
+        else{alertify.error(result.error);}     //mostrar error
     });
     request.fail(function(jqXHR, textStatus){
         console.log(textStatus);
+        alertify.error("ERROR:Error de inserción.");
     });
 }

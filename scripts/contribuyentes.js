@@ -54,7 +54,6 @@ $("#regemisor").validate({
 /* enviar(formulario) */
 function enviar(formulario){
 	var datos=new FormData(formulario);
-	//console.log(formulario);
 	var request = $.ajax({
         type: "POST",
         url: $(formulario).attr("action"),

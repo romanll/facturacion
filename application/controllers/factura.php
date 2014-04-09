@@ -3,6 +3,9 @@
 	Funciones para realizar factura
 	23/01/2013
 */
+
+error_reporting(0);
+
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Factura extends CI_Controller {
@@ -25,12 +28,14 @@ class Factura extends CI_Controller {
     function index() {
         //ver que tenga timbres disponibles
         $timbres=$this->ntimbres();
-        if($timbres==0){
-            $data=array("tipo"=>"error","mensaje"=>"No tiene timbres disponibles.");
-            $this->load->view('facturas/mensaje',$data);
+        if($timbres==0){$data['error']="No tienes timbres disponibles.";}
+        else{
+            //Obtener lista de clientes
+            $query=$this->customers->read(array("emisor"=>$this->emisor['idemisor']));
+            if($query->num_rows()>0){$data['clientes']=$query->result();}
+            $query->free_result();
         }
-        else{$this->load->view('facturas/nuevo');}
-        //echo "<pre>";print_r($this->emisor);echo "</pre>";
+        $this->load->view('facturas/index',$data);
     }
     
     /* 
@@ -185,8 +190,7 @@ class Factura extends CI_Controller {
         }
 
         $cadena=$this->opnssl->stringcadena($xmlpath,$cadenafile);          //Obtener la cadena o FALSE
-        if($cadena){                                                        //Proceder a obtener el sello
-            //echo $pem;die();
+        if($cadena){                                                        //Proceder a obtener el sello;
             $sello=$this->opnssl->sello($pem,$cadena);
             $this->crearxml->agregarsello($sello);                          //Agregar atributo sello a xml
             $comp_node['sello']=$sello;                                     //y a datos del comprobante
@@ -201,73 +205,95 @@ class Factura extends CI_Controller {
         /* ---- Timbrar ---- */
         $this->load->library('Finkok');                                     //Libraria con funciones de Finkok
         $timbrar=$this->finkok->timbrar($xmlpath);                          //Timbrar
-        if(isset($timbrar->CodEstatus)){                                    //Si responde con CodEstatus es exitoso
-            $response['mensaje']=$timbrar->CodEstatus;
-            $response['xml']=base_url("factura/descargar/xml/$filename");
-            $response['pdf']=base_url("factura/descargar/pdf/$filename");
-            //crear nodo para 'TimbreFiscalDigital' y para crear PDF
-            $timbre_node=array(
-                "version"=>"1.0",
-                "UUID"=>$timbrar->UUID,
-                "selloCFD"=>$comp_node['sello'],
-                "FechaTimbrado"=>$timbrar->Fecha,
-                "noCertificadoSAT"=>$timbrar->NoCertificadoSAT,
-                "selloSAT"=>$timbrar->SatSeal
-            );
-            //Crear archivo qr.png para Pdf
-            $qrpath=$this->makeqr($customer_node['rfc'],$total,$timbrar->UUID);
-            if($qrpath){
-                //echo "crear PDf";
-                $datos=array(
-                    "emisor"=>$emisor_node,
-                    "cliente"=>$customer_node,
-                    "comprobante"=>$comp_node,
-                    "items"=>$items_nodes,
-                    "impuestos"=>array("iva"=>$iva,"ivaretenido"=>$ivaret,"isr"=>$isr),
-                    "timbre"=>$timbre_node,
-                    "nombre"=>$filename,
-                    "qr"=>$qrpath
+        if(is_string($timbrar)){
+            //error en SOAP
+            $response['error']=$timbrar;
+            //Borrar archivos creados
+            $response['info']=$this->deletefile($xmlpath);
+        }
+        else{
+            if(isset($timbrar->CodEstatus)){                                    //Si responde con CodEstatus es exitoso
+                $response['mensaje']=$timbrar->CodEstatus;
+                $response['xml']=base_url("factura/descargar/xml/$filename");
+                $response['pdf']=base_url("factura/descargar/pdf/$filename");
+                //crear nodo para 'TimbreFiscalDigital' y para crear PDF
+                $timbre_node=array(
+                    "version"=>"1.0",
+                    "UUID"=>$timbrar->UUID,
+                    "selloCFD"=>$comp_node['sello'],
+                    "FechaTimbrado"=>$timbrar->Fecha,
+                    "noCertificadoSAT"=>$timbrar->NoCertificadoSAT,
+                    "selloSAT"=>$timbrar->SatSeal
                 );
-                $this->makepdf($datos);
-                //Ahora insertar en DB
-                $factura=array(
-                    "receptor"=>$customer_node['rfc'],
-                    "fecha"=>date("Y-m-d H:i:s"),
-                    "emisor"=>$this->emisor['idemisor'],
-                    "nodo_comprobante"=>json_encode($comp_node),
-                    "nodo_emisor"=>json_encode($emisor_node),
-                    "nodo_receptor"=>json_encode($customer_node),
-                    "nodo_conceptos"=>json_encode($items_nodes),
-                    "nodo_impuestos"=>json_encode($taxes_nodes),
-                    "nodo_timbre"=>json_encode($timbre_node),
-                    "estado"=>"Activo",
-                    "filename"=>$filename,
-                    "uuid"=>$timbre_node['UUID'],                                   //Para facilidad al cancelar
-                    "impuestos"=>json_encode($datos['impuestos'])                   //Para facilidad al crear PDF
-                    //Agregar Serie?folio
-                );
-                $insertar=$this->invoice->create($factura);
-                if($insertar){
-                    $response['success']="Factura creada";
-                    //Restar 1 la cantidad de timbres restantes
-                    $timb_restantes=$timbres-1;
-                    if($timb_restantes==0){$response['info']="No tienes timbres disponibles.";}
-                    else{$response['info']="Te restan $timb_restantes timbres.";}
-                    $actualizar=$this->contributors->update_stamps($this->emisor['idemisor']);
-                    //si utilizo alguna serie, aumentar +1 el numero de folio actual
-                    if($serie){$this->series->update_folio($serie);}
-                }
-                else{
-                    $response['error']="Error al guardar factura en DB";
-                    //Borrar datos y archivos
+                //Crear archivo qr.png para Pdf
+                $qrpath=$this->makeqr($customer_node['rfc'],$total,$timbrar->UUID);
+                if($qrpath){
+                    //echo "crear PDf";
+                    $datos=array(
+                        "emisor"=>$emisor_node,
+                        "cliente"=>$customer_node,
+                        "comprobante"=>$comp_node,
+                        "items"=>$items_nodes,
+                        "impuestos"=>array("iva"=>$iva,"ivaretenido"=>$ivaret,"isr"=>$isr),
+                        "timbre"=>$timbre_node,
+                        "nombre"=>$filename,
+                        "qr"=>$qrpath
+                    );
+                    $this->makepdf($datos);
+                    //Ahora insertar en DB
+                    $factura=array(
+                        "receptor"=>$customer_node['rfc'],
+                        "fecha"=>date("Y-m-d H:i:s"),
+                        "emisor"=>$this->emisor['idemisor'],
+                        "nodo_comprobante"=>json_encode($comp_node),
+                        "nodo_emisor"=>json_encode($emisor_node),
+                        "nodo_receptor"=>json_encode($customer_node),
+                        "nodo_conceptos"=>json_encode($items_nodes),
+                        "nodo_impuestos"=>json_encode($taxes_nodes),
+                        "nodo_timbre"=>json_encode($timbre_node),
+                        "estado"=>"Activo",
+                        "filename"=>$filename,
+                        "uuid"=>$timbre_node['UUID'],                                   //Para facilidad al cancelar
+                        "impuestos"=>json_encode($datos['impuestos'])                   //Para facilidad al crear PDF
+                        //Agregar Serie?folio
+                    );
+                    $insertar=$this->invoice->create($factura);
+                    if($insertar){
+                        $response['success']="Factura creada";
+                        //Restar 1 la cantidad de timbres restantes
+                        $timb_restantes=$timbres-1;
+                        if($timb_restantes==0){$response['info']="No tienes timbres disponibles.";}
+                        else{$response['info']="Te restan $timb_restantes timbres.";}
+                        $actualizar=$this->contributors->update_stamps($this->emisor['idemisor']);
+                        //si utilizo alguna serie, aumentar +1 el numero de folio actual
+                        if($serie){$this->series->update_folio($serie);}
+                    }
+                    else{
+                        $response['error']="Error al guardar factura en DB";
+                        //Borrar datos y archivos
+                    }
                 }
             }
-        }
-        else{                                                               //Si no retorna CodEstatus no se timbro
-            $response['error']="Error al timbrar";
-            $response['inc']=$timbrar;
+            else{                                                               //Si no retorna CodEstatus no se timbro
+                $response['error']="Error al timbrar";
+                //if(isset())
+                $response['inc']=$timbrar->Incidencia->MensajeIncidencia;
+                //Borrar archivos creados
+                $response['info']=$this->deletefile($xmlpath);
+            }
         }
         echo json_encode($response);
+    }
+
+    /*
+        Eliminar archivo XML, al tratar de timbrar si es que falla
+        01/04/2014
+     */
+    function deletefile($fullpath){
+        $fileinfo=pathinfo($fullpath);
+        $deleted=unlink($fullpath);
+        if($deleted){return "Archivo {$fileinfo['basename']} eliminado correctamente.";}
+        return "No se pudo eliminar archivo {$fileinfo['basename']}, poceder de forma manual.";
     }
 
     /* 
@@ -342,26 +368,32 @@ class Factura extends CI_Controller {
         $xml_cancel=$filename."_cancelado.xml";                                         //nombre del archivo a crear con la cancelacion
         $xml_cancel_path="./ufiles/{$this->emisor['rfc']}/$xml_cancel";                 //Path de archivo a crear
         $cancelar=$this->finkok->cancelar($uuid,$this->emisor['rfc'],$cert,$enckey);
-        //var_dump($cancelar);die();
-        $result['cancelar']=$cancelar;                                                  //Resultado de cancelacion
-        if($cancelar->cancelResult->Folios->Folio->EstatusUUID==201){                   //Correcto: 201
-            file_put_contents($xml_cancel_path, $cancelar->cancelResult->Acuse);        //Guardar Acuse en XML
-            //Imprimirlo bonito
-            $xmlfile_canceled=new DOMDocument();
-            $xmlfile_canceled->load($xml_cancel_path);
-            $xmlfile_canceled->formatOutput=true;
-            $xmlfile_canceled->save($xml_cancel_path);
-            $response['xmlc']=$xml_cancel_path;
-            $response['success']="La factura ha sido cancelada.";
-            //Actualizar en DB
-            $new_data=array("estado"=>"Cancelado");
-            $where=array("idfactura"=>$facturaid,"emisor"=>$this->emisor['idemisor']);
-            $update=$this->invoice->update($where,$new_data);
-            if($update){$response['db']="Actualización correcta en DB";}
-            else{$response['db']="Error al actualizar en DB";}                          //No se actualizo en DB
+        if(is_string($cancelar)){
+            //es string, error en conexion SOAP
+            $response=array("error"=>$cancelar);
         }
         else{
-            $response['error']="Error al cancelar factura: ".$cancelar->cancelResult->Folios->Folio->EstatusUUID;
+            //Se intento cancelar, respuesta de FINKOK
+            $response['cancelar']=$cancelar;                                                //Resultado de cancelacion
+            if($cancelar->cancelResult->Folios->Folio->EstatusUUID==201){                   //Correcto: 201
+                file_put_contents($xml_cancel_path, $cancelar->cancelResult->Acuse);        //Guardar Acuse en XML
+                //Imprimirlo bonito
+                $xmlfile_canceled=new DOMDocument();
+                $xmlfile_canceled->load($xml_cancel_path);
+                $xmlfile_canceled->formatOutput=true;
+                $xmlfile_canceled->save($xml_cancel_path);
+                $response['xmlc']=$xml_cancel_path;
+                $response['success']="La factura ha sido cancelada.";
+                //Actualizar en DB
+                $new_data=array("estado"=>"Cancelado");
+                $where=array("idfactura"=>$facturaid,"emisor"=>$this->emisor['idemisor']);
+                $update=$this->invoice->update($where,$new_data);
+                if($update){$response['db']="Actualización correcta en DB";}
+                else{$response['db']="Error al actualizar en DB";}                          //No se actualizo en DB
+            }
+            else{
+                $response['error']="Error al cancelar factura: {$cancelar->cancelResult->CodEstatus}";
+            }
         }
         return $response;
     }

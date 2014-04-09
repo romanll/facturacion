@@ -184,6 +184,22 @@ class Clientes extends CI_Controller {
         $this->load->view('clientes/info',$data);
     }
 
+    /*
+        Obtener info de cliente en <select>
+        04/04/2014
+     */
+    function cliente(){
+        $cliente=$this->input->post('cliente');
+        if($cliente){
+            $where=array('idcliente'=>$cliente,'emisor'=>$this->emisor['idemisor']);
+            $query=$this->customers->read($where,FALSE);
+            if($query->num_rows()>0){$data['customer']=$query->result();}
+            else{$data['error']="No existen datos de cliente";}
+        }
+        else{$data['error']="Especifique identificador de cliente";}
+        $this->load->view('clientes/info_json',$data);
+    }
+
 
     /* Eliminar */
     function eliminar(){

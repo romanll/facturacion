@@ -251,6 +251,13 @@ $("#tipocambio").keyup(function(event){comprobante.tipocambio=$(this).val();});
     24/01/2012
 */
 function additem(){
+    //Agregar en JS
+    item.cantidad=$("#cantidad").val();                             // campo cantidad agregar a item
+    item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s) (valor*cantidad)
+    items[item.noidentificacion]=item;                              //agregar el item a la lista de items
+    console.log(item);
+
+    /*
     item.cantidad=$("#cantidad").val();                             // campo cantidad agregar a item
     item.importe=parseFloat(item.valor)*parseFloat(item.cantidad);  //agregar importe de item(s) (valor*cantidad)
     items[item.noidentificacion]=item;                              //agregar el item a la lista de items
@@ -276,6 +283,7 @@ function additem(){
 
     //ver si item esta vacio, si no, habilitar boton 'generar factura'
     buttong();
+    */
 }
 
 /*

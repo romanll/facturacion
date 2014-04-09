@@ -4,6 +4,16 @@
 */
 
 
+NProgress.configure({ minimum: 0.1,trickleRate: 0.02, trickleSpeed: 600 });
+
+$(document).ready(function () {
+    $(document).ajaxStart(function () {
+        NProgress.start();
+    }).ajaxStop(function () {
+        NProgress.done();
+    });
+});
+
 /* Busqueda 01/02/2014 */
 $("#buscarform").submit(function(event){
     event.preventDefault();

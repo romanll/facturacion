@@ -19,7 +19,7 @@ class St
         $this->ci =& get_instance();
         //$this->username="Sergio.kenton@me.com";
         //$this->password="Qwerty1#";
-        $this->username="lopez.l.roman@gmail.com";
+        $this->username="roman.lopez@outlook.com";
         $this->password="Prueba@456";
 
 	}

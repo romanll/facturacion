@@ -58,8 +58,9 @@
 				<i class="uk-icon-cog"></i> Configuración
 			</a>
 			<ul class="uk-nav-sub">
-				<li><a href="<?php echo base_url('configuracion'); ?>">Datos fiscales</a></li>
-				<li><a href="<?php echo base_url('configuracion/series'); ?>">Series</a></li>
+				<li><a href="<?php echo base_url('configuracion/series'); ?>">Series & Folios</a></li>
+				<li><a href="<?php echo base_url('configuracion/solicitart'); ?>">Solicitar timbres</a></li>
+				<li><a href="<?php echo base_url('configuracion/contacto'); ?>">Contacto</a></li>
 			</ul>
 		</li>
 		<?php endif; ?>

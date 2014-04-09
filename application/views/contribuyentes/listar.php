@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Facturas</title>
+		<title>Facturas:Emisores</title>
 		<?php $this->load->view('template/jquery'); ?>
         <?php $this->load->view('template/uikit'); ?>
         <link rel="stylesheet" href="<?php echo base_url('css/base.css'); ?>">
@@ -49,7 +49,7 @@
 	                                <th class="uk-text-center">Timbres</th>
 	                                <th class="uk-text-center">E-mail</th>
 	                                <th class="uk-text-center">Tel&eacute;fono</th>
-	                                <th class="uk-text-center">Op</th>
+	                                <th class="uk-text-center">Opciones</th>
 	                            </tr>
 	                        <?php foreach($emisores as $e): ?>
 	                            <tr>
@@ -59,10 +59,19 @@
 	                                <td class="uk-text-center uk-width-2-10"><?php echo $e->email; ?></td>
 	                                <td class="uk-text-center uk-width-1-10"><?php echo $e->telefono; ?></td>
 	                                <td class="uk-text-center uk-width-1-10">
-	                                    <a href='<?php echo base_url("contribuyentes/info/$e->idemisor"); ?>' class="info" data-uk-modal="{target:'#modal',bgclose:false}"><i class="uk-icon-info-circle"></i></a>
-	                                    <a href='<?php echo base_url("contribuyentes/agregartimbres/$e->idemisor"); ?>' data-emisor="<?php echo $e->idemisor; ?>" class="agregar" data-uk-modal="{target:'#modaltimbres',bgclose:false}"><i class="uk-icon-plus-circle"></i></a>
-	                                    <a href='<?php echo base_url("contribuyentes/editar/$e->idemisor"); ?>' class="editar"><i class="uk-icon-edit"></i></a>
-	                                    <a href='<?php echo base_url("contribuyentes/eliminar/$e->idemisor"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
+	                                		<a href='<?php echo base_url("contribuyentes/info/$e->idemisor"); ?>' class="info" data-uk-modal="{target:'#modal',bgclose:false}"><i class="uk-icon-info-circle"></i></a>
+	                                		<a href='<?php echo base_url("contribuyentes/agregartimbres/$e->idemisor"); ?>' data-emisor="<?php echo $e->idemisor; ?>" class="agregar" data-uk-modal="{target:'#modaltimbres',bgclose:false}"><i class="uk-icon-plus-circle"></i></a>
+											<div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+												<a href='<?php echo base_url("contribuyentes/editar/cuenta/$e->idemisor"); ?>' class="editar"><i class="uk-icon-edit"></i></a>	
+												<div class="uk-dropdown uk-dropdown-small droparrow">
+				                                    <ul class="uk-nav uk-nav-dropdown">
+				                                        <li><a href="<?php echo base_url("contribuyentes/editar/cuenta/$e->idemisor"); ?>">Datos de cuenta</a></li>
+				                                        <li><a href="<?php echo base_url("contribuyentes/editar/fiscales/$e->idemisor"); ?>">Datos Fiscales</a></li>
+				                                        <li><a href="<?php echo base_url("contribuyentes/editar/archivos/$e->idemisor"); ?>">Archivos</a></li>
+				                                    </ul>
+				                                </div>
+											</div>
+	                                		<a href='<?php echo base_url("contribuyentes/eliminar/$e->idemisor"); ?>' class="eliminar"><i class="uk-icon-trash-o"></i></a>
 	                                </td>
 	                            </tr>
 						    <?php endforeach; ?>
